@@ -191,7 +191,7 @@ extern "C" {
 **  \par Limits:
 **       OS_MAX_LOCAL_PATH_LEN
 */
-#define VC_DEVICE_PATH                  "/dev/video0"
+#define VC_DEVICE_PATH                  "/dev/v4l/by-path/pci-0000:00:03.0-video-index2"
 
 
 /* Ground system settings */
@@ -245,7 +245,7 @@ extern "C" {
 **  \par Limits:
 **       V4L specific.
 */
-#define VC_V4L_VIDEO_FORMAT             V4L2_PIX_FMT_MJPEG 
+#define VC_V4L_VIDEO_FORMAT             V4L2_PIX_FMT_RGB565
 
 /** \brief V4L field order
 **
