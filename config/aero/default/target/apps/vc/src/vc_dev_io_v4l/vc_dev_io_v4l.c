@@ -432,12 +432,6 @@ void VC_Stream_Task(void)
 {
     int32 returnCode = 0;
     static int32 timeouts = 0;
-    int timeout = 0;
-    
-    struct pollfd desc[1];
-    desc[0].fd = VC_AppCustomDevice.Channel[0].DeviceFd;
-    desc[0].events = POLLIN | POLLPRI | POLL_ERROR_EVENTS;
-    desc[0].revents = 0;
     
     uint32 i = 0;
     uint32 j = 0;
@@ -445,7 +439,7 @@ void VC_Stream_Task(void)
     static uint32 retryAttempts = 0;
     fd_set fds;
     
-    struct timespec timeValue;
+    struct timeval timeValue;
     uint32 iStatus = -1;
     
     iStatus = CFE_ES_RegisterChildTask();
@@ -462,35 +456,33 @@ void VC_Stream_Task(void)
              * every loop iteration
              */
             timeValue.tv_sec = VC_BUFFER_FILL_TIMEOUT_SEC;
-            timeValue.tv_nsec = VC_BUFFER_FILL_TIMEOUT_USEC;
+            timeValue.tv_usec = VC_BUFFER_FILL_TIMEOUT_USEC;
 
             /* Initialize the set */
-            //FD_ZERO(&fds);
+            FD_ZERO(&fds);
         
-            ///* Add enabled and streaming devices to the fd set */
-            //for (i=0; i < VC_MAX_DEVICES; i++)
-            //{
-                //if(VC_AppCustomDevice.Channel[i].Mode == VC_DEVICE_ENABLED 
-                //&& VC_AppCustomDevice.Channel[i].Status == VC_DEVICE_STREAMING)
-                //{
-                    //FD_SET(VC_AppCustomDevice.Channel[i].DeviceFd, &fds);
+            /* Add enabled and streaming devices to the fd set */
+            for (i=0; i < VC_MAX_DEVICES; i++)
+            {
+                if(VC_AppCustomDevice.Channel[i].Mode == VC_DEVICE_ENABLED 
+                && VC_AppCustomDevice.Channel[i].Status == VC_DEVICE_STREAMING)
+                {
+                    FD_SET(VC_AppCustomDevice.Channel[i].DeviceFd, &fds);
             
-                    ///* Get the greatest fd value for select() */
-                    //if (VC_AppCustomDevice.Channel[i].DeviceFd > maxFd)
-                    //{
-                        ///* maxFd is needed for select */
-                        //maxFd = VC_AppCustomDevice.Channel[i].DeviceFd; 
-                    //}
-                //}
-            //}
+                    /* Get the greatest fd value for select() */
+                    if (VC_AppCustomDevice.Channel[i].DeviceFd > maxFd)
+                    {
+                        /* maxFd is needed for select */
+                        maxFd = VC_AppCustomDevice.Channel[i].DeviceFd; 
+                    }
+                }
+            }
             /* If maxFd is > 0 a fd was added the set so call select */
-            if (VC_AppCustomDevice.Channel[i].DeviceFd > 0)
+            if (maxFd > 0)
             {
                 CFE_ES_PerfLogEntry(VC_DEVICE_GET_PERF_ID);
                 /* Wait for a queued buffer to be filled by the device */
-                //returnCode = select(maxFd + 1, &fds, 0, 0, &timeValue);
-                timeout = (timeValue.tv_sec * 1000 + timeValue.tv_nsec / 1000000);
-                returnCode = poll(desc, sizeof(desc) / sizeof(struct pollfd), timeout);
+                returnCode = select(maxFd + 1, &fds, 0, 0, &timeValue);
                 CFE_ES_PerfLogExit(VC_DEVICE_GET_PERF_ID);
             }
             else
@@ -549,11 +541,11 @@ void VC_Stream_Task(void)
                     if(VC_AppCustomDevice.Channel[i].Mode == VC_DEVICE_ENABLED 
                     && VC_AppCustomDevice.Channel[i].Status == VC_DEVICE_STREAMING)
                     {
-                        //if(FD_ISSET(VC_AppCustomDevice.Channel[i].DeviceFd, &fds))
-                        //{
+                        if(FD_ISSET(VC_AppCustomDevice.Channel[i].DeviceFd, &fds))
+                        {
                             /* Call send buffer with the device that is ready */
                             VC_Send_Buffer(i);
-                        //}
+                        }
                     }
                 }
             }    
@@ -574,7 +566,6 @@ end_of_function:
         CFE_ES_ExitChildTask();
     }
 }
-
 
 int32 VC_Start_Streaming(void)
 {
