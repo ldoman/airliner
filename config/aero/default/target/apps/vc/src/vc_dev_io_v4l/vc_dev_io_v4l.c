@@ -47,10 +47,12 @@
 #include <sys/ioctl.h>
 #include <string.h>
 #include <linux/videodev2.h>
+#include <poll.h>
 
 /************************************************************************
 ** Local Defines
 *************************************************************************/
+#define POLL_ERROR_EVENTS (POLLERR | POLLHUP | POLLNVAL)
 
 /************************************************************************
 ** Local Structure Declarations
@@ -135,6 +137,9 @@ int32 VC_ConfigureDevice(uint8 DeviceID)
     struct v4l2_format              Format = {};
     struct v4l2_capability          Capabilities = {};
     struct v4l2_requestbuffers      Request = {};
+    struct v4l2_streamparm          Parameters = {};
+    /* TODO */
+    int camera_id = 0;
 
     bzero(&Format, sizeof(Format));
     Format.type                = VC_AppCustomDevice.Channel[DeviceID].BufferType;
@@ -147,6 +152,11 @@ int32 VC_ConfigureDevice(uint8 DeviceID)
     Request.count              = VC_AppCustomDevice.Channel[DeviceID].BufferRequest;
     Request.type               = VC_AppCustomDevice.Channel[DeviceID].BufferType;
     Request.memory             = VC_AppCustomDevice.Channel[DeviceID].MemoryType;
+    
+    bzero(&Parameters, sizeof(Parameters));
+    Parameters.type            = VC_AppCustomDevice.Channel[DeviceID].BufferType;
+    /* TODO */
+    Parameters.parm.capture.capturemode = 0x8000;
 
     if (-1 == VC_Ioctl(VC_AppCustomDevice.Channel[DeviceID].DeviceFd, VIDIOC_QUERYCAP, &Capabilities)) 
     {            
@@ -172,6 +182,26 @@ int32 VC_ConfigureDevice(uint8 DeviceID)
         CFE_EVS_SendEvent(VC_DEVICE_ERR_EID, CFE_EVS_ERROR,
                         "VC Capabilities %u on %s channel %u not found", 
                         V4L2_CAP_STREAMING,
+                        VC_AppCustomDevice.Channel[DeviceID].DevName, (unsigned int)DeviceID);
+        returnCode = -1;
+        goto end_of_function;
+    }
+    
+    /* Set device ID */
+    if (-1 == VC_Ioctl(VC_AppCustomDevice.Channel[DeviceID].DeviceFd, VIDIOC_S_INPUT, (int *)&camera_id))
+    {
+        CFE_EVS_SendEvent(VC_DEVICE_ERR_EID, CFE_EVS_ERROR,
+                        "VIDIOC_S_INPUT, returned %i on %s channel %u", errno,
+                        VC_AppCustomDevice.Channel[DeviceID].DevName, (unsigned int)DeviceID);
+        returnCode = -1;
+        goto end_of_function;
+    }
+
+    /* Set stream parameters */
+    if (-1 == VC_Ioctl(VC_AppCustomDevice.Channel[DeviceID].DeviceFd, VIDIOC_S_PARM, &Parameters))
+    {
+        CFE_EVS_SendEvent(VC_DEVICE_ERR_EID, CFE_EVS_ERROR,
+                        "VIDIOC_S_PARM, returned %i on %s channel %u", errno,
                         VC_AppCustomDevice.Channel[DeviceID].DevName, (unsigned int)DeviceID);
         returnCode = -1;
         goto end_of_function;
@@ -402,6 +432,12 @@ void VC_Stream_Task(void)
 {
     int32 returnCode = 0;
     static int32 timeouts = 0;
+    int timeout = 0;
+    
+    struct pollfd desc[1];
+    desc[0].fd = VC_AppCustomDevice.Channel[0].DeviceFd;
+    desc[0].events = POLLIN | POLLPRI | POLL_ERROR_EVENTS;
+    desc[0].revents = 0;
     
     uint32 i = 0;
     uint32 j = 0;
@@ -409,7 +445,7 @@ void VC_Stream_Task(void)
     static uint32 retryAttempts = 0;
     fd_set fds;
     
-    struct timeval timeValue;
+    struct timespec timeValue;
     uint32 iStatus = -1;
     
     iStatus = CFE_ES_RegisterChildTask();
@@ -426,33 +462,35 @@ void VC_Stream_Task(void)
              * every loop iteration
              */
             timeValue.tv_sec = VC_BUFFER_FILL_TIMEOUT_SEC;
-            timeValue.tv_usec = VC_BUFFER_FILL_TIMEOUT_USEC;
+            timeValue.tv_nsec = VC_BUFFER_FILL_TIMEOUT_USEC;
 
             /* Initialize the set */
-            FD_ZERO(&fds);
+            //FD_ZERO(&fds);
         
-            /* Add enabled and streaming devices to the fd set */
-            for (i=0; i < VC_MAX_DEVICES; i++)
-            {
-                if(VC_AppCustomDevice.Channel[i].Mode == VC_DEVICE_ENABLED 
-                && VC_AppCustomDevice.Channel[i].Status == VC_DEVICE_STREAMING)
-                {
-                    FD_SET(VC_AppCustomDevice.Channel[i].DeviceFd, &fds);
+            ///* Add enabled and streaming devices to the fd set */
+            //for (i=0; i < VC_MAX_DEVICES; i++)
+            //{
+                //if(VC_AppCustomDevice.Channel[i].Mode == VC_DEVICE_ENABLED 
+                //&& VC_AppCustomDevice.Channel[i].Status == VC_DEVICE_STREAMING)
+                //{
+                    //FD_SET(VC_AppCustomDevice.Channel[i].DeviceFd, &fds);
             
-                    /* Get the greatest fd value for select() */
-                    if (VC_AppCustomDevice.Channel[i].DeviceFd > maxFd)
-                    {
-                        /* maxFd is needed for select */
-                        maxFd = VC_AppCustomDevice.Channel[i].DeviceFd; 
-                    }
-                }
-            }
+                    ///* Get the greatest fd value for select() */
+                    //if (VC_AppCustomDevice.Channel[i].DeviceFd > maxFd)
+                    //{
+                        ///* maxFd is needed for select */
+                        //maxFd = VC_AppCustomDevice.Channel[i].DeviceFd; 
+                    //}
+                //}
+            //}
             /* If maxFd is > 0 a fd was added the set so call select */
-            if (maxFd > 0)
+            if (VC_AppCustomDevice.Channel[i].DeviceFd > 0)
             {
                 CFE_ES_PerfLogEntry(VC_DEVICE_GET_PERF_ID);
                 /* Wait for a queued buffer to be filled by the device */
-                returnCode = select(maxFd + 1, &fds, 0, 0, &timeValue);
+                //returnCode = select(maxFd + 1, &fds, 0, 0, &timeValue);
+                timeout = (timeValue.tv_sec * 1000 + timeValue.tv_nsec / 1000000);
+                returnCode = poll(desc, sizeof(desc) / sizeof(struct pollfd), timeout);
                 CFE_ES_PerfLogExit(VC_DEVICE_GET_PERF_ID);
             }
             else
@@ -511,11 +549,11 @@ void VC_Stream_Task(void)
                     if(VC_AppCustomDevice.Channel[i].Mode == VC_DEVICE_ENABLED 
                     && VC_AppCustomDevice.Channel[i].Status == VC_DEVICE_STREAMING)
                     {
-                        if(FD_ISSET(VC_AppCustomDevice.Channel[i].DeviceFd, &fds))
-                        {
+                        //if(FD_ISSET(VC_AppCustomDevice.Channel[i].DeviceFd, &fds))
+                        //{
                             /* Call send buffer with the device that is ready */
                             VC_Send_Buffer(i);
-                        }
+                        //}
                     }
                 }
             }    

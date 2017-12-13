@@ -6,15 +6,15 @@ add_airliner_app_unit_test(vc-custom-ut
         # Unit test runner
         ${CMAKE_CURRENT_SOURCE_DIR}/unit_test/vc_custom_testrunner.c
         # Unit test for custom device module v4l
-        #${CMAKE_CURRENT_SOURCE_DIR}/unit_test/vc_dev_io_v4l_test/vc_app_custom_device_test.c
-        #${CMAKE_CURRENT_SOURCE_DIR}/unit_test/vc_dev_io_v4l_test/vc_app_custom_device_test.h
-        #${CMAKE_CURRENT_SOURCE_DIR}/unit_test/vc_dev_io_v4l_test/vc_custom_device_test_utils.c
-        #${CMAKE_CURRENT_SOURCE_DIR}/unit_test/vc_dev_io_v4l_test/vc_custom_device_test_utils.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/unit_test/vc_dev_io_v4l_test/vc_app_custom_device_test.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/unit_test/vc_dev_io_v4l_test/vc_app_custom_device_test.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/unit_test/vc_dev_io_v4l_test/vc_custom_device_test_utils.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/unit_test/vc_dev_io_v4l_test/vc_custom_device_test_utils.h
         # Custom device code udp 
-        ${CMAKE_CURRENT_SOURCE_DIR}/unit_test/vc_dev_io_udp_test/vc_app_custom_device_test.c
-        ${CMAKE_CURRENT_SOURCE_DIR}/unit_test/vc_dev_io_udp_test/vc_app_custom_device_test.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/unit_test/vc_dev_io_udp_test/vc_custom_device_test_utils.c
-        ${CMAKE_CURRENT_SOURCE_DIR}/unit_test/vc_dev_io_udp_test/vc_custom_device_test_utils.h
+        #${CMAKE_CURRENT_SOURCE_DIR}/unit_test/vc_dev_io_udp_test/vc_app_custom_device_test.c
+        #${CMAKE_CURRENT_SOURCE_DIR}/unit_test/vc_dev_io_udp_test/vc_app_custom_device_test.h
+        #${CMAKE_CURRENT_SOURCE_DIR}/unit_test/vc_dev_io_udp_test/vc_custom_device_test_utils.c
+        #${CMAKE_CURRENT_SOURCE_DIR}/unit_test/vc_dev_io_udp_test/vc_custom_device_test_utils.h
         # Unit test for custom transmit module
         ${CMAKE_CURRENT_SOURCE_DIR}/unit_test/vc_transmit_udp_test/vc_app_custom_transmit_test.c
         ${CMAKE_CURRENT_SOURCE_DIR}/unit_test/vc_transmit_udp_test/vc_app_custom_transmit_test.h
@@ -35,11 +35,11 @@ add_airliner_app_unit_test(vc-custom-ut
         ${CMAKE_CURRENT_SOURCE_DIR}/src/vc_transmit_udp/vc_transmit_udp.c
         ${CMAKE_CURRENT_SOURCE_DIR}/src/vc_transmit_udp/vc_transmit_udp.h
         # Custom device code v4l 
-        #${CMAKE_CURRENT_SOURCE_DIR}/src/vc_dev_io_v4l/vc_dev_io_v4l.c
-        #${CMAKE_CURRENT_SOURCE_DIR}/src/vc_dev_io_v4l/vc_dev_io_v4l.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/vc_dev_io_v4l/vc_dev_io_v4l.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/vc_dev_io_v4l/vc_dev_io_v4l.h
         # Custom device code udp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/vc_dev_io_udp/vc_dev_io_udp.c
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/vc_dev_io_udp/vc_dev_io_udp.h
+        #${CMAKE_CURRENT_SOURCE_DIR}/src/vc_dev_io_udp/vc_dev_io_udp.c
+        #${CMAKE_CURRENT_SOURCE_DIR}/src/vc_dev_io_udp/vc_dev_io_udp.h
         ${CMAKE_CURRENT_SOURCE_DIR}/src/vc_custom.c
         ${CMAKE_CURRENT_SOURCE_DIR}/src/vc_custom_shared.h
 
@@ -47,16 +47,16 @@ add_airliner_app_unit_test(vc-custom-ut
         # Custom code under test
         ${CMAKE_CURRENT_SOURCE_DIR}/src/
         # Custom v4l code
-        #${CMAKE_CURRENT_SOURCE_DIR}/src/vc_dev_io_v4l/
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/vc_dev_io_v4l/
         # Custom udp code
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/vc_dev_io_udp/
+        #${CMAKE_CURRENT_SOURCE_DIR}/src/vc_dev_io_udp/
         ${CMAKE_CURRENT_SOURCE_DIR}/src/vc_transmit_udp/
         # Test code
         ${CMAKE_CURRENT_SOURCE_DIR}/unit_test/
         # Custom v4l code
-        #${CMAKE_CURRENT_SOURCE_DIR}/unit_test/vc_dev_io_v4l_test/
+        ${CMAKE_CURRENT_SOURCE_DIR}/unit_test/vc_dev_io_v4l_test/
         # Custom udp code 
-        ${CMAKE_CURRENT_SOURCE_DIR}/unit_test/vc_dev_io_udp_test/
+        #${CMAKE_CURRENT_SOURCE_DIR}/unit_test/vc_dev_io_udp_test/
         ${CMAKE_CURRENT_SOURCE_DIR}/unit_test/vc_transmit_udp_test/
         ${CMAKE_CURRENT_SOURCE_DIR}/unit_test/vc_transmit_udp_test/
         ${CMAKE_CURRENT_SOURCE_DIR}/unit_test/vc_platform_stubs/

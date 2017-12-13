@@ -126,7 +126,7 @@ extern "C" {
 **       Minimum based on configured device driver requirements.
 */
 //#define VC_MAX_BUFFER_SIZE              (115200)
-#define VC_MAX_BUFFER_SIZE              (1228800)
+#define VC_MAX_BUFFER_SIZE              (155648)
 
 /** \brief Max packet size
 **
@@ -252,7 +252,7 @@ extern "C" {
 **  \par Limits:
 **       V4L specific.
 */
-#define VC_V4L_VIDEO_FIELD_ORDER        V4L2_FIELD_NONE 
+#define VC_V4L_VIDEO_FIELD_ORDER        V4L2_FIELD_INTERLACED 
 
 /** \brief V4L buffers to request 
 **
