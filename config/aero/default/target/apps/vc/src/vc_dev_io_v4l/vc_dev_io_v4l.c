@@ -47,12 +47,12 @@
 #include <sys/ioctl.h>
 #include <string.h>
 #include <linux/videodev2.h>
-#include <poll.h>
 
 /************************************************************************
 ** Local Defines
 *************************************************************************/
-#define POLL_ERROR_EVENTS (POLLERR | POLLHUP | POLLNVAL)
+#define VC_DEFAULT_CAMERA_ID        (0)
+#define VC_CAPTURE_MODE_PREVIEW     (0x8000)
 
 /************************************************************************
 ** Local Structure Declarations
@@ -138,8 +138,7 @@ int32 VC_ConfigureDevice(uint8 DeviceID)
     struct v4l2_capability          Capabilities = {};
     struct v4l2_requestbuffers      Request = {};
     struct v4l2_streamparm          Parameters = {};
-    /* TODO */
-    int camera_id = 0;
+    int camera_id = VC_DEFAULT_CAMERA_ID;
 
     bzero(&Format, sizeof(Format));
     Format.type                = VC_AppCustomDevice.Channel[DeviceID].BufferType;
@@ -155,8 +154,7 @@ int32 VC_ConfigureDevice(uint8 DeviceID)
     
     bzero(&Parameters, sizeof(Parameters));
     Parameters.type            = VC_AppCustomDevice.Channel[DeviceID].BufferType;
-    /* TODO */
-    Parameters.parm.capture.capturemode = 0x8000;
+    Parameters.parm.capture.capturemode = VC_CAPTURE_MODE_PREVIEW;
 
     if (-1 == VC_Ioctl(VC_AppCustomDevice.Channel[DeviceID].DeviceFd, VIDIOC_QUERYCAP, &Capabilities)) 
     {            
@@ -283,7 +281,7 @@ int32 VC_Start_StreamingDevice(uint8 DeviceID)
     for (i=0; i < VC_AppCustomDevice.Channel[DeviceID].BufferRequest; i++)
     {
         VC_AppCustomDevice.Channel[DeviceID].Buffer_Ptrs[i].ptr = (void*)&VC_AppCustomDevice.Channel[DeviceID].Buffers[i][0];
-        
+
         bzero(&Buffer, sizeof(Buffer));
         Buffer.type            = VC_AppCustomDevice.Channel[DeviceID].BufferType;
         Buffer.memory          = VC_AppCustomDevice.Channel[DeviceID].MemoryType;
@@ -566,6 +564,8 @@ end_of_function:
         CFE_ES_ExitChildTask();
     }
 }
+
+
 
 int32 VC_Start_Streaming(void)
 {
