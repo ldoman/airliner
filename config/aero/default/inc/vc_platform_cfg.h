@@ -126,7 +126,7 @@ extern "C" {
 **       Minimum based on configured device driver requirements.
 */
 //#define VC_MAX_BUFFER_SIZE              (115200)
-#define VC_MAX_BUFFER_SIZE              (155648)
+#define VC_MAX_BUFFER_SIZE              (153600)
 
 /** \brief Max packet size
 **
@@ -191,7 +191,7 @@ extern "C" {
 **  \par Limits:
 **       OS_MAX_LOCAL_PATH_LEN
 */
-#define VC_DEVICE_PATH                  "/dev/v4l/by-path/pci-0000:00:03.0-video-index2"
+#define VC_DEVICE_PATH                  "/dev/video2"
 
 
 /* Ground system settings */
@@ -245,7 +245,7 @@ extern "C" {
 **  \par Limits:
 **       V4L specific.
 */
-#define VC_V4L_VIDEO_FORMAT             V4L2_PIX_FMT_RGB565
+#define VC_V4L_VIDEO_FORMAT             V4L2_PIX_FMT_YUYV
 
 /** \brief V4L field order
 **

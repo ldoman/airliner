@@ -51,8 +51,6 @@
 /************************************************************************
 ** Local Defines
 *************************************************************************/
-#define VC_DEFAULT_CAMERA_ID        (0)
-#define VC_CAPTURE_MODE_PREVIEW     (0x8000)
 
 /************************************************************************
 ** Local Structure Declarations
@@ -138,7 +136,6 @@ int32 VC_ConfigureDevice(uint8 DeviceID)
     struct v4l2_capability          Capabilities = {};
     struct v4l2_requestbuffers      Request = {};
     struct v4l2_streamparm          Parameters = {};
-    int camera_id = VC_DEFAULT_CAMERA_ID;
 
     bzero(&Format, sizeof(Format));
     Format.type                = VC_AppCustomDevice.Channel[DeviceID].BufferType;
@@ -151,10 +148,6 @@ int32 VC_ConfigureDevice(uint8 DeviceID)
     Request.count              = VC_AppCustomDevice.Channel[DeviceID].BufferRequest;
     Request.type               = VC_AppCustomDevice.Channel[DeviceID].BufferType;
     Request.memory             = VC_AppCustomDevice.Channel[DeviceID].MemoryType;
-    
-    bzero(&Parameters, sizeof(Parameters));
-    Parameters.type            = VC_AppCustomDevice.Channel[DeviceID].BufferType;
-    Parameters.parm.capture.capturemode = VC_CAPTURE_MODE_PREVIEW;
 
     if (-1 == VC_Ioctl(VC_AppCustomDevice.Channel[DeviceID].DeviceFd, VIDIOC_QUERYCAP, &Capabilities)) 
     {            
@@ -184,27 +177,7 @@ int32 VC_ConfigureDevice(uint8 DeviceID)
         returnCode = -1;
         goto end_of_function;
     }
-    
-    /* Set device ID */
-    if (-1 == VC_Ioctl(VC_AppCustomDevice.Channel[DeviceID].DeviceFd, VIDIOC_S_INPUT, (int *)&camera_id))
-    {
-        CFE_EVS_SendEvent(VC_DEVICE_ERR_EID, CFE_EVS_ERROR,
-                        "VIDIOC_S_INPUT, returned %i on %s channel %u", errno,
-                        VC_AppCustomDevice.Channel[DeviceID].DevName, (unsigned int)DeviceID);
-        returnCode = -1;
-        goto end_of_function;
-    }
 
-    /* Set stream parameters */
-    if (-1 == VC_Ioctl(VC_AppCustomDevice.Channel[DeviceID].DeviceFd, VIDIOC_S_PARM, &Parameters))
-    {
-        CFE_EVS_SendEvent(VC_DEVICE_ERR_EID, CFE_EVS_ERROR,
-                        "VIDIOC_S_PARM, returned %i on %s channel %u", errno,
-                        VC_AppCustomDevice.Channel[DeviceID].DevName, (unsigned int)DeviceID);
-        returnCode = -1;
-        goto end_of_function;
-    }
-    
     if (-1 == VC_Ioctl(VC_AppCustomDevice.Channel[DeviceID].DeviceFd, VIDIOC_S_FMT, &Format)) 
     {
         CFE_EVS_SendEvent(VC_DEVICE_ERR_EID, CFE_EVS_ERROR,
