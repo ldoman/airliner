@@ -47,6 +47,7 @@
 #include <sys/ioctl.h>
 #include <string.h>
 #include <linux/videodev2.h>
+#include "../vc_dev_utils/vc_dev_utils.h"
 
 /************************************************************************
 ** Local Defines
@@ -323,7 +324,8 @@ int32 VC_Send_Buffer(uint8 DeviceID)
     int32 returnCode = 0;
     uint32 i = 0;
     boolean checkFlag = FALSE;
-    
+    int convertedSize = 0;
+
     struct v4l2_buffer Buffer;
     
     bzero(&Buffer, sizeof(Buffer));
@@ -373,8 +375,22 @@ int32 VC_Send_Buffer(uint8 DeviceID)
         goto end_of_function;
     }
     
+    /* */
+    returnCode = VC_Custom_Utils_YUVY2JPG((char*)Buffer.m.userptr, 
+    VC_AppCustomDevice.Channel[DeviceID].TempBuffer, 
+    &convertedSize);
+    if (-1 == returnCode)
+    {
+        CFE_EVS_SendEvent(VC_DEVICE_ERR_EID, CFE_EVS_ERROR,
+                "VC YUVY2JPG conversion failed on %s channel %u",
+                VC_AppCustomDevice.Channel[DeviceID].DevName, (unsigned int)DeviceID);
+        returnCode = -1;
+        goto end_of_function;
+    }
+    
+    
     /* Send data, for now map device id to senddata channel */
-    if (-1 == VC_SendData(DeviceID, (void*)Buffer.m.userptr, Buffer.bytesused))
+    if (-1 == VC_SendData(DeviceID, VC_AppCustomDevice.Channel[DeviceID].TempBuffer, convertedSize))
     {
         CFE_EVS_SendEvent(VC_DEVICE_ERR_EID, CFE_EVS_ERROR,
                 "VC send data failed on %s channel %u",

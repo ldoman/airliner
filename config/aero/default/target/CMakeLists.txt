@@ -198,10 +198,15 @@ add_airliner_app(
     CONFIG_SOURCES
         #${CMAKE_CURRENT_SOURCE_DIR}/apps/vc/src/vc_dev_io_udp/vc_dev_io_udp.c
         #${CMAKE_CURRENT_SOURCE_DIR}/apps/vc/src/vc_dev_io_udp/vc_dev_io_udp.h
+        # device layer
         ${CMAKE_CURRENT_SOURCE_DIR}/apps/vc/src/vc_dev_io_v4l/vc_dev_io_v4l.c
         ${CMAKE_CURRENT_SOURCE_DIR}/apps/vc/src/vc_dev_io_v4l/vc_dev_io_v4l.h
+        # transmit layer
         ${CMAKE_CURRENT_SOURCE_DIR}/apps/vc/src/vc_transmit_udp/vc_transmit_udp.c
         ${CMAKE_CURRENT_SOURCE_DIR}/apps/vc/src/vc_transmit_udp/vc_transmit_udp.h
+        # custom utilities
+        ${CMAKE_CURRENT_SOURCE_DIR}/apps/vc/src/vc_dev_utils/vc_dev_utils.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/apps/vc/src/vc_dev_utils/vc_dev_utils.h
         ${CMAKE_CURRENT_SOURCE_DIR}/apps/vc/src/vc_custom.c
         ${CMAKE_CURRENT_SOURCE_DIR}/apps/vc/src/vc_custom_shared.h
         ${CMAKE_CURRENT_SOURCE_DIR}/../inc/vc_platform_cfg.h
@@ -209,6 +214,20 @@ add_airliner_app(
         ${CMAKE_CURRENT_SOURCE_DIR}/../../../shared/inc/vc_mission_cfg.h
         ${CMAKE_CURRENT_SOURCE_DIR}/../../../shared/inc/vc_perfids.h
     )
+    
+    #set_property(TARGET vc
+            #APPEND_STRING
+            #PROPERTY
+            #LINK_FLAGS
+            #"-L/usr/lib/x86_64-linux-gnu/libopencv_imgproc.so.2.4 -L/usr/lib/x86_64-linux-gnu/libopencv_core.so.2.4"
+        #)
+
+        set_property(TARGET vc
+            APPEND_STRING
+            PROPERTY
+            LINK_FLAGS
+            "-ljpeg"
+        )
 
 add_airliner_app(
     px4br

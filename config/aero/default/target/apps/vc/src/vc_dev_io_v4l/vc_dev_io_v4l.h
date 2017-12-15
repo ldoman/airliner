@@ -112,6 +112,8 @@ typedef struct
     uint32              MemoryType;
     /*! V4L user defined buffer(s) */
     char                Buffers[VC_V4L_BUFFER_REQUEST][VC_MAX_BUFFER_SIZE];
+    /*! Temp buffer for conversion */
+    char                TempBuffer[VC_MAX_BUFFER_SIZE];
     /*! V4L buffer size (for all buffers)  */
     uint32              Buffer_Size;
     /*! V4L user defined buffer pointer(s) */
