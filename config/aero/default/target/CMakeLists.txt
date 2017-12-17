@@ -215,19 +215,12 @@ add_airliner_app(
         ${CMAKE_CURRENT_SOURCE_DIR}/../../../shared/inc/vc_perfids.h
     )
     
-    #set_property(TARGET vc
-            #APPEND_STRING
-            #PROPERTY
-            #LINK_FLAGS
-            #"-L/usr/lib/x86_64-linux-gnu/libopencv_imgproc.so.2.4 -L/usr/lib/x86_64-linux-gnu/libopencv_core.so.2.4"
-        #)
-
-        set_property(TARGET vc
+set_property(TARGET vc
             APPEND_STRING
             PROPERTY
             LINK_FLAGS
-            "-ljpeg"
-        )
+            "-Wl,--no-as-needed -ljpeg"
+    )
 
 add_airliner_app(
     px4br
