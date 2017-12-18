@@ -343,17 +343,6 @@ int32 VC_Send_Buffer(uint8 DeviceID)
             goto end_of_function;
     }
     
-    /* The dequeued buffer is larger than max transmit packet size */
-    if (Buffer.bytesused > VC_MAX_PACKET_SIZE)
-    {
-        /* The buffer is too large so skip sending */
-        CFE_EVS_SendEvent(VC_DEVICE_ERR_EID, CFE_EVS_ERROR,
-                "VC Packet on %s channel %u is too large",
-                VC_AppCustomDevice.Channel[DeviceID].DevName, (unsigned int)DeviceID);
-            returnCode = -1;
-            goto queue_next_buffer;
-    }
-    
     /* Check and make sure VIDIOC_DQBUF returned a valid address 
      * from possible addresses (user buffer pointers)
      */
@@ -379,7 +368,7 @@ int32 VC_Send_Buffer(uint8 DeviceID)
     returnCode = VC_Custom_Utils_YUVY2JPG((char*)Buffer.m.userptr, 
     VC_AppCustomDevice.Channel[DeviceID].TempBuffer, 
     &convertedSize);
-    if (-1 == returnCode)
+    if (-1 == returnCode || -2 == returnCode)
     {
         CFE_EVS_SendEvent(VC_DEVICE_ERR_EID, CFE_EVS_ERROR,
                 "VC YUVY2JPG conversion failed on %s channel %u",
@@ -387,7 +376,17 @@ int32 VC_Send_Buffer(uint8 DeviceID)
         returnCode = -1;
         goto end_of_function;
     }
-    
+
+    /* The encoded buffer is larger than max transmit packet size */
+    if (convertedSize > VC_MAX_PACKET_SIZE)
+    {
+        /* The buffer is too large so skip sending */
+        CFE_EVS_SendEvent(VC_DEVICE_ERR_EID, CFE_EVS_ERROR,
+                "VC Packet on %s channel %u is too large",
+                VC_AppCustomDevice.Channel[DeviceID].DevName, (unsigned int)DeviceID);
+            returnCode = -1;
+            goto queue_next_buffer;
+    }
     
     /* Send data, for now map device id to senddata channel */
     if (-1 == VC_SendData(DeviceID, VC_AppCustomDevice.Channel[DeviceID].TempBuffer, convertedSize))

@@ -125,8 +125,7 @@ extern "C" {
 **  \par Limits:
 **       Minimum based on configured device driver requirements.
 */
-//#define VC_MAX_BUFFER_SIZE              (115200)
-#define VC_MAX_BUFFER_SIZE              (153600)
+#define VC_MAX_BUFFER_SIZE              (115200)
 
 /** \brief Max packet size
 **
@@ -177,7 +176,7 @@ extern "C" {
 **  \par Limits:
 **       Specific to device
 */
-#define VC_FRAME_HEIGHT                 (240)
+#define VC_FRAME_HEIGHT                 (180)
 
 /** \brief Video frame rate
 **
