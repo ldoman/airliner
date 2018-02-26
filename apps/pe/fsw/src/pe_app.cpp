@@ -295,9 +295,9 @@ void PE::InitData()
     m_LandTimeout           = true;
 
     /* Faults */
-    m_BaroFault             = false;
-    m_GpsFault              = false;
-    m_LandFault             = false;
+    m_BaroFault             = true;
+    m_GpsFault              = true;
+    m_LandFault             = true;
 
     /* Validity */
     m_XyEstValid            = false;
