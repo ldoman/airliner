@@ -308,11 +308,7 @@ void PE::gpsCorrect()
 
     //	_P -= K * C * _P;
     /* 10x10 - (10x6 * 6x10 * 10x10)*/
-    //OS_printf("PRE GPS\n");
-    //m_StateCov.Print();
     m_StateCov = m_StateCov - K * C * m_StateCov;
-    //OS_printf("GPS\n");
-    //m_StateCov.Print();
 }
 
 

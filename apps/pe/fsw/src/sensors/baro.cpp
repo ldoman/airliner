@@ -140,11 +140,7 @@ void PE::baroCorrect()
     /* 10F + 10F*/
     m_StateVec = m_StateVec + dx;
     /* 10x10 - 10x1 * 1x10 * 10x10 */
-    //OS_printf("PRE BARO\n");
-    //m_StateCov.Print();
     m_StateCov = m_StateCov - K * C * m_StateCov;
-    //OS_printf("BARO CORRECTED\n");
-    //m_StateCov.Print();
 }
 
 

@@ -295,9 +295,9 @@ void PE::InitData()
     m_LandTimeout           = true;
 
     /* Faults */
-    m_BaroFault             = true;
-    m_GpsFault              = true;
-    m_LandFault             = true;
+    m_BaroFault             = false;
+    m_GpsFault              = false;
+    m_LandFault             = false;
 
     /* Validity */
     m_XyEstValid            = false;
@@ -1045,95 +1045,74 @@ void PE::Update()
 		m_ParamsUpdated = false;
 	}
 
-	/* Update current GPS validity */
-	if(m_GpsInitialized)
+	/* Check if xy is valid */
+	bool VxyStdDevValid = false;
+	if (fmax(m_StateCov[X_vx][X_vx], m_StateCov[X_vy][X_vy]) <
+		m_Params.VXY_PUB_THRESH * m_Params.VXY_PUB_THRESH)
 	{
-		/* Check if xy is valid */
-		bool VxyStdDevValid = false;
-		if (fmax(m_StateCov[X_vx][X_vx], m_StateCov[X_vy][X_vy]) <
-			m_Params.VXY_PUB_THRESH * m_Params.VXY_PUB_THRESH)
-		{
-			VxyStdDevValid = true;
-		}
+		VxyStdDevValid = true;
+	}
 
-		if(m_XyEstValid)
+	/* Update current validity if needed */
+	if(m_XyEstValid)
+	{
+		if(!VxyStdDevValid && m_GpsTimeout) // TODO: Should this really be AND?
 		{
-			if(!VxyStdDevValid && m_GpsTimeout) // TODO: Should this really be AND?
-			{
-				m_XyEstValid = false;
-			}
-		}
-		else
-		{
-			if(VxyStdDevValid && !m_GpsTimeout)
-			{
-				m_XyEstValid = true;
-			}
+			m_XyEstValid = false;
 		}
 	}
 	else
 	{
-		m_XyEstValid = false;
+		if(VxyStdDevValid && !m_GpsTimeout)
+		{
+			m_XyEstValid = true;
+		}
 	}
 
-	/* Update current baro validity */
-	if(m_BaroInitialized)
+	/* Check if z is valid */
+	bool ZStdDevValid = false;
+	if(sqrtf(m_StateCov[X_z][X_z]) < m_Params.Z_PUB_THRESH)
 	{
-		/* Check if z is valid */
-		bool ZStdDevValid = false;
-		if(sqrtf(m_StateCov[X_z][X_z]) < m_Params.Z_PUB_THRESH)
-		{
-			ZStdDevValid = true;
-		}
+		ZStdDevValid = true;
+	}
 
-		if(m_ZEstValid)
+	/* Update current validity if needed */
+	if(m_ZEstValid)
+	{
+		if(!ZStdDevValid && m_BaroTimeout) // TODO: Should this really be AND?
 		{
-			if(!ZStdDevValid && m_BaroTimeout) // TODO: Should this really be AND?
-			{
-				m_ZEstValid = false;
-			}
-		}
-		else
-		{
-			if(ZStdDevValid && !m_BaroTimeout)
-			{
-				m_ZEstValid = true;
-			}
+			m_ZEstValid = false;
 		}
 	}
 	else
 	{
-		m_ZEstValid = false;
+		if(ZStdDevValid && !m_BaroTimeout)
+		{
+			m_ZEstValid = true;
+		}
 	}
 
-	/* Update current land validity */
-	if(m_LandInitialized)
+	/* Check if terrain is valid */
+	bool TzStdDevValid = false;
+	if(sqrtf(m_StateCov[X_tz][X_tz]) < m_Params.Z_PUB_THRESH)
 	{
-		/* Check if terrain is valid */
-		bool TzStdDevValid = false;
-		if(sqrtf(m_StateCov[X_tz][X_tz]) < m_Params.Z_PUB_THRESH)
-		{
-			TzStdDevValid = true;
-		}
+		TzStdDevValid = true;
+	}
 
-		if(m_TzEstValid)
+	/* Update current validity if needed */
+	if(m_TzEstValid)
+	{
+		if(!TzStdDevValid)
 		{
-			if(!TzStdDevValid)
-			{
-				m_TzEstValid = false;
-			}
-		}
-		else
-		{
-			if(TzStdDevValid)
-			{
-				m_TzEstValid = true;
-			}
+			m_TzEstValid = false;
 		}
 	}
 	else
 	{
-		m_TzEstValid = false;
+		if(TzStdDevValid)
+		{
+			m_TzEstValid = true;
+		}
 	}
 
 	/* Initialize map projection to INIT_ORIGIN_LAT, INIT_ORIGIN_LON if we don't
@@ -1219,10 +1198,7 @@ void PE::Update()
 	/* Publish updated data if initialized */
 	if(m_AltOriginInitialized)
 	{
-		if(!m_EstimatorInitialized &&
-			m_BaroInitialized &&
-			m_GpsInitialized &&
-			m_LandInitialized)
+		if(!m_EstimatorInitialized)
 		{
 			m_EstimatorInitialized = true;
 			(void) CFE_EVS_SendEvent(PE_ESTIMATOR_INF_EID, CFE_EVS_INFORMATION,
