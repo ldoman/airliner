@@ -97,8 +97,8 @@ int32 TO_Custom_Init(void)
     uint32 i = 0;
 
     TO_AppCustomData.Channel[0].Mode = TO_CHANNEL_ENABLED;
-    strncpy(TO_AppCustomData.Channel[0].IP, "127.0.0.1", INET_ADDRSTRLEN);
-    TO_AppCustomData.Channel[0].DstPort = 5011;
+    strncpy(TO_AppCustomData.Channel[0].IP, TO_CUSTOM_BINARY_IP, INET_ADDRSTRLEN);
+    TO_AppCustomData.Channel[0].DstPort = TO_CUSTOM_BINARY_UDP_PORT;
     TO_AppCustomData.Channel[0].Priority = 50;
     TO_AppCustomData.Channel[0].ListenerTask = TO_OutputChannel_BinaryChannelTask;
     TO_AppCustomData.Channel[0].Socket = 0;

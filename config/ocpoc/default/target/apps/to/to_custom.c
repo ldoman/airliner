@@ -97,8 +97,8 @@ int32 TO_Custom_Init(void)
     uint32 i = 0;
 
     TO_AppCustomData.Channel[0].Mode = TO_CHANNEL_ENABLED;
-    strncpy(TO_AppCustomData.Channel[0].IP, "192.168.1.3", INET_ADDRSTRLEN);
-    TO_AppCustomData.Channel[0].DstPort = 5011;
+    strncpy(TO_AppCustomData.Channel[0].IP, TO_CUSTOM_BINARY_IP, INET_ADDRSTRLEN);
+    TO_AppCustomData.Channel[0].DstPort = TO_CUSTOM_BINARY_UDP_PORT;
     TO_AppCustomData.Channel[0].Priority = 50;
     TO_AppCustomData.Channel[0].ListenerTask = TO_OutputChannel_BinaryChannelTask;
     TO_AppCustomData.Channel[0].Socket = 0;
@@ -112,6 +112,14 @@ int32 TO_Custom_Init(void)
     TO_AppCustomData.Channel[1].Socket = 0;
     TO_AppCustomData.Channel[1].ChildTaskID = 0;
 
+    TO_AppCustomData.Channel[2].Mode = TO_CHANNEL_ENABLED;
+    strncpy(TO_AppCustomData.Channel[0].IP, TO_CUSTOM_BINARY_IP, INET_ADDRSTRLEN);
+    TO_AppCustomData.Channel[0].DstPort = TO_CUSTOM_BINARY_CFDP_PORT;
+    TO_AppCustomData.Channel[2].Priority = 50;
+    TO_AppCustomData.Channel[2].ListenerTask = TO_OutputChannel_ProtobufChannelTask;
+    TO_AppCustomData.Channel[2].Socket = 0;
+    TO_AppCustomData.Channel[2].ChildTaskID = 0;
+
     iStatus = TO_Channel_OpenChannel(0, "GRND-BIN", TO_GROUND_BINARY_CONFIG_TABLENAME, TO_GROUND_BINARY_CONFIG_TABLE_FILENAME, TO_GROUND_BINARY_DUMP_TABLENAME);
     if(iStatus != 0)
     {
@@ -119,6 +127,8 @@ int32 TO_Custom_Init(void)
     }
 
     iStatus = TO_Channel_OpenChannel(1, "GRND-PB", TO_GROUND_PROTOBUF_CONFIG_TABLENAME, TO_GROUND_PROTOBUF_CONFIG_TABLE_FILENAME, TO_GROUND_PROTOBUF_DUMP_TABLENAME);
+
+    iStatus = TO_Channel_OpenChannel(0, "GRND-CFDP", TO_GROUND_CFDP_CONFIG_TABLENAME, TO_GROUND_CFDP_CONFIG_TABLE_FILENAME, TO_GROUND_CFDP_DUMP_TABLENAME);
 
     for (i=0; i < TO_MAX_CHANNELS; i++)
     {

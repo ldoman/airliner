@@ -5,6 +5,8 @@
 extern "C" {
 #endif
 
+#include "ci_sub_platform_cfg.h"
+
 /*
 ** ci Platform Configuration Parameter Definitions
 */

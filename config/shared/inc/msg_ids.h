@@ -2,6 +2,7 @@
 #define MSG_IDS_H
 
 #include "cfe_msgids.h"
+#include "msg_ids_platform.h"
 
 /* Commands */
 
@@ -26,7 +27,6 @@
 /* CF										*/
 /* Range: 0x910 - 0x92f						*/
 #define CF_CMD_MID                      0x1910
-#define CF_INCOMING_PDU_MID             0x0FFD
 #define CF_SEND_HK_MID                  0x1912
 #define CF_SPARE1_CMD_MID               0x1913
 #define CF_SPARE2_CMD_MID               0x1914
@@ -42,13 +42,6 @@
 #define CF_SPARE3_TLM_MID               0x091e
 #define CF_SPARE4_TLM_MID               0x091f
 #define CF_TRANS_TLM_MID                0x0920
-/*
-** NOTE: the definition below is NOT used by the code. The code uses the MsgId
-** defined in the CF table. For the purpose of keeping all CF related message
-** IDs defined in this file, the CF table should reference this macro
-** definition.
-*/
-#define CF_SPACE_TO_GND_PDU_MID         0x1FFE
 
 
 /* CS										*/

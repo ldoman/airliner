@@ -49,7 +49,7 @@ typedef struct
 	uint16 Port;
 } CI_AppCustomData_t;
 
-CI_AppCustomData_t CI_AppCustomData = {0, 5010};
+CI_AppCustomData_t CI_AppCustomData = {0, CI_CUSTOM_BINARY_UDP_PORT};
 CI_AppCustomData_t CI_AppSerialCustomData = {0, 5009};
 
 int32 CI_InitCustom(void)
@@ -119,16 +119,29 @@ end_of_function:
 
 int32 CI_ReadMessage(char* buffer, uint32* size)
 {
-	*size = recv(CI_AppCustomData.Socket,
-					   (char *)buffer,
-					   (size_t)size, 0);
+    struct sockaddr_in si_other;
+    int recv_len = 0;
+    int slen = sizeof(si_other);
+
+    recv_len = recv(CI_AppCustomData.Socket, buffer, *size, 0);
+
+    *size = recv_len;
+
+    return CFE_SUCCESS;
 }
+
 
 int32 CI_ReadSerializedMessage(char* buffer, uint32* size)
 {
-	*size = recv(CI_AppSerialCustomData.Socket,
-					   (char *)buffer,
-					   (size_t)size, 0);
+    struct sockaddr_in si_other;
+    int recv_len = 0;
+    int slen = sizeof(si_other);
+
+    recv_len = recv(CI_AppCustomData.Socket, buffer, *size, 0);
+
+    *size = recv_len;
+
+    return CFE_SUCCESS;
 }
 
 
