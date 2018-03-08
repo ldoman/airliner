@@ -44,7 +44,7 @@ int32 TO_Channel_OpenChannel(uint32 index, char *ChannelName,
 		char *ConfigTableName, char *ConfigTableFileName,
 		char *DumpTableName)
 {
-	uint32 iStatus = -1;
+	uint32 iStatus = CFE_SUCCESS;
 	char pipeName[OS_MAX_API_NAME];
 	TO_ChannelData_t *channel;
 

@@ -5,9 +5,9 @@
 extern "C" {
 #endif
 
-#define TO_CUSTOM_BINARY_UDP_PORT   (5111)
-#define TO_CUSTOM_BINARY_IP         "192.168.1.2"
-#define TO_CUSTOM_BINARY_CFDP_PORT  (5010)
+#define TO_CUSTOM_BINARY_UDP_PORT   (5011)
+#define TO_CUSTOM_BINARY_IP         "127.0.0.1"
+#define TO_CUSTOM_BINARY_CFDP_PORT  (5013)
 
 #ifdef __cplusplus
 }

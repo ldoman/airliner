@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-#define CI_CUSTOM_BINARY_UDP_PORT   (5013)
+#define CI_CUSTOM_BINARY_UDP_PORT   (5010)
 
 #ifdef __cplusplus
 }

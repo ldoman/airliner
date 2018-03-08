@@ -49,7 +49,7 @@ typedef struct
 	uint16 Port;
 } CI_AppCustomData_t;
 
-CI_AppCustomData_t CI_AppCustomData = {0, 5010};
+CI_AppCustomData_t CI_AppCustomData = {0, CI_CUSTOM_BINARY_UDP_PORT};
 CI_AppCustomData_t CI_AppSerialCustomData = {0, 5009};
 
 int32 CI_InitCustom(void)
@@ -123,6 +123,7 @@ int32 CI_ReadMessage(char* buffer, uint32* size)
 					   (char *)buffer,
 					   (size_t)size, 0);
 }
+
 
 int32 CI_ReadSerializedMessage(char* buffer, uint32* size)
 {

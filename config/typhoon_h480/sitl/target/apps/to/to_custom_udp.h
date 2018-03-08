@@ -117,6 +117,7 @@ int32 TO_OutputChannel_Enable(uint8 ChannelID, const char *DestinationAddress, u
 int32 TO_OutputChannel_Disable(uint8 ChannelID);
 void  TO_OutputChannel_BinaryChannelTask(void);
 void  TO_OutputChannel_ProtobufChannelTask(void);
+void TO_OutputChannel_CfdpChannelTask(void);
 void  TO_OutputChannel_ChannelHandler(uint32 ChannelIndex);
 
 int32 TO_OutputChannel_CustomBuildupAll(uint32 index);

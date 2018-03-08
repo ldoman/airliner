@@ -13,6 +13,8 @@ extern "C" {
 #define CI_CHECKSUM_REQUIRED	0
 #define CI_CMD_MAX_TIMEOUT	20
 
+#define CI_ALLOW_TELEMETRY
+
 #ifdef __cplusplus
 }
 #endif

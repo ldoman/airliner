@@ -874,6 +874,40 @@ void CI_ProcessTimeouts(void)
 	return;
 }
 
+
+
+boolean CI_ValidatePriHdr(CFE_SB_Msg_t* MsgPtr, uint32 MsgSize)
+{
+	boolean 			bResult = FALSE;
+	CCSDS_CmdPkt_t		*cmdPkt = 0;
+
+
+	/* Verify CCSDS version */
+	if (CCSDS_RD_VERS(MsgPtr->Hdr) != 0)
+	{
+		goto CI_ValidatePriHdr_Exit_Tag;
+	}
+
+	/* Verify secondary header present */
+	if (CCSDS_RD_SHDR(MsgPtr->Hdr) == 0)
+	{
+		goto CI_ValidatePriHdr_Exit_Tag;
+	}
+
+	/* Verify packet type is cmd */
+	if ((CCSDS_RD_TYPE(MsgPtr->Hdr) != CCSDS_CMD) &&
+		(CCSDS_RD_TYPE(MsgPtr->Hdr) != CCSDS_TLM))
+	{
+		goto CI_ValidatePriHdr_Exit_Tag;
+	}
+
+	bResult = TRUE;
+
+CI_ValidatePriHdr_Exit_Tag:
+	return bResult;
+}
+
+
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
 /* Determine Validity of Command                                   */
@@ -885,18 +919,6 @@ boolean CI_ValidateCmd(CFE_SB_Msg_t* MsgPtr, uint32 MsgSize)
 	boolean 			bResult = FALSE;
 	uint32  			usMsgLen = 0;
 	CCSDS_CmdPkt_t		*cmdPkt = 0;
-
-	/* Verify CCSDS version */
-	if (CCSDS_RD_VERS(MsgPtr->Hdr) != 0)
-	{
-		goto CI_ValidateCmd_Exit_Tag;
-	}
-
-	/* Verify secondary header present */
-	if (CCSDS_RD_SHDR(MsgPtr->Hdr) == 0)
-	{
-		goto CI_ValidateCmd_Exit_Tag;
-	}
 
 	/* Verify packet type is cmd */
 	if (CCSDS_RD_TYPE(MsgPtr->Hdr) != CCSDS_CMD)
@@ -935,6 +957,40 @@ boolean CI_ValidateCmd(CFE_SB_Msg_t* MsgPtr, uint32 MsgSize)
 CI_ValidateCmd_Exit_Tag:
 	return bResult;
 }
+
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Determine Validity of Telemetry                                 */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+boolean CI_ValidateTlm(CFE_SB_Msg_t* MsgPtr, uint32 MsgSize)
+{
+	boolean 			bResult = FALSE;
+	uint32  			usMsgLen = 0;
+	CCSDS_CmdPkt_t		*cmdPkt = 0;
+
+	/* Verify packet type is telemetry */
+	if (CCSDS_RD_TYPE(MsgPtr->Hdr) != CCSDS_TLM)
+	{
+		goto CI_ValidateTlm_Exit_Tag;
+	}
+
+	/* Verify length */
+	usMsgLen = CFE_SB_GetTotalMsgLength(MsgPtr);
+	if (usMsgLen != MsgSize)
+	{
+		goto CI_ValidateTlm_Exit_Tag;
+	}
+
+	bResult = TRUE;
+
+CI_ValidateTlm_Exit_Tag:
+	return bResult;
+}
+
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -1173,24 +1229,45 @@ void CI_ProcessIngestCmd(CFE_SB_MsgPtr_t CmdMsgPtr, uint32 MsgSize)
 		/* If number of bytes received less than max */
 		if (MsgSize <= CI_MAX_CMD_INGEST)
 		{
-			/* Verify validity of cmd */
-			if (CI_ValidateCmd(CmdMsgPtr, MsgSize) == TRUE)
+            if(CI_ValidatePriHdr(CmdMsgPtr, MsgSize) == TRUE)
 			{
-				/* Check if cmd is for CI and route if so */
-				CmdMsgId = CFE_SB_GetMsgId(CmdMsgPtr);
-				if (CI_CMD_MID == CmdMsgId)
-				{
-					CI_ProcessNewAppCmds(CmdMsgPtr);
-				}
-				else
-				{
-					/* Verify cmd is authorized */
-					if (CI_GetCmdAuthorized(CmdMsgPtr) == TRUE)
+				uint32 msgType = CCSDS_RD_TYPE(CmdMsgPtr->Hdr);
+
+#ifdef CI_ALLOW_TELEMETRY
+		        if(msgType == CCSDS_TLM)
+		        {
+					if (CI_ValidateTlm(CmdMsgPtr, MsgSize) == TRUE)
 					{
 						CFE_ES_PerfLogEntry(CI_SOCKET_RCV_PERF_ID);
 						CI_AppData.HkTlm.IngestMsgCount++;
 						CFE_SB_SendMsg(CmdMsgPtr);
 						CFE_ES_PerfLogExit(CI_SOCKET_RCV_PERF_ID);
+					}
+		        }
+#endif
+
+				if(msgType == CCSDS_CMD)
+				{
+					/* Verify validity of cmd */
+					if (CI_ValidateCmd(CmdMsgPtr, MsgSize) == TRUE)
+					{
+						/* Check if cmd is for CI and route if so */
+						CmdMsgId = CFE_SB_GetMsgId(CmdMsgPtr);
+						if (CI_CMD_MID == CmdMsgId)
+						{
+							CI_ProcessNewAppCmds(CmdMsgPtr);
+						}
+						else
+						{
+							/* Verify cmd is authorized */
+							if (CI_GetCmdAuthorized(CmdMsgPtr) == TRUE)
+							{
+								CFE_ES_PerfLogEntry(CI_SOCKET_RCV_PERF_ID);
+								CI_AppData.HkTlm.IngestMsgCount++;
+								CFE_SB_SendMsg(CmdMsgPtr);
+								CFE_ES_PerfLogExit(CI_SOCKET_RCV_PERF_ID);
+							}
+						}
 					}
 				}
 			}

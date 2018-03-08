@@ -130,8 +130,8 @@ extern "C" {
 #define TO_GROUND_BINARY_DUMP_TABLENAME          ("GRND_BIN_DMP")
 #define TO_GROUND_PROTOBUF_CONFIG_TABLENAME      ("GRND_PB_CFG")
 #define TO_GROUND_PROTOBUF_DUMP_TABLENAME        ("GRND_PB_DMP")
-#define TO_GROUND_PROTOBUF_CONFIG_TABLENAME      ("GRND_CFDP_CFG")
-#define TO_GROUND_PROTOBUF_DUMP_TABLENAME        ("GRND_CFDP_DMP")
+#define TO_GROUND_CFDP_CONFIG_TABLENAME          ("GRND_CFDP_CFG")
+#define TO_GROUND_CFDP_DUMP_TABLENAME            ("GRND_CFDP_DMP")
 
 /** \brief The timeout value, in milliseconds, to wait for ES application startup sync.
 **

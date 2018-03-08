@@ -31,7 +31,7 @@ services:
 tmDataLinks:
     - class: com.odysseysr.proteus.yamcs.tctm.CfsUdpTmProvider
       name: tm_realtime
-      spec: local
+      spec: vehicle
       stream: tm_realtime
 
 #parameterDataLinks:
@@ -43,11 +43,11 @@ tmDataLinks:
 # config the tc uplinkers
 tcDataLinks: 
     - class: com.odysseysr.proteus.yamcs.tctm.CfsUdpTcUplinker
-      spec: local
+      spec: vehicle
       stream: tc_realtime
 
 #Specify which MDB configuration to use, references a named section in mdb.yaml 
-mdb: softsim
+mdb: vehicle
 
 #Configuration for streams created at server startup
 streamConfig:

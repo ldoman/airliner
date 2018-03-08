@@ -32,7 +32,6 @@ CFE_APP, /cf/apps/MPC.so,       MPC_AppMain,     MPC,       90, 32768, 0x0, 0;
 CFE_APP, /cf/apps/NAV.so,       NAV_AppMain,     NAV,       90, 32768, 0x0, 0;
 CFE_APP, /cf/apps/VM.so,        VM_AppMain,      VM,       90, 32768, 0x0, 0;
 CFE_APP, /cf/apps/CS.so,        CS_AppMain,      CS,        55, 32768, 0x0, 0;
-CFE_APP, /cf/apps/MAVLINK.so,   MAVLINK_AppMain, MAVLINK,       90, 32768, 0x0, 0;
 CFE_APP, /cf/apps/RCIN.so,      RCIN_AppMain,    RCIN,      90, 32768, 0x0, 0;
 CFE_APP, /cf/apps/LD.so,        LD_AppMain,      LD,       90, 32768, 0x0, 0;
 CFE_APP, /cf/apps/SCH.so,       SCH_AppMain,     SCH,       34,  4096, 0x0, 0;

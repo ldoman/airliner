@@ -695,6 +695,9 @@ void CI_UpdateCmdReg(CFE_SB_Msg_t* MsgPtr);
 *************************************************************************/
 uint32 CI_DeserializeMsg(CFE_SB_MsgPtr_t CmdMsgPtr);
 
+boolean CI_ValidatePriHdr(CFE_SB_Msg_t* MsgPtr, uint32 MsgSize);
+boolean CI_ValidateTlm(CFE_SB_Msg_t* MsgPtr, uint32 MsgSize);
+
 #ifdef __cplusplus
 }
 #endif 

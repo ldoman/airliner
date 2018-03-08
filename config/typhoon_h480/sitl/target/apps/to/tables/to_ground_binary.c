@@ -84,7 +84,6 @@ TO_ChannelTbl_t TO_ConfigTbl =
 	    {CF_HK_TLM_MID,			      1,	TO_PQUEUE_MEDIUM_IDX},
 	    {CF_TRANS_TLM_MID,			      1,	TO_PQUEUE_MEDIUM_IDX},
 	    {CF_CONFIG_TLM_MID,			      1,	TO_PQUEUE_MEDIUM_IDX},
-	    {CF_SPACE_TO_GND_PDU_MID,	             32,	TO_PQUEUE_MEDIUM_IDX},
 	    {CS_HK_TLM_MID,			      1,	TO_PQUEUE_MEDIUM_IDX},
 	    {DS_HK_TLM_MID,			      1,	TO_PQUEUE_MEDIUM_IDX},
 	    {DS_DIAG_TLM_MID,			      1,	TO_PQUEUE_MEDIUM_IDX},
@@ -101,6 +100,7 @@ TO_ChannelTbl_t TO_ConfigTbl =
 	    {SCH_HK_TLM_MID,			      1,	TO_PQUEUE_MEDIUM_IDX},
 	    {SCH_DIAG_TLM_MID,			      1,	TO_PQUEUE_MEDIUM_IDX},
 	    {CI_HK_TLM_MID,			      1,	TO_PQUEUE_MEDIUM_IDX},
+	    {AE_HK_TLM_MID,			      1,	TO_PQUEUE_MEDIUM_IDX},
 
 //        {PX4_ACTUATOR_ARMED_MID,               1,     TO_PQUEUE_LOW_IDX},
 //        {PX4_ACTUATOR_CONTROLS_0_MID,          1,     TO_PQUEUE_LOW_IDX},

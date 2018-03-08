@@ -7,6 +7,10 @@ build_airliner_cfe_host_tools(
     TARGET_OSAL ${TARGET_OSAL}
     HOST_PSP ${TARGET_PSP}
     HOST_OSAL ${TARGET_OSAL}
+    CONFIG
+        ${CMAKE_CURRENT_SOURCE_DIR}/inc
+        ${CMAKE_CURRENT_SOURCE_DIR}/../inc
+        ${CMAKE_CURRENT_SOURCE_DIR}/../../../shared/inc
     FILESYS
         /cf/apps
         /cf/download
@@ -15,9 +19,6 @@ build_airliner_cfe_host_tools(
         /ram
     STARTUP_SCRIPT
         ${CMAKE_CURRENT_SOURCE_DIR}/cfe_es_startup.scr
-    CONFIG
-        ${CMAKE_CURRENT_SOURCE_DIR}/inc
-        ${CMAKE_CURRENT_SOURCE_DIR}/../../../shared/inc
     CONFIG_SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/../../../shared/inc/cfe_mission_cfg.h
         ${CMAKE_CURRENT_SOURCE_DIR}/../../../shared/inc/cfe_msgids.h

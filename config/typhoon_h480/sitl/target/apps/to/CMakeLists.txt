@@ -14,6 +14,13 @@ add_airliner_app_table(
     INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/src/
 )
 
+add_airliner_app_table(
+    ${APP_NAME}
+    NAME to_grnd_cfdp
+    SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/tables/to_ground_cfdp.c
+    INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/src/
+)
+
 #add_airliner_app_unit_test(to-custom-ut
 #    UTASSERT
 #    SOURCES

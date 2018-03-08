@@ -98,7 +98,7 @@ int32 TO_Custom_Init(void)
 
     TO_AppCustomData.Channel[0].Mode = TO_CHANNEL_ENABLED;
     strncpy(TO_AppCustomData.Channel[0].IP, "127.0.0.1", INET_ADDRSTRLEN);
-    TO_AppCustomData.Channel[0].DstPort = 5011;
+    TO_AppCustomData.Channel[0].DstPort = TO_CUSTOM_BINARY_UDP_PORT;
     TO_AppCustomData.Channel[0].Priority = 50;
     TO_AppCustomData.Channel[0].ListenerTask = TO_OutputChannel_BinaryChannelTask;
     TO_AppCustomData.Channel[0].Socket = 0;
@@ -112,6 +112,14 @@ int32 TO_Custom_Init(void)
     TO_AppCustomData.Channel[1].Socket = 0;
     TO_AppCustomData.Channel[1].ChildTaskID = 0;
 
+    TO_AppCustomData.Channel[2].Mode = TO_CHANNEL_ENABLED;
+    strncpy(TO_AppCustomData.Channel[2].IP, TO_CUSTOM_BINARY_IP, INET_ADDRSTRLEN);
+    TO_AppCustomData.Channel[2].DstPort = TO_CUSTOM_BINARY_CFDP_PORT;
+    TO_AppCustomData.Channel[2].Priority = 50;
+    TO_AppCustomData.Channel[2].ListenerTask = TO_OutputChannel_CfdpChannelTask;
+    TO_AppCustomData.Channel[2].Socket = 0;
+    TO_AppCustomData.Channel[2].ChildTaskID = 0;
+
     iStatus = TO_Channel_OpenChannel(0, "GRND-BIN", TO_GROUND_BINARY_CONFIG_TABLENAME, TO_GROUND_BINARY_CONFIG_TABLE_FILENAME, TO_GROUND_BINARY_DUMP_TABLENAME);
     if(iStatus != 0)
     {
@@ -119,6 +127,16 @@ int32 TO_Custom_Init(void)
     }
 
     iStatus = TO_Channel_OpenChannel(1, "GRND-PB", TO_GROUND_PROTOBUF_CONFIG_TABLENAME, TO_GROUND_PROTOBUF_CONFIG_TABLE_FILENAME, TO_GROUND_PROTOBUF_DUMP_TABLENAME);
+    if(iStatus != 0)
+    {
+        goto end_of_function;
+    }
+
+    iStatus = TO_Channel_OpenChannel(2, "GRND-CFDP", TO_GROUND_CFDP_CONFIG_TABLENAME, TO_GROUND_CFDP_CONFIG_TABLE_FILENAME, TO_GROUND_CFDP_DUMP_TABLENAME);
+    if(iStatus != 0)
+    {
+        goto end_of_function;
+    }
 
     for (i=0; i < TO_MAX_CHANNELS; i++)
     {
@@ -489,6 +507,22 @@ void TO_OutputChannel_ProtobufChannelTask(void)
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
+/* CFDP Channel Task Entry Point                                   */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void TO_OutputChannel_CfdpChannelTask(void)
+{
+    CFE_ES_RegisterChildTask();
+
+    TO_OutputChannel_ChannelHandler(2);
+
+    CFE_ES_ExitChildTask();
+}
+
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
 /* Channel Handler                                                 */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -570,7 +604,6 @@ void TO_OutputChannel_ChannelHandler(uint32 ChannelIdx)
                     chQueue->SentCount++;
                     TO_Channel_UnlockByIndex(ChannelIdx);
                 }
-
             }
             else if(iStatus == OS_QUEUE_TIMEOUT)
 			{

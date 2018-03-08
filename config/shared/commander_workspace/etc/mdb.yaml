@@ -1,4 +1,4 @@
-softsim:
+vehicle:
     # Configuration of the active loaders
     # Valid loaders are: sheet, xtce or fully qualified name of the class
     - type: "sheet"
@@ -83,11 +83,27 @@ softsim:
            - type: "sheet"
              spec: "/mdb/VM.xls"
 
-mavlink:
+ground:
     # Configuration of the active loaders
     # Valid loaders are: sheet, xtce or fully qualified name of the class
     - type: "sheet"
-      spec: "/mdb/Mavlink.xls"
+      spec: "/mdb/cfs-ccsds.xls"
       subLoaders:
            - type: "sheet"
-             spec: "/mdb/common/Mavlink.xls"
+             spec: "/mdb/CFE_ES.xls"
+           - type: "sheet"
+             spec: "/mdb/CFE_EVS.xls"
+           - type: "sheet"
+             spec: "/mdb/CFE_SB.xls"
+           - type: "sheet"
+             spec: "/mdb/CFE_TBL.xls"
+           - type: "sheet"
+             spec: "/mdb/CFE_TIME.xls"
+           - type: "sheet"
+             spec: "/mdb/CF.xls"
+           - type: "sheet"
+             spec: "/mdb/CI.xls"
+           - type: "sheet"
+             spec: "/mdb/SCH.xls"
+           - type: "sheet"
+             spec: "/mdb/TO.xls"

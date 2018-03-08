@@ -2,7 +2,7 @@
 ** File:
 **   $Id: cf_app.c 1.41.1.1 2015/03/06 15:30:49EST sstrege Exp  $
 **
-**   Copyright © 2007-2014 United States Government as represented by the 
+**   Copyright (c) 2007-2014 United States Government as represented by the
 **   Administrator of the National Aeronautics and Space Administration. 
 **   All Other Rights Reserved.  
 **
@@ -1020,7 +1020,7 @@ void CF_SendPDUToEngine(CFE_SB_MsgPtr_t MessagePtr)
 #endif
 
     /* claculate the pdu 'length' field needed by the engine */
-    CF_AppData.RawPduInputBuf.length = PduHdrPtr->PDataLen + PduHdrBytes;
+    CF_AppData.RawPduInputBuf.length = CFE_SB_GetUserDataLength(MessagePtr);  //PduHdrPtr->PDataLen + PduHdrBytes;
 
     if(CF_AppData.RawPduInputBuf.length > CF_INCOMING_PDU_BUF_SIZE){
         CFE_EVS_SendEvent(CF_PDU_RCV_ERR2_EID, CFE_EVS_ERROR,

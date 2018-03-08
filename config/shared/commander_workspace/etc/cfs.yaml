@@ -6,10 +6,18 @@
 #    tcHost:
 #    tcPort:
 
-local:
+vehicle:
     tmHost: 0.0.0.0
     tmPort: 5011
-    tcHost: 192.168.1.2
+    tcHost: 127.0.0.1
     tcPort: 5010
+    timestampFormat: CFE_SB_TIME_32_16_SUBS 
+    OS_MAX_API_NAME: 40
+
+ground:
+    tmHost: 0.0.0.0
+    tmPort: 5111
+    tcHost: 127.0.0.1
+    tcPort: 5013
     timestampFormat: CFE_SB_TIME_32_16_SUBS 
     OS_MAX_API_NAME: 40

@@ -6,6 +6,7 @@ extern "C" {
 #endif
 
 #include "cfe_platform_cfg.h"
+#include "to_sub_platform_cfg.h"
 
 /*
 ** to Platform Configuration Parameter Definitions
@@ -97,6 +98,7 @@ extern "C" {
 */
 #define TO_GROUND_BINARY_CONFIG_TABLE_FILENAME      ("/cf/apps/to_grnd_bin.tbl")
 #define TO_GROUND_PROTOBUF_CONFIG_TABLE_FILENAME    ("/cf/apps/to_grnd_pb.tbl")
+#define TO_GROUND_CFDP_CONFIG_TABLE_FILENAME        ("/cf/apps/to_grnd_cfdp.tbl")
 
 
 #define TO_MAX_MEMPOOL_BLK_SIZES 8
@@ -128,6 +130,8 @@ extern "C" {
 #define TO_GROUND_BINARY_DUMP_TABLENAME          ("GRND_BIN_DMP")
 #define TO_GROUND_PROTOBUF_CONFIG_TABLENAME      ("GRND_PB_CFG")
 #define TO_GROUND_PROTOBUF_DUMP_TABLENAME        ("GRND_PB_DMP")
+#define TO_GROUND_CFDP_CONFIG_TABLENAME          ("GRND_CFDP_CFG")
+#define TO_GROUND_CFDP_DUMP_TABLENAME            ("GRND_CFDP_DMP")
 
 /** \brief The timeout value, in milliseconds, to wait for ES application startup sync.
 **
