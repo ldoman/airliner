@@ -1,0 +1,23 @@
+extends ../../web_includes/common/layout
+
+block includes
+  include ../../web_includes/common/common_includes.pug
+
+block header
+  i.fa-fw.fa.fa-signal
+  | Ground System
+
+block main
+  .row.row-fluid
+    article.col-xs-10.col-sm-8.col-md-6.col-lg-6(style='max-width:450px')
+        #wid-AMC-CmdAndData.jarviswidget.jarviswidget-color-blueDark(data-widget-editbutton='false')
+          header
+            span.widget-icon
+              i.fa.fa-table
+            h2 Command Path
+          div
+            .jarviswidget-editbox
+              input.form-control(type='text')
+            .widget-body
+                button.btn.btn-primary(data-sage={cmd: {name:'/CFS/GND/SetVehicleAddress'}}) Set Vehicle Address
+                
