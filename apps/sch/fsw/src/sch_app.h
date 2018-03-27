@@ -57,11 +57,7 @@
 /** \name Scheduler App Pipe Characteristics */
 /**  \{ */
 #define SCH_PIPE_NAME       "SCH_CMD_PIPE"  /**< \brief SCH Command Pipe Name */
-#define SCH_AD_PIPE_NAME    "SCH_AD_PIPE"   /**< \brief SCH Activity Deadline Messaging Pipe Name */
 /** \} */
-
-#define SCH_AD_CHILD_TASK_NAME  		"SCH_AD_TASK"
-#define SCH_AD_MUTEX_NAME			"SCH_AD_MUTEX"
 
 /*
 ** Event filter table definitions
@@ -90,7 +86,6 @@
 /**  \{ */
 #define SCH_SCHEDULE_TABLE_NAME  "SCHED_DEF"  /**< \brief Schedule Definition Table Name */
 #define SCH_MESSAGE_TABLE_NAME   "MSG_DEFS"   /**< \brief Message Definition Table Name */
-#define SCH_DEADLINE_TABLE_NAME  "DEADLINE_TBL"
 /** \} */
 
 /*
@@ -120,7 +115,6 @@
 #define SCH_SDT_BAD_ACTIVITY     (-4)
 #define SCH_SDT_BAD_MSG_INDEX    (-5)
 #define SCH_SDT_BAD_ENABLE_STATE (-6)
-#define SCH_SDT_BAD_DEADLINE 	 (-7)
 
 /*
 ** MDT Table Validation Error Codes
@@ -145,15 +139,12 @@ typedef struct
     */
     CFE_SB_MsgPtr_t       MsgPtr;                         /**< \brief Ptr to most recently received cmd message */
     CFE_SB_PipeId_t       CmdPipe;                        /**< \brief Pipe ID for SCH Command Pipe */
-    CFE_SB_PipeId_t       ADPipe;                         /**< \brief Pipe ID for SCH Activity Deadline Message Pipe */
     
     SCH_MessageEntry_t   *MessageTable;                   /**< \brief Ptr to Message Table contents */
     SCH_ScheduleEntry_t  *ScheduleTable;                  /**< \brief Ptr to Schedule Table contents */
-    SCH_DeadlineTable_t  *DeadlineTable;                  /**< \brief Ptr to Deadline Table contents */
     
     CFE_TBL_Handle_t      ScheduleTableHandle;            /**< \brief Handle for Schedule Definition Table */
     CFE_TBL_Handle_t      MessageTableHandle;             /**< \brief Handle for Message Definition Table */
-    CFE_TBL_Handle_t      DeadlineTableHandle;
     
     CFE_EVS_BinFilter_t   EventFilters[SCH_FILTER_COUNT]; /**< \brief Array of Event Filters */
     
@@ -240,10 +231,6 @@ typedef struct
     boolean               IgnoreMajorFrameMsgSent;       /**< \brief Major Frame Event Message has been sent */
     boolean               UnexpectedMajorFrame;          /**< \brief Major Frame signal was unexpected */
 
-    uint32		  ADChildTaskID;	         /**< \brief Activity Deadline child task ID */
-    int32 		  ADChildTaskRunStatus;
-    uint32		  ADChildTaskMutex;
-    uint32                ADHoldupSemaphore;
 } SCH_AppData_t;
 
 /*************************************************************************
@@ -479,26 +466,6 @@ int32  SCH_ProcessCommands(void);
 int32 SCH_ValidateScheduleData(void *TableData);
 
 /************************************************************************/
-/** \brief Validates deadlines of Schedule Definition Table
-**
-**  \par Description
-**       This function is called by the schedule table validation
-**       function.
-**
-**  \par Assumptions, External Events, and Notes:
-**       None
-**
-**  \returns
-**  \retcode #CFE_SUCCESS  \retdesc \copydoc CFE_SUCCESS \endcode
-**  \retstmt Return codes from #CFE_EVS_Register         \endcode
-**  \retstmt Return codes from #CFE_SB_CreatePipe        \endcode
-**  \retstmt Return codes from #CFE_SB_Subscribe         \endcode
-**  \endreturns
-**
-*************************************************************************/
-int32 SCH_ValidateScheduleDeadlines(void *TableData);
-
-/************************************************************************/
 /** \brief Validates contents of Message Definition Table
 **  
 **  \par Description
@@ -517,8 +484,6 @@ int32 SCH_ValidateScheduleDeadlines(void *TableData);
 **
 *************************************************************************/
 int32 SCH_ValidateMessageData(void *TableData);
-
-int32 SCH_ValidateScheduleDeadlines(void *TableData);
 
 #endif /* _sch_app_ */
 

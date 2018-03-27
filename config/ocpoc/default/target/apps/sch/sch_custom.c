@@ -1,3 +1,31 @@
+/*
+** $Id: sch_custom.c 1.3 2015/03/01 14:01:44EST sstrege Exp  $
+**
+**  Copyright � 2007-2014 United States Government as represented by the 
+**  Administrator of the National Aeronautics and Space Administration. 
+**  All Other Rights Reserved.  
+**
+**  This software was created at NASA's Goddard Space Flight Center.
+**  This software is governed by the NASA Open Source Agreement and may be 
+**  used, distributed and modified only pursuant to the terms of that 
+**  agreement.
+**
+** Purpose: Scheduler (SCH) application custom component
+**
+** Author:
+**
+** Notes:
+**
+** $Log: sch_custom.c  $
+** Revision 1.3 2015/03/01 14:01:44EST sstrege 
+** Added copyright information
+** Revision 1.2 2011/06/30 20:39:09EDT aschoeni 
+** updated OS_SUCCESS to CFE_SUCCESS for custom earlyinit
+** Revision 1.1 2011/06/30 15:30:03EDT aschoeni 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/sch/fsw/src/project.pj
+*/
+
 /*************************************************************************
 **
 ** Include section

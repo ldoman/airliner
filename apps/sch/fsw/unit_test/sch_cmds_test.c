@@ -49,7 +49,7 @@
 void SCH_AppPipe_Test_SendHK(void)
 {
     int32             Result;
-    SCH_NoArgsCmd_t   CmdPacket = {0};
+    SCH_NoArgsCmd_t   CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_SEND_HK_MID, sizeof(SCH_NoArgsCmd_t), TRUE);
 
@@ -70,7 +70,7 @@ void SCH_AppPipe_Test_SendHK(void)
 void SCH_AppPipe_Test_Noop(void)
 {
     int32             Result;
-    SCH_NoArgsCmd_t   CmdPacket = {0};
+    SCH_NoArgsCmd_t   CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_NoArgsCmd_t), TRUE);
     CFE_SB_SetCmdCode ((CFE_SB_MsgPtr_t)(&CmdPacket), SCH_NOOP_CC);
@@ -89,7 +89,7 @@ void SCH_AppPipe_Test_Noop(void)
 void SCH_AppPipe_Test_Reset(void)
 {
     int32             Result;
-    SCH_NoArgsCmd_t   CmdPacket = {0};
+    SCH_NoArgsCmd_t   CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_NoArgsCmd_t), TRUE);
     CFE_SB_SetCmdCode ((CFE_SB_MsgPtr_t)(&CmdPacket), SCH_RESET_CC);
@@ -108,7 +108,7 @@ void SCH_AppPipe_Test_Reset(void)
 void SCH_AppPipe_Test_Enable(void)
 {
     int32            Result;
-    SCH_EntryCmd_t   CmdPacket = {0};
+    SCH_EntryCmd_t   CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_EntryCmd_t), TRUE);
     CFE_SB_SetCmdCode ((CFE_SB_MsgPtr_t)(&CmdPacket), SCH_ENABLE_CC);
@@ -131,7 +131,7 @@ void SCH_AppPipe_Test_Enable(void)
 void SCH_AppPipe_Test_Disable(void)
 {
     int32            Result;
-    SCH_EntryCmd_t   CmdPacket = {0};
+    SCH_EntryCmd_t   CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_EntryCmd_t), TRUE);
     CFE_SB_SetCmdCode ((CFE_SB_MsgPtr_t)(&CmdPacket), SCH_DISABLE_CC);
@@ -154,7 +154,7 @@ void SCH_AppPipe_Test_Disable(void)
 void SCH_AppPipe_Test_EnableGroupCmd(void)
 {
     int32            Result;
-    SCH_GroupCmd_t   CmdPacket = {0};
+    SCH_GroupCmd_t   CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_GroupCmd_t), TRUE);
     CFE_SB_SetCmdCode ((CFE_SB_MsgPtr_t)(&CmdPacket), SCH_ENABLE_GROUP_CC);
@@ -173,7 +173,7 @@ void SCH_AppPipe_Test_EnableGroupCmd(void)
 void SCH_AppPipe_Test_DisableGroupCmd(void)
 {
     int32            Result;
-    SCH_GroupCmd_t   CmdPacket = {0};
+    SCH_GroupCmd_t   CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_GroupCmd_t), TRUE);
     CFE_SB_SetCmdCode ((CFE_SB_MsgPtr_t)(&CmdPacket), SCH_DISABLE_GROUP_CC);
@@ -192,7 +192,7 @@ void SCH_AppPipe_Test_DisableGroupCmd(void)
 void SCH_AppPipe_Test_EnableSyncCmd(void)
 {
     int32             Result;
-    SCH_NoArgsCmd_t   CmdPacket = {0};
+    SCH_NoArgsCmd_t   CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_NoArgsCmd_t), TRUE);
     CFE_SB_SetCmdCode ((CFE_SB_MsgPtr_t)(&CmdPacket), SCH_ENABLE_SYNC_CC);
@@ -211,7 +211,7 @@ void SCH_AppPipe_Test_EnableSyncCmd(void)
 void SCH_AppPipe_Test_SendDiagTlmCmd(void)
 {
     int32                 Result;
-    SCH_ScheduleEntry_t   CmdPacket = {0};
+    SCH_ScheduleEntry_t   CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_ScheduleEntry_t), TRUE);
     CFE_SB_SetCmdCode ((CFE_SB_MsgPtr_t)(&CmdPacket), SCH_SEND_DIAG_TLM_CC);
@@ -230,7 +230,7 @@ void SCH_AppPipe_Test_SendDiagTlmCmd(void)
 void SCH_AppPipe_Test_InvalidCommandCode(void)
 {
     int32            Result;
-    SCH_NoArgsCmd_t  CmdPacket = {0};
+    SCH_NoArgsCmd_t  CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_NoArgsCmd_t), TRUE);
     CFE_SB_SetCmdCode ((CFE_SB_MsgPtr_t)(&CmdPacket), 99);
@@ -253,7 +253,7 @@ void SCH_AppPipe_Test_InvalidCommandCode(void)
 void SCH_AppPipe_Test_InvalidMessageID(void)
 {
     int32            Result;
-    SCH_NoArgsCmd_t  CmdPacket = {0};
+    SCH_NoArgsCmd_t  CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, 0x0099, sizeof(SCH_NoArgsCmd_t), TRUE);
 
@@ -274,7 +274,7 @@ void SCH_AppPipe_Test_InvalidMessageID(void)
 void SCH_HousekeepingCmd_Test(void)
 {
     int32            Result;
-    SCH_NoArgsCmd_t  CmdPacket = {0};
+    SCH_NoArgsCmd_t  CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_SEND_HK_MID, sizeof(SCH_NoArgsCmd_t), TRUE);
 
@@ -340,7 +340,7 @@ void SCH_HousekeepingCmd_Test(void)
 
 void SCH_NoopCmd_Test_Error(void)
 {
-    SCH_NoArgsCmd_t  CmdPacket = {0};
+    SCH_NoArgsCmd_t  CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, 1, TRUE);
 
@@ -357,7 +357,7 @@ void SCH_NoopCmd_Test_Error(void)
 
 void SCH_NoopCmd_Test_Nominal(void)
 {
-    SCH_NoArgsCmd_t  CmdPacket = {0};
+    SCH_NoArgsCmd_t  CmdPacket;
     char             Message[125];
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_NoArgsCmd_t), TRUE);
@@ -377,7 +377,7 @@ void SCH_NoopCmd_Test_Nominal(void)
 
 void SCH_ResetCmd_Test_Error(void)
 {
-    SCH_NoArgsCmd_t  CmdPacket = {0};
+    SCH_NoArgsCmd_t  CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, 1, TRUE);
 
@@ -394,7 +394,7 @@ void SCH_ResetCmd_Test_Error(void)
 
 void SCH_ResetCmd_Test_Nominal(void)
 {
-    SCH_NoArgsCmd_t  CmdPacket = {0};
+    SCH_NoArgsCmd_t  CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, 1, TRUE);
 
@@ -429,7 +429,7 @@ void SCH_ResetCmd_Test_Nominal(void)
 
 void SCH_EnableCmd_Test_InvalidCmdLength(void)
 {
-    SCH_EntryCmd_t  CmdPacket = {0};
+    SCH_EntryCmd_t  CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, 1, TRUE);
 
@@ -444,7 +444,7 @@ void SCH_EnableCmd_Test_InvalidCmdLength(void)
 
 void SCH_EnableCmd_Test_InvalidArgumentSlotNumber(void)
 {
-    SCH_EntryCmd_t  CmdPacket = {0};
+    SCH_EntryCmd_t  CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_EntryCmd_t), TRUE);
 
@@ -465,7 +465,7 @@ void SCH_EnableCmd_Test_InvalidArgumentSlotNumber(void)
 
 void SCH_EnableCmd_Test_InvalidArgumentEntryNumber(void)
 {
-    SCH_EntryCmd_t  CmdPacket = {0};
+    SCH_EntryCmd_t  CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_EntryCmd_t), TRUE);
 
@@ -486,7 +486,7 @@ void SCH_EnableCmd_Test_InvalidArgumentEntryNumber(void)
 
 void SCH_EnableCmd_Test_InvalidState(void)
 {
-    SCH_EntryCmd_t  CmdPacket = {0};
+    SCH_EntryCmd_t  CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_EntryCmd_t), TRUE);
 
@@ -509,7 +509,7 @@ void SCH_EnableCmd_Test_InvalidState(void)
 
 void SCH_EnableCmd_Test_Nominal(void)
 {
-    SCH_EntryCmd_t  CmdPacket = {0};
+    SCH_EntryCmd_t  CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_EntryCmd_t), TRUE);
 
@@ -534,7 +534,7 @@ void SCH_EnableCmd_Test_Nominal(void)
 
 void SCH_DisableCmd_Test_InvalidCmdLength(void)
 {
-    SCH_EntryCmd_t  CmdPacket = {0};
+    SCH_EntryCmd_t  CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, 1, TRUE);
 
@@ -549,7 +549,7 @@ void SCH_DisableCmd_Test_InvalidCmdLength(void)
 
 void SCH_DisableCmd_Test_InvalidArgumentSlotNumber(void)
 {
-    SCH_EntryCmd_t  CmdPacket = {0};
+    SCH_EntryCmd_t  CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_EntryCmd_t), TRUE);
 
@@ -570,7 +570,7 @@ void SCH_DisableCmd_Test_InvalidArgumentSlotNumber(void)
 
 void SCH_DisableCmd_Test_InvalidArgumentEntryNumber(void)
 {
-    SCH_EntryCmd_t  CmdPacket = {0};
+    SCH_EntryCmd_t  CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_EntryCmd_t), TRUE);
 
@@ -591,7 +591,7 @@ void SCH_DisableCmd_Test_InvalidArgumentEntryNumber(void)
 
 void SCH_DisableCmd_Test_InvalidState(void)
 {
-    SCH_EntryCmd_t  CmdPacket = {0};
+    SCH_EntryCmd_t  CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_EntryCmd_t), TRUE);
 
@@ -614,7 +614,7 @@ void SCH_DisableCmd_Test_InvalidState(void)
 
 void SCH_DisableCmd_Test_Nominal(void)
 {
-    SCH_EntryCmd_t  CmdPacket = {0};
+    SCH_EntryCmd_t  CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_EntryCmd_t), TRUE);
 
@@ -639,7 +639,7 @@ void SCH_DisableCmd_Test_Nominal(void)
 
 void SCH_EnableGroupCmd_Test_InvalidCmdLength(void)
 {
-    SCH_GroupCmd_t  CmdPacket = {0};
+    SCH_GroupCmd_t  CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, 1, TRUE);
 
@@ -654,7 +654,7 @@ void SCH_EnableGroupCmd_Test_InvalidCmdLength(void)
 
 void SCH_EnableGroupCmd_Test_InvalidArgument(void)
 {
-    SCH_GroupCmd_t  CmdPacket = {0};
+    SCH_GroupCmd_t  CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_GroupCmd_t), TRUE);
 
@@ -672,7 +672,7 @@ void SCH_EnableGroupCmd_Test_InvalidArgument(void)
 
 void SCH_EnableGroupCmd_Test_NominalCmdGroupNumberNotUnused(void)
 {
-    SCH_GroupCmd_t  CmdPacket = {0};
+    SCH_GroupCmd_t  CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_GroupCmd_t), TRUE);
 
@@ -697,7 +697,7 @@ void SCH_EnableGroupCmd_Test_NominalCmdGroupNumberNotUnused(void)
 
 void SCH_EnableGroupCmd_Test_NominalCmdMultiGroupBitwiseAndTblMultiGroupNotUnused(void)
 {
-    SCH_GroupCmd_t  CmdPacket = {0};
+    SCH_GroupCmd_t  CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_GroupCmd_t), TRUE);
 
@@ -722,7 +722,7 @@ void SCH_EnableGroupCmd_Test_NominalCmdMultiGroupBitwiseAndTblMultiGroupNotUnuse
 
 void SCH_EnableGroupCmd_Test_GroupNotFound(void)
 {
-    SCH_GroupCmd_t  CmdPacket = {0};
+    SCH_GroupCmd_t  CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_GroupCmd_t), TRUE);
 
@@ -743,7 +743,7 @@ void SCH_EnableGroupCmd_Test_GroupNotFound(void)
 
 void SCH_DisableGroupCmd_Test_InvalidCmdLength(void)
 {
-    SCH_GroupCmd_t  CmdPacket = {0};
+    SCH_GroupCmd_t  CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, 1, TRUE);
 
@@ -758,7 +758,7 @@ void SCH_DisableGroupCmd_Test_InvalidCmdLength(void)
 
 void SCH_DisableGroupCmd_Test_InvalidArgument(void)
 {
-    SCH_GroupCmd_t  CmdPacket = {0};
+    SCH_GroupCmd_t  CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_GroupCmd_t), TRUE);
 
@@ -776,7 +776,7 @@ void SCH_DisableGroupCmd_Test_InvalidArgument(void)
 
 void SCH_DisableGroupCmd_Test_NominalCmdGroupNumberNotUnused(void)
 {
-    SCH_GroupCmd_t  CmdPacket = {0};
+    SCH_GroupCmd_t  CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_GroupCmd_t), TRUE);
 
@@ -801,7 +801,7 @@ void SCH_DisableGroupCmd_Test_NominalCmdGroupNumberNotUnused(void)
 
 void SCH_DisableGroupCmd_Test_NominalCmdMultiGroupBitwiseAndTblMultiGroupNotUnused(void)
 {
-    SCH_GroupCmd_t  CmdPacket = {0};
+    SCH_GroupCmd_t  CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_GroupCmd_t), TRUE);
 
@@ -826,7 +826,7 @@ void SCH_DisableGroupCmd_Test_NominalCmdMultiGroupBitwiseAndTblMultiGroupNotUnus
 
 void SCH_DisableGroupCmd_Test_GroupNotFound(void)
 {
-    SCH_GroupCmd_t  CmdPacket = {0};
+    SCH_GroupCmd_t  CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_GroupCmd_t), TRUE);
 
@@ -847,7 +847,7 @@ void SCH_DisableGroupCmd_Test_GroupNotFound(void)
 
 void SCH_EnableSyncCmd_Test_InvalidCmdLength(void)
 {
-    SCH_NoArgsCmd_t  CmdPacket = {0};
+    SCH_NoArgsCmd_t  CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, 1, TRUE);
 
@@ -862,7 +862,7 @@ void SCH_EnableSyncCmd_Test_InvalidCmdLength(void)
 
 void SCH_EnableSyncCmd_Test_Nominal(void)
 {
-    SCH_NoArgsCmd_t  CmdPacket = {0};
+    SCH_NoArgsCmd_t  CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_NoArgsCmd_t), TRUE);
 
@@ -884,7 +884,7 @@ void SCH_EnableSyncCmd_Test_Nominal(void)
 
 void SCH_SendDiagTlmCmd_Test_InvalidCmdLength(void)
 {
-    SCH_NoArgsCmd_t  CmdPacket = {0};
+    SCH_NoArgsCmd_t  CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, 1, TRUE);
 
@@ -899,7 +899,7 @@ void SCH_SendDiagTlmCmd_Test_InvalidCmdLength(void)
 
 void SCH_SendDiagTlmCmd_Test_Enabled(void)
 {
-    SCH_NoArgsCmd_t  CmdPacket = {0};
+    SCH_NoArgsCmd_t  CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_NoArgsCmd_t), TRUE);
 
@@ -921,7 +921,7 @@ void SCH_SendDiagTlmCmd_Test_Enabled(void)
 
 void SCH_SendDiagTlmCmd_Test_Disabled(void)
 {
-    SCH_NoArgsCmd_t  CmdPacket = {0};
+    SCH_NoArgsCmd_t  CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_NoArgsCmd_t), TRUE);
 
@@ -943,7 +943,7 @@ void SCH_SendDiagTlmCmd_Test_Disabled(void)
 
 void SCH_SendDiagTlmCmd_Test_Other(void)
 {
-    SCH_NoArgsCmd_t  CmdPacket = {0};
+    SCH_NoArgsCmd_t  CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_NoArgsCmd_t), TRUE);
 
@@ -1020,7 +1020,7 @@ void SCH_AcquirePointers_Test_Result1LessThanSuccess(void)
 void SCH_VerifyCmdLength_Test_LengthError(void)
 {
     int32            Result;
-    SCH_NoArgsCmd_t  CmdPacket = {0};
+    SCH_NoArgsCmd_t  CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_NoArgsCmd_t), TRUE);
     CFE_SB_SetCmdCode ((CFE_SB_MsgPtr_t)(&CmdPacket), 1);
@@ -1042,7 +1042,7 @@ void SCH_VerifyCmdLength_Test_LengthError(void)
 void SCH_VerifyCmdLength_Test_Success(void)
 {
     int32            Result;
-    SCH_NoArgsCmd_t  CmdPacket = {0};
+    SCH_NoArgsCmd_t  CmdPacket;
 
     CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_NoArgsCmd_t), TRUE);
     CFE_SB_SetCmdCode ((CFE_SB_MsgPtr_t)(&CmdPacket), 1);

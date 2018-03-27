@@ -706,14 +706,6 @@
 **/
 #define SCH_CMD_LEN_ERR_EID                  60
 
-#define SCH_DEADLINE_REG_ERR_EID			 61
-#define SCH_SLOT_DEADLINE_FULL_ERR_EID	 	 62
-#define SCH_SUB_ACTIVITY_DONE_REQ_ERR_EID	 63
-#define SCH_UNEXPECTED_ACT_DONE_ERR_EID		 64
-#define SCH_MUTEX_CREATE_ERR_EID			 65
-#define SCH_AD_CHILD_TASK_CREATE_ERR_EID     66
-#define SCH_AD_RCVD_UNEXPECTED_MSG_ERR_EID	 67
-
 #endif /* _sch_events_ */
 
 /************************/

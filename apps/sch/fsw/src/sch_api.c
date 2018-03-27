@@ -26,7 +26,6 @@
 #include "sch_api.h"
 #include "sch_apipriv.h"
 #include "sch_platform_cfg.h"
-#include "sch_msgids.h"
 
 /*
 ** Exported data
@@ -83,17 +82,4 @@ void SCH_DisableProcessing(void)
 boolean SCH_GetProcessingState(void)
 {
     return (SCH_LibData.ProcessingDisabledCtr == 0);
-}
-
-
-
-void SCH_ActivityComplete(CFE_SB_MsgId_t MsgID)
-{
-    SCH_ActivityDoneMsg_t DoneMsg;
-
-    DoneMsg.MsgID = MsgID;
-
-    CFE_SB_InitMsg(&DoneMsg, SCH_ACTIVITY_DONE_MID, sizeof(SCH_ActivityDoneMsg_t), FALSE);
-    CFE_SB_TimeStampMsg((CFE_SB_Msg_t *) &DoneMsg);
-    CFE_SB_SendMsg((CFE_SB_Msg_t *) &DoneMsg);
 }

@@ -41,9 +41,6 @@
 #define SCH_TLM_SPARE2                 0x089A
 */
 
-#define SCH_ACTIVITY_DONE_MID		   0x0f00
-
-
 #endif /* _sch_msgids_h_ */
 
 /************************/

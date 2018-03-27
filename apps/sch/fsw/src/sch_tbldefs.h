@@ -45,7 +45,6 @@ typedef struct
     uint16   MessageIndex;         /**< \brief Byte index into Message Definition Table */
 
     uint32   GroupData;            /**< \brief Group and Multi-Group membership definitions */
-    uint32   Deadline;             /**< \brief Number of frames the activity is required to complete. */
 
 } SCH_ScheduleEntry_t;
 
@@ -58,30 +57,5 @@ typedef struct
 
 } SCH_MessageEntry_t;
 
-
-typedef enum
-{
-	SCH_DEADLINE_STATE_UNKNOWN 	= 0,
-	SCH_DEADLINE_STATE_PENDED	= 1,
-	SCH_DEADLINE_STATE_IDLE		= 2
-} SCH_ActivityDeadlineState_t;
-
-typedef struct
-{
-	CFE_SB_MsgId_t					MsgID;
-	SCH_ActivityDeadlineState_t		State;
-	uint32							OverrunCount;
-} SCH_ActivityDeadlineStatus_t;
-
-
-typedef struct
-{
-	SCH_ActivityDeadlineStatus_t Status[SCH_DEADLINES_PER_SLOT];
-} SCH_SlotDeadlineStatus_t;
-
-typedef struct
-{
-	SCH_SlotDeadlineStatus_t	Slot[SCH_TOTAL_SLOTS];
-} SCH_DeadlineTable_t;
 
 #endif /* _sch_tbldefs_ */

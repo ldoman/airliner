@@ -43,12 +43,6 @@
 #include <stdlib.h>
 
 /*
- * Wrapper variables
- */
-int OS_RUNTIME_MODE;
-int MINOR_FRAME;
-
-/*
  * Function Definitions
  */
 
@@ -56,6 +50,13 @@ int32 SCH_APP_TEST_CFE_TIME_RegisterSynchCallbackHook(CFE_TIME_SynchCallbackPtr_
 {
     SCH_AppData.IgnoreMajorFrame      = TRUE;
     SCH_AppData.MinorFramesSinceTone  = 1;
+
+    return CFE_SUCCESS;
+}
+
+int32 SCH_APP_TEST_CFE_TIME_UnregisterSynchCallbackHook(CFE_TIME_SynchCallbackPtr_t CallbackFuncPtr)
+{
+    SCH_AppData.AppID = 99;
 
     return CFE_SUCCESS;
 }
@@ -84,6 +85,9 @@ void SCH_AppMain_Test_RegisterAppError(void)
     /* Set to fail condition "Status == CFE_SUCCESS" */
     Ut_CFE_ES_SetReturnCode(UT_CFE_ES_REGISTERAPP_INDEX, -1, 1);
 
+    /* Sets SCH_AppData.AppID to 99, to allow verification that the end of the function under test has been reached */
+    Ut_CFE_TIME_SetFunctionHook(UT_CFE_TIME_UNREGISTERSYNCHCALLBACK_INDEX, &SCH_APP_TEST_CFE_TIME_UnregisterSynchCallbackHook);
+
     /* Execute the function being tested */
     SCH_AppMain();
     
@@ -97,6 +101,8 @@ void SCH_AppMain_Test_RegisterAppError(void)
     UtAssert_True
         (Ut_CFE_ES_SysLogWritten("SCH App terminating, err = 0xFFFFFFFF\n"),
         "SCH App terminating, err = 0xFFFFFFFF");
+
+    UtAssert_True (SCH_AppData.AppID == 99, "SCH_AppData.AppID == 99");
 
     UtAssert_True (Ut_CFE_ES_GetSysLogQueueDepth() == 1, "Ut_CFE_ES_GetSysLogQueueDepth() == 1");
 
@@ -107,6 +113,9 @@ void SCH_AppMain_Test_AppInitError(void)
     /* Set to make SCH_AppInit return -1, in order fail condition "Status == CFE_SUCCESS" */
     Ut_CFE_ES_SetReturnCode(UT_CFE_ES_GETAPPID_INDEX, -1, 1);
 
+    /* Sets SCH_AppData.AppID to 99, to allow verification that the end of the function under test has been reached */
+    Ut_CFE_TIME_SetFunctionHook(UT_CFE_TIME_UNREGISTERSYNCHCALLBACK_INDEX, &SCH_APP_TEST_CFE_TIME_UnregisterSynchCallbackHook);
+
     /* Execute the function being tested */
     SCH_AppMain();
     
@@ -120,6 +129,8 @@ void SCH_AppMain_Test_AppInitError(void)
     UtAssert_True
         (Ut_CFE_ES_SysLogWritten("SCH App terminating, err = 0xFFFFFFFF\n"),
         "SCH App terminating, err = 0xFFFFFFFF");
+
+    UtAssert_True (SCH_AppData.AppID == 99, "SCH_AppData.AppID == 99");
 
     UtAssert_True (Ut_CFE_ES_GetSysLogQueueDepth() == 2, "Ut_CFE_ES_GetSysLogQueueDepth() == 2");
     /* Generates 1 system log message we don't care about in this test */
@@ -133,7 +144,10 @@ void SCH_AppMain_Test_CustomLateInitError(void)
     Ut_CFE_TBL_ContinueReturnCodeAfterCountZero(UT_CFE_TBL_LOAD_INDEX);
 
     /* Set to make CustomLateInit return -1, in order to generate error message SCH_MAJOR_FRAME_SUB_ERR_EID */
-    Ut_OSTIMER_SetReturnCode(UT_OSTIMER_SET_INDEX, -1, 1);
+    Ut_CFE_TIME_SetReturnCode(UT_CFE_TIME_REGISTERSYNCHCALLBACK_INDEX, -1, 1);
+
+    /* Sets SCH_AppData.AppID to 99, to allow verification that the end of the function under test has been reached */
+    Ut_CFE_TIME_SetFunctionHook(UT_CFE_TIME_UNREGISTERSYNCHCALLBACK_INDEX, &SCH_APP_TEST_CFE_TIME_UnregisterSynchCallbackHook);
 
     /* Execute the function being tested */
     SCH_AppMain();
@@ -154,6 +168,8 @@ void SCH_AppMain_Test_CustomLateInitError(void)
         (Ut_CFE_ES_SysLogWritten("SCH App terminating, err = 0xFFFFFFFF\n"),
         "SCH App terminating, err = 0xFFFFFFFF");
 
+    UtAssert_True (SCH_AppData.AppID == 99, "SCH_AppData.AppID == 99");
+
     UtAssert_True (Ut_CFE_ES_GetSysLogQueueDepth() == 1, "Ut_CFE_ES_GetSysLogQueueDepth() == 1");
     /* Generates 1 system log message we don't care about in this test */
 
@@ -165,7 +181,7 @@ void SCH_AppMain_Test_NoisyMajorFrameError(void)
 
     /* Causes SCH_CustomLateInit to set SCH_AppData.IgnoreMajorFrame = TRUE, which it would normally do if CFE_TIME_RegisterSynchCallback weren't stubbed out.
        Also sets SCH_AppData.MinorFramesSinceTone = 1. Setting these manually in the test setup doesn't work, because they get reset at a certain point */
-    Ut_OSTIMER_SetFunctionHook(UT_OSTIMER_SET_INDEX, &SCH_APP_TEST_CFE_TIME_RegisterSynchCallbackHook);
+    Ut_CFE_TIME_SetFunctionHook(UT_CFE_TIME_REGISTERSYNCHCALLBACK_INDEX, &SCH_APP_TEST_CFE_TIME_RegisterSynchCallbackHook);
 
     /* Set to make SCH_TblInit return CFE_SUCCESS, in order to make SCH_AppInit return CFE_SUCCESS */
     Ut_CFE_TBL_SetReturnCode(UT_CFE_TBL_LOAD_INDEX, CFE_SUCCESS, 1);
@@ -173,6 +189,9 @@ void SCH_AppMain_Test_NoisyMajorFrameError(void)
 
     /* Set to exit loop after first run */
     Ut_CFE_ES_SetReturnCode(UT_CFE_ES_RUNLOOP_INDEX, FALSE, 2);
+
+    /* Sets SCH_AppData.AppID to 99, to allow verification that the end of the function under test has been reached */
+    Ut_CFE_TIME_SetFunctionHook(UT_CFE_TIME_UNREGISTERSYNCHCALLBACK_INDEX, &SCH_APP_TEST_CFE_TIME_UnregisterSynchCallbackHook);
 
     /* Execute the function being tested */
     SCH_AppMain();
@@ -183,6 +202,8 @@ void SCH_AppMain_Test_NoisyMajorFrameError(void)
         "Major Frame Sync too noisy (Slot 1). Disabling synchronization.");
 
     UtAssert_True (SCH_AppData.IgnoreMajorFrameMsgSent == TRUE, "SCH_AppData.IgnoreMajorFrameMsgSent == TRUE");
+
+    UtAssert_True (SCH_AppData.AppID == 99, "SCH_AppData.AppID == 99");
 
 #if SCH_LIB_PRESENCE == 1
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 2, "Ut_CFE_EVS_GetEventQueueDepth() == 2");
@@ -205,11 +226,16 @@ void SCH_AppMain_Test_NominalIgnoreMajorFrameFalse(void)
 
     /* SCH_AppData.IgnoreMajorFrameMsgSent = FALSE by default */
 
+    /* Sets SCH_AppData.AppID to 99, to allow verification that the end of the function under test has been reached */
+    Ut_CFE_TIME_SetFunctionHook(UT_CFE_TIME_UNREGISTERSYNCHCALLBACK_INDEX, &SCH_APP_TEST_CFE_TIME_UnregisterSynchCallbackHook);
+
     /* Execute the function being tested */
     SCH_AppMain();
     
     /* Verify results */
     UtAssert_True (SCH_AppData.IgnoreMajorFrameMsgSent == FALSE, "SCH_AppData.IgnoreMajorFrameMsgSent == FALSE");
+
+    UtAssert_True (SCH_AppData.AppID == 99, "SCH_AppData.AppID == 99");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
     /* Generates 1 event message we don't care about in this test */
@@ -250,10 +276,15 @@ void SCH_AppMain_Test_ProcessScheduleTableError(void)
 
     /* End section */
 
+    /* Sets SCH_AppData.AppID to 99, to allow verification that the end of the function under test has been reached */
+    Ut_CFE_TIME_SetFunctionHook(UT_CFE_TIME_UNREGISTERSYNCHCALLBACK_INDEX, &SCH_APP_TEST_CFE_TIME_UnregisterSynchCallbackHook);
+
     /* Execute the function being tested */
     SCH_AppMain();
     
     /* Verify results */
+    UtAssert_True (SCH_AppData.AppID == 99, "SCH_AppData.AppID == 99");
+
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 3, "Ut_CFE_EVS_GetEventQueueDepth() == 3");
     /* Generates 3 event messages we don't care about in this test */
 
@@ -270,10 +301,15 @@ void SCH_AppMain_Test_Nominal(void)
 
     /* SCH_AppData.IgnoreMajorFrameMsgSent = FALSE by default */
 
+    /* Sets SCH_AppData.AppID to 99, to allow verification that the end of the function under test has been reached */
+    Ut_CFE_TIME_SetFunctionHook(UT_CFE_TIME_UNREGISTERSYNCHCALLBACK_INDEX, &SCH_APP_TEST_CFE_TIME_UnregisterSynchCallbackHook);
+
     /* Execute the function being tested */
     SCH_AppMain();
     
     /* Verify results */
+    UtAssert_True (SCH_AppData.AppID == 99, "SCH_AppData.AppID == 99");
+
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
     /* Generates 1 event message we don't care about in this test */
 
@@ -1150,8 +1186,10 @@ void SCH_ProcessScheduleTable_Test_ProcessCount2LastProcessCount1(void)
 {
     int32   Result;
 
-    /* Cause SCH_CustomGetCurrentSlotNumber to return MINOR_FRAME */
-    MINOR_FRAME = 2;
+    /* Cause SCH_CustomGetCurrentSlotNumber to return SCH_AppData.MinorFramesSinceTone */
+    SCH_AppData.SyncToMET = SCH_NOT_SYNCHRONIZED;
+
+    SCH_AppData.MinorFramesSinceTone = 2;
     SCH_AppData.NextSlotNumber       = 1;
     SCH_AppData.LastProcessCount     = 1;
 
@@ -1171,8 +1209,10 @@ void SCH_ProcessScheduleTable_Test_ProcessCountTotalSlotsLastProcessCountNotSame
 {
     int32   Result;
 
-    /* Cause SCH_CustomGetCurrentSlotNumber to return MINOR_FRAME */
-    MINOR_FRAME = SCH_TOTAL_SLOTS - 1;
+    /* Cause SCH_CustomGetCurrentSlotNumber to return SCH_AppData.MinorFramesSinceTone */
+    SCH_AppData.SyncToMET = SCH_NOT_SYNCHRONIZED;
+
+    SCH_AppData.MinorFramesSinceTone = SCH_TOTAL_SLOTS - 1;
     SCH_AppData.NextSlotNumber       = 0;
     SCH_AppData.LastProcessCount     = 1;
 
@@ -1221,8 +1261,10 @@ void SCH_ProcessScheduleTable_Test_ProcessCountOtherAndNoRollover(void)
 {
     int32   Result;
 
-    /* Cause SCH_CustomGetCurrentSlotNumber to return MINOR_FRAME */
-    MINOR_FRAME = 0;
+    /* Cause SCH_CustomGetCurrentSlotNumber to return SCH_AppData.ProcessCountOtherAndNoRollover */
+    SCH_AppData.SyncToMET = SCH_NOT_SYNCHRONIZED;
+
+    SCH_AppData.MinorFramesSinceTone = 0;
     SCH_AppData.NextSlotNumber       = SCH_TOTAL_SLOTS;
     SCH_AppData.LastProcessCount     = 1;
 
@@ -1242,8 +1284,10 @@ void SCH_ProcessScheduleTable_Test_SkippedSlotsErrorIncrementTablePassCountAndCa
 {
     int32   Result;
 
-    /* Cause SCH_CustomGetCurrentSlotNumber to return MINOR_FRAME */
-    MINOR_FRAME = SCH_MAX_LAG_COUNT + 1;
+    /* Cause SCH_CustomGetCurrentSlotNumber to return SCH_AppData.MinorFramesSinceTone */
+    SCH_AppData.SyncToMET = SCH_NOT_SYNCHRONIZED;
+
+    SCH_AppData.MinorFramesSinceTone = SCH_MAX_LAG_COUNT + 1;
     SCH_AppData.NextSlotNumber       = SCH_MAX_LAG_COUNT + 3;
 
     /* Set to prevent failure in SCH_ProcessCommands */
@@ -1276,10 +1320,7 @@ void SCH_ProcessScheduleTable_Test_MultiSlotsProcessCountTooLargeSynchronizedPro
 {
     int32   Result;
 
-    /* Note: This value was 99 in the previous version of this test. The way the custom code, which was
-     * replaced, handled this number resulted in it being set to 0. Since that logic is no longer
-     * the same we are doing that assignment manually here. */
-    MINOR_FRAME = 0;
+    SCH_AppData.SyncToMET = 99;
 
     SCH_AppData.NextSlotNumber = SCH_TOTAL_SLOTS - SCH_MAX_LAG_COUNT + 1;
 
@@ -1313,7 +1354,7 @@ void SCH_ProcessScheduleTable_Test_MultiSlotsNotSynchronizedProcessCountGreaterT
     /* Cause SCH_CustomGetCurrentSlotNumber to return SCH_AppData.MinorFramesSinceTone */
     SCH_AppData.SyncToMET = SCH_NOT_SYNCHRONIZED;
 
-    MINOR_FRAME = SCH_MAX_LAG_COUNT - 1;
+    SCH_AppData.MinorFramesSinceTone = SCH_MAX_LAG_COUNT - 1;
     SCH_AppData.NextSlotNumber       = SCH_TOTAL_SLOTS;
 
     SCH_AppData.WorstCaseSlotsPerMinorFrame = 100;
@@ -1864,11 +1905,11 @@ void SCH_ValidateScheduleData_Test_EnableStateUnusedAllFieldsUnused(void)
         (Ut_CFE_EVS_EventSent(SCH_SCHEDULE_TABLE_EID, CFE_EVS_DEBUG, "Schedule table verify results -- good[0] bad[0] unused[500]"),
         "Schedule table verify results -- good[0] bad[0] unused[500]");
 
-    UtAssert_True (SCH_AppData.TableVerifySuccessCount == 2, "SCH_AppData.TableVerifySuccessCount == 2");
+    UtAssert_True (SCH_AppData.TableVerifySuccessCount == 1, "SCH_AppData.TableVerifySuccessCount == 1");
 
     UtAssert_True (Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
 
-    UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 2, "Ut_CFE_EVS_GetEventQueueDepth() == 2");
+    UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
 
 } /* end SCH_ValidateScheduleData_Test_EnableStateUnusedAllFieldsUnused */
 
@@ -2106,11 +2147,11 @@ void SCH_ValidateScheduleData_Test_ValidEntryResult(void)
         (Ut_CFE_EVS_EventSent(SCH_SCHEDULE_TABLE_EID, CFE_EVS_DEBUG, "Schedule table verify results -- good[500] bad[0] unused[0]"),
         "Schedule table verify results -- good[500] bad[0] unused[0]");
 
-    UtAssert_True (SCH_AppData.TableVerifySuccessCount == 2, "SCH_AppData.TableVerifySuccessCount == 2");
+    UtAssert_True (SCH_AppData.TableVerifySuccessCount == 1, "SCH_AppData.TableVerifySuccessCount == 1");
 
     UtAssert_True (Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
 
-    UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 2, "Ut_CFE_EVS_GetEventQueueDepth() == 2");
+    UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
 
 } /* end SCH_ValidateScheduleData_Test_ValidEntryResult */
 
@@ -2370,415 +2411,6 @@ void SCH_ValidateMessageData_Test_MessageIdOther(void)
 
 } /* end SCH_ValidateMessageData_Test_MessageIdOther */
 
-void SCH_ValidateScheduleDeadlines_Test_AllZeroes(void)
-{
-    int32   Result;
-    int32   TableIndex;
-
-    /* Build a table to be tested */
-    for (TableIndex = 0; TableIndex < SCH_TABLE_ENTRIES; TableIndex++)
-    {
-        SCH_AppData.ScheduleTable[TableIndex].EnableState = SCH_DISABLED;
-        SCH_AppData.ScheduleTable[TableIndex].Type = SCH_ACTIVITY_SEND_MSG;
-        SCH_AppData.ScheduleTable[TableIndex].Frequency = 1;
-        SCH_AppData.ScheduleTable[TableIndex].Remainder = 1;
-        SCH_AppData.ScheduleTable[TableIndex].MessageIndex = SCH_MAX_MESSAGES;
-        SCH_AppData.ScheduleTable[TableIndex].GroupData = SCH_UNUSED;
-        SCH_AppData.ScheduleTable[TableIndex].Deadline = 0;
-    }
-
-    /* Execute the function being tested */
-    Result = SCH_ValidateScheduleDeadlines(&SCH_AppData.ScheduleTable[0]);
-
-    /* Verify results */
-    UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_SCHEDULE_TABLE_EID, CFE_EVS_DEBUG, "Schedule table deadline verify results -- fails[0]"),
-        "Schedule table deadline verify results -- fails[0]");
-
-    UtAssert_True (SCH_AppData.TableVerifyFailureCount == 0, "SCH_AppData.TableVerifyFailureCount == 0");
-    UtAssert_True (SCH_AppData.TableVerifySuccessCount == 1, "SCH_AppData.TableVerifySuccessCount == 1");
-    UtAssert_True (Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
-    UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
-
-} /* end SCH_ValidateScheduleDeadlines_Test_AllZeroes */
-
-void SCH_ValidateScheduleDeadlines_Test_AllOnes(void)
-{
-    int32   Result;
-    int32   TableIndex;
-
-    /* Build a table to be tested. Note: A table of all ones will pass 1/5 of the time due to
-     * the last item in a slot specifying a deadline of 1 being a valid deadline */
-    for (TableIndex = 0; TableIndex < SCH_TABLE_ENTRIES; TableIndex++)
-    {
-        SCH_AppData.ScheduleTable[TableIndex].EnableState = SCH_DISABLED;
-        SCH_AppData.ScheduleTable[TableIndex].Type = SCH_ACTIVITY_SEND_MSG;
-        SCH_AppData.ScheduleTable[TableIndex].Frequency = 1;
-        SCH_AppData.ScheduleTable[TableIndex].Remainder = 1;
-        SCH_AppData.ScheduleTable[TableIndex].MessageIndex = SCH_MAX_MESSAGES;
-        SCH_AppData.ScheduleTable[TableIndex].GroupData = SCH_UNUSED;
-        SCH_AppData.ScheduleTable[TableIndex].Deadline = 1;
-    }
-
-    /* Execute the function being tested */
-    Result = SCH_ValidateScheduleDeadlines(&SCH_AppData.ScheduleTable[0]);
-
-    /* Verify results */
-    UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_SCHEDULE_TBL_ERR_EID, CFE_EVS_ERROR, "Schedule tbl validate error - Overlapping message deadline occurrence for msg[128]: 1 frames"),
-        "Schedule tbl validate error - Overlapping message deadline occurrence for msg[128]: 1 frames");
-    UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_SCHEDULE_TABLE_EID, CFE_EVS_DEBUG, "Schedule table deadline verify results -- fails[400]"),
-        "Schedule table deadline verify results -- fails[400]");
-
-    UtAssert_True (SCH_AppData.TableVerifyFailureCount == 1, "SCH_AppData.TableVerifyFailureCount == 1");
-    UtAssert_True (SCH_AppData.TableVerifySuccessCount == 0, "SCH_AppData.TableVerifySuccessCount == 0");
-    UtAssert_True (Result == SCH_SDT_BAD_DEADLINE, "Result == SCH_SDT_BAD_DEADLINE");
-    UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 401, "Ut_CFE_EVS_GetEventQueueDepth() == 401");
-
-} /* end SCH_ValidateScheduleDeadlines_Test_AllOnes */
-
-void SCH_ValidateScheduleDeadlines_Test_AllTwos(void)
-{
-    int32   Result;
-    int32   TableIndex;
-
-    /* Build a table to be tested */
-    for (TableIndex = 0; TableIndex < SCH_TABLE_ENTRIES; TableIndex++)
-    {
-        SCH_AppData.ScheduleTable[TableIndex].EnableState = SCH_DISABLED;
-        SCH_AppData.ScheduleTable[TableIndex].Type = SCH_ACTIVITY_SEND_MSG;
-        SCH_AppData.ScheduleTable[TableIndex].Frequency = 1;
-        SCH_AppData.ScheduleTable[TableIndex].Remainder = 1;
-        SCH_AppData.ScheduleTable[TableIndex].MessageIndex = SCH_MAX_MESSAGES;
-        SCH_AppData.ScheduleTable[TableIndex].GroupData = SCH_UNUSED;
-        SCH_AppData.ScheduleTable[TableIndex].Deadline = 2;
-    }
-
-    /* Execute the function being tested */
-    Result = SCH_ValidateScheduleDeadlines(&SCH_AppData.ScheduleTable[0]);
-
-    /* Verify results */
-    UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_SCHEDULE_TBL_ERR_EID, CFE_EVS_ERROR, "Schedule tbl validate error - Overlapping message deadline occurrence for msg[128]: 1 frames"),
-        "Schedule tbl validate error - Overlapping message deadline occurrence for msg[128]: 1 frames");
-    UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_SCHEDULE_TABLE_EID, CFE_EVS_DEBUG, "Schedule table deadline verify results -- fails[500]"),
-        "Schedule table deadline verify results -- fails[500]");
-
-    UtAssert_True (SCH_AppData.TableVerifyFailureCount == 1, "SCH_AppData.TableVerifyFailureCount == 1");
-    UtAssert_True (SCH_AppData.TableVerifySuccessCount == 0, "SCH_AppData.TableVerifySuccessCount == 0");
-    UtAssert_True (Result == SCH_SDT_BAD_DEADLINE, "Result == SCH_SDT_BAD_DEADLINE");
-    UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 501, "Ut_CFE_EVS_GetEventQueueDepth() == 501");
-
-} /* end SCH_ValidateScheduleDeadlines_Test_AllTwos */
-
-void SCH_ValidateScheduleDeadlines_Test_Valid1(void)
-{
-    int32   Result;
-    int32   TestIdx1 = 0; 	// Frame 0
-    int32   TestIdx2 = 100; // Frame 20
-
-    /* Build a table to be tested */
-
-    /* Place messages in two locations with valid deadlines */
-	SCH_AppData.ScheduleTable[TestIdx1].EnableState = SCH_DISABLED;
-	SCH_AppData.ScheduleTable[TestIdx1].Type = SCH_ACTIVITY_SEND_MSG;
-	SCH_AppData.ScheduleTable[TestIdx1].Frequency = 1;
-	SCH_AppData.ScheduleTable[TestIdx1].Remainder = 1;
-	SCH_AppData.ScheduleTable[TestIdx1].MessageIndex = SCH_MAX_MESSAGES;
-	SCH_AppData.ScheduleTable[TestIdx1].GroupData = SCH_UNUSED;
-	SCH_AppData.ScheduleTable[TestIdx1].Deadline = 20;
-
-	SCH_AppData.ScheduleTable[TestIdx2].EnableState = SCH_DISABLED;
-	SCH_AppData.ScheduleTable[TestIdx2].Type = SCH_ACTIVITY_SEND_MSG;
-	SCH_AppData.ScheduleTable[TestIdx2].Frequency = 1;
-	SCH_AppData.ScheduleTable[TestIdx2].Remainder = 1;
-	SCH_AppData.ScheduleTable[TestIdx2].MessageIndex = SCH_MAX_MESSAGES;
-	SCH_AppData.ScheduleTable[TestIdx2].GroupData = SCH_UNUSED;
-	SCH_AppData.ScheduleTable[TestIdx2].Deadline = 20;
-
-    /* Execute the function being tested */
-    Result = SCH_ValidateScheduleDeadlines(&SCH_AppData.ScheduleTable[0]);
-
-    /* Verify results */
-    UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_SCHEDULE_TABLE_EID, CFE_EVS_DEBUG, "Schedule table deadline verify results -- fails[0]"),
-        "Schedule table deadline verify results -- fails[0]");
-
-    UtAssert_True (SCH_AppData.TableVerifyFailureCount == 0, "SCH_AppData.TableVerifyFailureCount == 0");
-    UtAssert_True (SCH_AppData.TableVerifySuccessCount == 1, "SCH_AppData.TableVerifySuccessCount == 1");
-    UtAssert_True (Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
-    UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
-
-} /* end SCH_ValidateScheduleDeadlines_Test_Valid1 */
-
-void SCH_ValidateScheduleDeadlines_Test_Valid2(void)
-{
-    int32   Result;
-    int32   TestIdx1 = 50;	// Frame 10
-    int32   TestIdx2 = 100; // Frame 20
-
-    /* Build a table to be tested */
-
-    /* Place messages in two locations with valid deadlines */
-	SCH_AppData.ScheduleTable[TestIdx1].EnableState = SCH_DISABLED;
-	SCH_AppData.ScheduleTable[TestIdx1].Type = SCH_ACTIVITY_SEND_MSG;
-	SCH_AppData.ScheduleTable[TestIdx1].Frequency = 1;
-	SCH_AppData.ScheduleTable[TestIdx1].Remainder = 1;
-	SCH_AppData.ScheduleTable[TestIdx1].MessageIndex = SCH_MAX_MESSAGES;
-	SCH_AppData.ScheduleTable[TestIdx1].GroupData = SCH_UNUSED;
-	SCH_AppData.ScheduleTable[TestIdx1].Deadline = 10;
-
-	SCH_AppData.ScheduleTable[TestIdx2].EnableState = SCH_DISABLED;
-	SCH_AppData.ScheduleTable[TestIdx2].Type = SCH_ACTIVITY_SEND_MSG;
-	SCH_AppData.ScheduleTable[TestIdx2].Frequency = 1;
-	SCH_AppData.ScheduleTable[TestIdx2].Remainder = 1;
-	SCH_AppData.ScheduleTable[TestIdx2].MessageIndex = SCH_MAX_MESSAGES;
-	SCH_AppData.ScheduleTable[TestIdx2].GroupData = SCH_UNUSED;
-	SCH_AppData.ScheduleTable[TestIdx2].Deadline = 90;
-
-    /* Execute the function being tested */
-    Result = SCH_ValidateScheduleDeadlines(&SCH_AppData.ScheduleTable[0]);
-
-    /* Verify results */
-    UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_SCHEDULE_TABLE_EID, CFE_EVS_DEBUG, "Schedule table deadline verify results -- fails[0]"),
-        "Schedule table deadline verify results -- fails[0]");
-
-    UtAssert_True (SCH_AppData.TableVerifyFailureCount == 0, "SCH_AppData.TableVerifyFailureCount == 0");
-    UtAssert_True (SCH_AppData.TableVerifySuccessCount == 1, "SCH_AppData.TableVerifySuccessCount == 1");
-    UtAssert_True (Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
-    UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
-
-} /* end SCH_ValidateScheduleDeadlines_Test_Valid2 */
-
-void SCH_ValidateScheduleDeadlines_Test_Valid3(void)
-{
-    int32   Result;
-    int32   TestMsgIdx = 7;
-    int32   TestIdx1 = 0;	// Frame 0
-    int32   TestIdx2 = 200; // Frame 40
-    int32   TestIdx3 = 50;  // Frame 10
-    int32   TestIdx4 = 125; // Frame 25
-
-    /* Build a table to be tested */
-
-    /* Place messages in two locations with valid deadlines */
-	SCH_AppData.ScheduleTable[TestIdx1].EnableState = SCH_DISABLED;
-	SCH_AppData.ScheduleTable[TestIdx1].Type = SCH_ACTIVITY_SEND_MSG;
-	SCH_AppData.ScheduleTable[TestIdx1].Frequency = 1;
-	SCH_AppData.ScheduleTable[TestIdx1].Remainder = 1;
-	SCH_AppData.ScheduleTable[TestIdx1].MessageIndex = SCH_MAX_MESSAGES;
-	SCH_AppData.ScheduleTable[TestIdx1].GroupData = SCH_UNUSED;
-	SCH_AppData.ScheduleTable[TestIdx1].Deadline = 40;
-
-	SCH_AppData.ScheduleTable[TestIdx2].EnableState = SCH_DISABLED;
-	SCH_AppData.ScheduleTable[TestIdx2].Type = SCH_ACTIVITY_SEND_MSG;
-	SCH_AppData.ScheduleTable[TestIdx2].Frequency = 1;
-	SCH_AppData.ScheduleTable[TestIdx2].Remainder = 1;
-	SCH_AppData.ScheduleTable[TestIdx2].MessageIndex = SCH_MAX_MESSAGES;
-	SCH_AppData.ScheduleTable[TestIdx2].GroupData = SCH_UNUSED;
-	SCH_AppData.ScheduleTable[TestIdx2].Deadline = 60;
-
-	SCH_AppData.ScheduleTable[TestIdx3].EnableState = SCH_DISABLED;
-	SCH_AppData.ScheduleTable[TestIdx3].Type = SCH_ACTIVITY_SEND_MSG;
-	SCH_AppData.ScheduleTable[TestIdx3].Frequency = 1;
-	SCH_AppData.ScheduleTable[TestIdx3].Remainder = 1;
-	SCH_AppData.ScheduleTable[TestIdx3].MessageIndex = TestMsgIdx;
-	SCH_AppData.ScheduleTable[TestIdx3].GroupData = SCH_UNUSED;
-	SCH_AppData.ScheduleTable[TestIdx3].Deadline = 3;
-
-	SCH_AppData.ScheduleTable[TestIdx4].EnableState = SCH_DISABLED;
-	SCH_AppData.ScheduleTable[TestIdx4].Type = SCH_ACTIVITY_SEND_MSG;
-	SCH_AppData.ScheduleTable[TestIdx4].Frequency = 1;
-	SCH_AppData.ScheduleTable[TestIdx4].Remainder = 1;
-	SCH_AppData.ScheduleTable[TestIdx4].MessageIndex = TestMsgIdx;
-	SCH_AppData.ScheduleTable[TestIdx4].GroupData = SCH_UNUSED;
-	SCH_AppData.ScheduleTable[TestIdx4].Deadline = 85;
-
-    /* Execute the function being tested */
-    Result = SCH_ValidateScheduleDeadlines(&SCH_AppData.ScheduleTable[0]);
-
-    /* Verify results */
-    UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_SCHEDULE_TABLE_EID, CFE_EVS_DEBUG, "Schedule table deadline verify results -- fails[0]"),
-        "Schedule table deadline verify results -- fails[0]");
-
-    UtAssert_True (SCH_AppData.TableVerifyFailureCount == 0, "SCH_AppData.TableVerifyFailureCount == 0");
-    UtAssert_True (SCH_AppData.TableVerifySuccessCount == 1, "SCH_AppData.TableVerifySuccessCount == 1");
-    UtAssert_True (Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
-    UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
-
-} /* end SCH_ValidateScheduleDeadlines_Test_Valid3 */
-
-void SCH_ValidateScheduleDeadlines_Test_Invalid1(void)
-{
-    int32   Result;
-    int32   TestIdx1 = 50;	 // Frame 10
-    int32   TestIdx2 = 100;	 // Frame 20
-
-    /* Build a table to be tested */
-
-    /* Place messages in two locations with valid deadlines */
-	SCH_AppData.ScheduleTable[TestIdx1].EnableState = SCH_DISABLED;
-	SCH_AppData.ScheduleTable[TestIdx1].Type = SCH_ACTIVITY_SEND_MSG;
-	SCH_AppData.ScheduleTable[TestIdx1].Frequency = 1l;
-	SCH_AppData.ScheduleTable[TestIdx1].Remainder = 1;
-	SCH_AppData.ScheduleTable[TestIdx1].MessageIndex = SCH_MAX_MESSAGES;
-	SCH_AppData.ScheduleTable[TestIdx1].GroupData = SCH_UNUSED;
-	SCH_AppData.ScheduleTable[TestIdx1].Deadline = 50;
-
-	SCH_AppData.ScheduleTable[TestIdx2].EnableState = SCH_DISABLED;
-	SCH_AppData.ScheduleTable[TestIdx2].Type = SCH_ACTIVITY_SEND_MSG;
-	SCH_AppData.ScheduleTable[TestIdx2].Frequency = 1;
-	SCH_AppData.ScheduleTable[TestIdx2].Remainder = 1;
-	SCH_AppData.ScheduleTable[TestIdx2].MessageIndex = SCH_MAX_MESSAGES;
-	SCH_AppData.ScheduleTable[TestIdx2].GroupData = SCH_UNUSED;
-	SCH_AppData.ScheduleTable[TestIdx2].Deadline = 100;
-
-
-    /* Execute the function being tested */
-    Result = SCH_ValidateScheduleDeadlines(&SCH_AppData.ScheduleTable[0]);
-
-    /* Verify results */
-    UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_SCHEDULE_TBL_ERR_EID, CFE_EVS_ERROR, "Schedule tbl validate error - Overlapping message deadline occurrence for msg[128]: 40 frames"),
-        "Schedule tbl validate error - Overlapping message deadline occurrence for msg[128]: 40 frames");
-    UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_SCHEDULE_TBL_ERR_EID, CFE_EVS_ERROR, "Schedule tbl validate error - Overlapping message deadline occurrence for msg[128]: 10 frames"),
-        "Schedule tbl validate error - Overlapping message deadline occurrence for msg[128]: 10 frames");
-    UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_SCHEDULE_TABLE_EID, CFE_EVS_DEBUG, "Schedule table deadline verify results -- fails[2]"),
-        "Schedule table deadline verify results -- fails[2]");
-
-    UtAssert_True (SCH_AppData.TableVerifyFailureCount == 1, "SCH_AppData.TableVerifyFailureCount == 1");
-    UtAssert_True (SCH_AppData.TableVerifySuccessCount == 0, "SCH_AppData.TableVerifySuccessCount == 0");
-    UtAssert_True (Result == SCH_SDT_BAD_DEADLINE, "Result == SCH_SDT_BAD_DEADLINE");
-    UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 3, "Ut_CFE_EVS_GetEventQueueDepth() == 3");
-
-} /* end SCH_ValidateScheduleDeadlines_Test_Invalid1 */
-
-void SCH_ValidateScheduleDeadlines_Test_Invalid2(void)
-{
-    int32   Result;
-    int32   TestIdx1 = 0;	// Frame 0
-    int32   TestIdx2 = 25;  // Frame 5
-
-    /* Build a table to be tested */
-
-    /* Place messages in two locations with invalid deadlines */
-	SCH_AppData.ScheduleTable[TestIdx1].EnableState = SCH_DISABLED;
-	SCH_AppData.ScheduleTable[TestIdx1].Type = SCH_ACTIVITY_SEND_MSG;
-	SCH_AppData.ScheduleTable[TestIdx1].Frequency = 1l;
-	SCH_AppData.ScheduleTable[TestIdx1].Remainder = 1;
-	SCH_AppData.ScheduleTable[TestIdx1].MessageIndex = SCH_MAX_MESSAGES;
-	SCH_AppData.ScheduleTable[TestIdx1].GroupData = SCH_UNUSED;
-	SCH_AppData.ScheduleTable[TestIdx1].Deadline = 7;
-
-	SCH_AppData.ScheduleTable[TestIdx2].EnableState = SCH_DISABLED;
-	SCH_AppData.ScheduleTable[TestIdx2].Type = SCH_ACTIVITY_SEND_MSG;
-	SCH_AppData.ScheduleTable[TestIdx2].Frequency = 1;
-	SCH_AppData.ScheduleTable[TestIdx2].Remainder = 1;
-	SCH_AppData.ScheduleTable[TestIdx2].MessageIndex = SCH_MAX_MESSAGES;
-	SCH_AppData.ScheduleTable[TestIdx2].GroupData = SCH_UNUSED;
-	SCH_AppData.ScheduleTable[TestIdx2].Deadline = 100;
-
-
-    /* Execute the function being tested */
-    Result = SCH_ValidateScheduleDeadlines(&SCH_AppData.ScheduleTable[0]);
-
-    /* Verify results */
-    UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_SCHEDULE_TBL_ERR_EID, CFE_EVS_ERROR, "Schedule tbl validate error - Overlapping message deadline occurrence for msg[128]: 2 frames"),
-        "Schedule tbl validate error - Overlapping message deadline occurrence for msg[128]: 2 frames");
-    UtAssert_True
-		(Ut_CFE_EVS_EventSent(SCH_SCHEDULE_TBL_ERR_EID, CFE_EVS_ERROR, "Schedule tbl validate error - Overlapping message deadline occurrence for msg[128]: 5 frames"),
-		"Schedule tbl validate error - Overlapping message deadline occurrence for msg[128]: 5 frames");
-    UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_SCHEDULE_TABLE_EID, CFE_EVS_DEBUG, "Schedule table deadline verify results -- fails[2]"),
-        "Schedule table deadline verify results -- fails[2]");
-
-    UtAssert_True (SCH_AppData.TableVerifyFailureCount == 1, "SCH_AppData.TableVerifyFailureCount == 1");
-    UtAssert_True (SCH_AppData.TableVerifySuccessCount == 0, "SCH_AppData.TableVerifySuccessCount == 0");
-    UtAssert_True (Result == SCH_SDT_BAD_DEADLINE, "Result == SCH_SDT_BAD_DEADLINE");
-    UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 3, "Ut_CFE_EVS_GetEventQueueDepth() == 3");
-
-} /* end SCH_ValidateScheduleDeadlines_Test_Invalid2 */
-
-void SCH_ValidateScheduleDeadlines_Test_Invalid3(void)
-{
-    int32   Result;
-    int32   TestMsgIdx = 7;
-    int32   TestIdx1 = 0; 	// Frame 0
-    int32   TestIdx2 = 10;  // Frame 2
-    int32   TestIdx3 = 5;	// Frame 1
-    int32   TestIdx4 = 50;  // Frame 10
-
-    /* Build a table to be tested */
-
-    /* Place messages in locations with invalid deadlines */
-	SCH_AppData.ScheduleTable[TestIdx1].EnableState = SCH_DISABLED;
-	SCH_AppData.ScheduleTable[TestIdx1].Type = SCH_ACTIVITY_SEND_MSG;
-	SCH_AppData.ScheduleTable[TestIdx1].Frequency = 1;
-	SCH_AppData.ScheduleTable[TestIdx1].Remainder = 1;
-	SCH_AppData.ScheduleTable[TestIdx1].MessageIndex = SCH_MAX_MESSAGES;
-	SCH_AppData.ScheduleTable[TestIdx1].GroupData = SCH_UNUSED;
-	SCH_AppData.ScheduleTable[TestIdx1].Deadline = 100;
-
-	SCH_AppData.ScheduleTable[TestIdx2].EnableState = SCH_DISABLED;
-	SCH_AppData.ScheduleTable[TestIdx2].Type = SCH_ACTIVITY_SEND_MSG;
-	SCH_AppData.ScheduleTable[TestIdx2].Frequency = 1;
-	SCH_AppData.ScheduleTable[TestIdx2].Remainder = 1;
-	SCH_AppData.ScheduleTable[TestIdx2].MessageIndex = SCH_MAX_MESSAGES;
-	SCH_AppData.ScheduleTable[TestIdx2].GroupData = SCH_UNUSED;
-	SCH_AppData.ScheduleTable[TestIdx2].Deadline = 100;
-
-	SCH_AppData.ScheduleTable[TestIdx3].EnableState = SCH_DISABLED;
-	SCH_AppData.ScheduleTable[TestIdx3].Type = SCH_ACTIVITY_SEND_MSG;
-	SCH_AppData.ScheduleTable[TestIdx3].Frequency = 1;
-	SCH_AppData.ScheduleTable[TestIdx3].Remainder = 1;
-	SCH_AppData.ScheduleTable[TestIdx3].MessageIndex = TestMsgIdx;
-	SCH_AppData.ScheduleTable[TestIdx3].GroupData = SCH_UNUSED;
-	SCH_AppData.ScheduleTable[TestIdx3].Deadline = 50;
-
-	SCH_AppData.ScheduleTable[TestIdx4].EnableState = SCH_DISABLED;
-	SCH_AppData.ScheduleTable[TestIdx4].Type = SCH_ACTIVITY_SEND_MSG;
-	SCH_AppData.ScheduleTable[TestIdx4].Frequency = 1;
-	SCH_AppData.ScheduleTable[TestIdx4].Remainder = 1;
-	SCH_AppData.ScheduleTable[TestIdx4].MessageIndex = TestMsgIdx;
-	SCH_AppData.ScheduleTable[TestIdx4].GroupData = SCH_UNUSED;
-	SCH_AppData.ScheduleTable[TestIdx4].Deadline = 92;
-
-
-    /* Execute the function being tested */
-    Result = SCH_ValidateScheduleDeadlines(&SCH_AppData.ScheduleTable[0]);
-
-    /* Verify results */
-    UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_SCHEDULE_TBL_ERR_EID, CFE_EVS_ERROR, "Schedule tbl validate error - Overlapping message deadline occurrence for msg[128]: 98 frames"),
-        "Schedule tbl validate error - Overlapping message deadline occurrence for msg[128]: 98 frames");
-    UtAssert_True
-		(Ut_CFE_EVS_EventSent(SCH_SCHEDULE_TBL_ERR_EID, CFE_EVS_ERROR, "Schedule tbl validate error - Overlapping message deadline occurrence for msg[128]: 2 frames"),
-		"Schedule tbl validate error - Overlapping message deadline occurrence for msg[128]: 2 frames");
-    UtAssert_True
-		(Ut_CFE_EVS_EventSent(SCH_SCHEDULE_TBL_ERR_EID, CFE_EVS_ERROR, "Schedule tbl validate error - Overlapping message deadline occurrence for msg[7]: 41 frames"),
-		"Schedule tbl validate error - Overlapping message deadline occurrence for msg[7]: 41 frames");
-    UtAssert_True
-		(Ut_CFE_EVS_EventSent(SCH_SCHEDULE_TBL_ERR_EID, CFE_EVS_ERROR, "Schedule tbl validate error - Overlapping message deadline occurrence for msg[7]: 1 frames"),
-		"Schedule tbl validate error - Overlapping message deadline occurrence for msg[7]: 1 frames");
-    UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_SCHEDULE_TABLE_EID, CFE_EVS_DEBUG, "Schedule table deadline verify results -- fails[4]"),
-        "Schedule table deadline verify results -- fails[4]");
-
-    UtAssert_True (SCH_AppData.TableVerifyFailureCount == 1, "SCH_AppData.TableVerifyFailureCount == 1");
-    UtAssert_True (SCH_AppData.TableVerifySuccessCount == 0, "SCH_AppData.TableVerifySuccessCount == 0");
-    UtAssert_True (Result == SCH_SDT_BAD_DEADLINE, "Result == SCH_SDT_BAD_DEADLINE");
-    UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 5, "Ut_CFE_EVS_GetEventQueueDepth() == 5");
-
-} /* end SCH_ValidateScheduleDeadlines_Test_Invalid3 */
-
-
 void SCH_App_Test_AddTestCases(void)
 {
     UtTest_Add(SCH_AppMain_Test_RegisterAppError, SCH_Test_Setup, SCH_Test_TearDown, "SCH_AppMain_Test_RegisterAppError");
@@ -2868,19 +2500,8 @@ void SCH_App_Test_AddTestCases(void)
     UtTest_Add(SCH_ValidateMessageData_Test_MessageIdValidRangeLengthValid, SCH_Test_Setup, SCH_Test_TearDown, "SCH_ValidateMessageData_Test_MessageIdValidRangeLengthValid");
     UtTest_Add(SCH_ValidateMessageData_Test_MessageIdOther, SCH_Test_Setup, SCH_Test_TearDown, "SCH_ValidateMessageData_Test_MessageIdOther");
 
-    UtTest_Add(SCH_ValidateScheduleDeadlines_Test_AllZeroes, SCH_Test_Setup, SCH_Test_TearDown, "SCH_ValidateScheduleDeadlines_Test_AllZeroes");
-    UtTest_Add(SCH_ValidateScheduleDeadlines_Test_AllOnes, SCH_Test_Setup, SCH_Test_TearDown, "SCH_ValidateScheduleDeadlines_Test_AllOnes");
-    UtTest_Add(SCH_ValidateScheduleDeadlines_Test_AllTwos, SCH_Test_Setup, SCH_Test_TearDown, "SCH_ValidateScheduleDeadlines_Test_AllTwos");
-    UtTest_Add(SCH_ValidateScheduleDeadlines_Test_Valid1, SCH_Test_Setup, SCH_Test_TearDown, "SCH_ValidateScheduleDeadlines_Test_Valid1");
-    UtTest_Add(SCH_ValidateScheduleDeadlines_Test_Valid2, SCH_Test_Setup, SCH_Test_TearDown, "SCH_ValidateScheduleDeadlines_Test_Valid2");
-    UtTest_Add(SCH_ValidateScheduleDeadlines_Test_Valid3, SCH_Test_Setup, SCH_Test_TearDown, "SCH_ValidateScheduleDeadlines_Test_Valid3");
-    UtTest_Add(SCH_ValidateScheduleDeadlines_Test_Invalid1, SCH_Test_Setup, SCH_Test_TearDown, "SCH_ValidateScheduleDeadlines_Test_Invalid1");
-    UtTest_Add(SCH_ValidateScheduleDeadlines_Test_Invalid2, SCH_Test_Setup, SCH_Test_TearDown, "SCH_ValidateScheduleDeadlines_Test_Invalid2");
-    UtTest_Add(SCH_ValidateScheduleDeadlines_Test_Invalid3, SCH_Test_Setup, SCH_Test_TearDown, "SCH_ValidateScheduleDeadlines_Test_Invalid3");
-
-
 } /* end SCH_App_Test_AddTestCases */
-//    UtTest_Add(, SCH_Test_Setup, SCH_Test_TearDown, "");
+
 /************************/
 /*  End of File Comment */
 /************************/

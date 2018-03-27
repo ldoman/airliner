@@ -295,10 +295,6 @@
 #define SCH_MISSION_REV            0
 
 
-#define SCH_AD_PIPE_DEPTH				3
-#define SCH_AD_CHILD_TASK_PRIORITY		10
-#define SCH_DEADLINES_PER_SLOT			5
-
 #endif /* _sch_platform_cfg_h_ */
 
 /************************/

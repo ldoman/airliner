@@ -43,8 +43,6 @@
 
 #include "cfe_time_msg.h"
 #include "sch_verify.h"
-#include "sch_apipriv.h"
-#include "osapi.h"
 
 /*************************************************************************
 **
@@ -58,10 +56,6 @@
 #define SCH_SEM_NAME     "SCH_TIME_SEM"
 #define SCH_SEM_VALUE    0
 #define SCH_SEM_OPTIONS  0
-
-#define SCH_AD_HOLDUP_SEM_NAME		"SCH_HOLDUP_SEM"
-#define SCH_AD_HOLDUP_SEM_VALUE		0
-#define SCH_AD_HOLDUP_SEM_OPTIONS	0
 
 /*
 ** SDT Table Validation Error Codes
@@ -116,13 +110,6 @@ SCH_AppData_t           SCH_AppData;
 ** Function definitions
 **
 **************************************************************************/
-
-uint32 SCH_GetOutstandingActivityCount(uint32 Slot);
-SCH_ActivityDeadlineStatus_t* SCH_GetAvailableActivityDeadline(uint32 DeadlineSlot);
-void  SCH_CheckDeadlines(void);
-int32 SCH_ChildTaskInit(void);
-void SCH_ADChildTask(void);
-void SCH_ProcessActivityComplete(CFE_SB_MsgId_t MsgID);
 
 /*******************************************************************
 **
@@ -244,8 +231,6 @@ void SCH_AppMain(void)
             RunStatus = CFE_ES_APP_ERROR;
         }
 
-        SCH_CheckDeadlines();
-        OS_RtmEndFrame();
     } /* End of while */
 
     /*
@@ -281,55 +266,6 @@ void SCH_AppMain(void)
     CFE_ES_ExitApp(RunStatus);
 
 } /* End of SH_AppMain() */
-
-
-
-uint32 SCH_GetOutstandingActivityCount(uint32 Slot)
-{
-	uint32 count = 0;
-	uint32 i = 0;
-
-
-    OS_MutSemTake(SCH_AppData.ADChildTaskMutex);
-	for(i = 0; i < SCH_DEADLINES_PER_SLOT; ++i)
-	{
-		SCH_ActivityDeadlineStatus_t *status = &SCH_AppData.DeadlineTable->Slot[Slot].Status[i];
-		if(status->State == SCH_DEADLINE_STATE_PENDED)
-		{
-			count++;
-		}
-	}
-    OS_MutSemGive(SCH_AppData.ADChildTaskMutex);
-
-	return count;
-}
-
-
-
-void SCH_CheckDeadlines(void)
-{
-	uint32 slot = SCH_AppData.NextSlotNumber;
-	uint32 pendingActivityCount = 0;
-
-	/* Get the previous slot */
-    if (slot == 0)
-    {
-        slot = SCH_TOTAL_SLOTS;
-    }
-    else
-    {
-    	slot--;
-    }
-
-    if(OS_RtmGetRunMode() == OS_RUNTIME_MODE_NONREALTIME)
-    {
-    	while(SCH_GetOutstandingActivityCount(slot))
-    	{
-    		OS_BinSemTake(SCH_AppData.ADHoldupSemaphore);
-    	}
-    }
-}
-
 
 
 /*******************************************************************
@@ -400,15 +336,6 @@ int32 SCH_AppInit(void)
     if (Status != CFE_SUCCESS)
     {
         return(Status);
-    }
-
-    /*
-    ** Initialize child task
-    */
-    Status = SCH_ChildTaskInit();
-    if (Status != CFE_SUCCESS)
-    {
-    	return(Status);
     }
 
     /*
@@ -503,17 +430,6 @@ int32 SCH_SbInit(void)
     }
 
     /*
-    ** Create Software Bus message pipe
-    */
-    Status = CFE_SB_CreatePipe(&SCH_AppData.ADPipe, SCH_AD_PIPE_DEPTH, SCH_AD_PIPE_NAME);
-    if (Status != CFE_SUCCESS)
-    {
-        CFE_EVS_SendEvent(SCH_CR_PIPE_ERR_EID, CFE_EVS_ERROR,
-                          "Error Creating SB Pipe, RC=0x%08lX", Status);
-        return(Status);
-    }
-
-    /*
     ** Subscribe to Housekeeping request commands
     */
     Status = CFE_SB_Subscribe(SCH_SEND_HK_MID, SCH_AppData.CmdPipe);
@@ -537,18 +453,6 @@ int32 SCH_SbInit(void)
         return(Status);
     }
 
-    /*
-    ** Subscribe to SCH activity done messages
-    */
-    Status = CFE_SB_Subscribe(SCH_ACTIVITY_DONE_MID, SCH_AppData.ADPipe);
-    if (Status != CFE_SUCCESS)
-    {
-        CFE_EVS_SendEvent(SCH_SUB_GND_CMD_ERR_EID, CFE_EVS_ERROR,
-                "Error Subscribing to activity done msg(MID=0x%04X), RC=0x%08lX",
-				SCH_ACTIVITY_DONE_MID, Status);
-        return(Status);
-    }
-
     return(Status);
     
 } /* End of SCH_SbInit() */
@@ -565,8 +469,6 @@ int32 SCH_TblInit(void)
 {
     uint32 TableSize = 0;
     int32  Status = CFE_SUCCESS;
-    uint32 iSlot = 0;
-    uint32 iActivity = 0;
 
     /*
     ** Initialize SCH table variables
@@ -621,18 +523,6 @@ int32 SCH_TblInit(void)
     }
 
     /*
-    ** Register the dump only deadline table.
-    */
-    Status = CFE_TBL_Register(&SCH_AppData.DeadlineTableHandle,
-                 SCH_DEADLINE_TABLE_NAME, sizeof(SCH_DeadlineTable_t), (CFE_TBL_OPT_DEFAULT | CFE_TBL_OPT_SNGL_BUFFER | CFE_TBL_OPT_DUMP_ONLY), NULL);
-    if (Status != CFE_SUCCESS)
-    {
-        CFE_EVS_SendEvent( SCH_DEADLINE_REG_ERR_EID, CFE_EVS_ERROR,
-                "Error Registering Deadline, RC=0x%08lX", Status);
-        return(Status);
-    }
-
-    /*
     ** Load default schedule definition table data
     */
     Status = CFE_TBL_Load(SCH_AppData.ScheduleTableHandle,
@@ -642,8 +532,8 @@ int32 SCH_TblInit(void)
     if (Status != CFE_SUCCESS)
     {
         CFE_EVS_SendEvent(SCH_SDT_LOAD_ERR_EID, CFE_EVS_ERROR,
-                          "Error (RC=0x%08X) Loading SDT with %s",
-                          (unsigned int)Status, SCH_SCHEDULE_FILENAME);
+                          "Error (RC=0x%08X) Loading SDT with %s", 
+                          (unsigned int)Status, SCH_SCHEDULE_FILENAME);    
         return(Status);
     }
 
@@ -657,7 +547,7 @@ int32 SCH_TblInit(void)
     if (Status != CFE_SUCCESS)
     {
         CFE_EVS_SendEvent(SCH_MDT_LOAD_ERR_EID, CFE_EVS_ERROR,
-                          "Error (RC=0x%08X) Loading MDT with %s",
+                          "Error (RC=0x%08X) Loading MDT with %s", 
                           (unsigned int)Status, SCH_MESSAGE_FILENAME);    
         return(Status);
     }
@@ -675,22 +565,6 @@ int32 SCH_TblInit(void)
                           (unsigned int)Status);    
         return(Status);
     }
-
-    /*
-    ** Initialize the table.  Since this is a dump only table, the contents
-    ** are undefined.
-    */
-	for(iSlot = 0; iSlot < SCH_TOTAL_SLOTS; ++iSlot)
-	{
-		for(iActivity = 0; iActivity < SCH_DEADLINES_PER_SLOT; ++iActivity)
-		{
-			SCH_ActivityDeadlineStatus_t *Activity = &SCH_AppData.DeadlineTable->Slot[iSlot].Status[iActivity];
-
-			Activity->MsgID = 0;
-			Activity->OverrunCount = 0;
-			Activity->State = SCH_DEADLINE_STATE_UNKNOWN;
-		}
-	}
 
     return(Status);
 
@@ -1077,29 +951,6 @@ void SCH_ProcessNextEntry(SCH_ScheduleEntry_t *NextEntry, int32 EntryNumber)
             if (Status == CFE_SUCCESS)
             {
                 SCH_AppData.ScheduleActivitySuccessCount++;
-
-                if(NextEntry->Deadline)
-                {
-                	uint32 DeadlineSlot = SCH_AppData.NextSlotNumber + NextEntry->Deadline;
-                	if(DeadlineSlot >= SCH_TOTAL_SLOTS)
-                	{
-                		DeadlineSlot -= SCH_TOTAL_SLOTS;
-                	}
-        		    OS_MutSemTake(SCH_AppData.ADChildTaskMutex);
-                	SCH_ActivityDeadlineStatus_t *ActivityDeadline = SCH_GetAvailableActivityDeadline(DeadlineSlot);
-                	if(ActivityDeadline == 0)
-                	{
-                        CFE_EVS_SendEvent(SCH_SLOT_DEADLINE_FULL_ERR_EID, CFE_EVS_ERROR,
-                                          "Slot deadline full: slot = %d, entry = %ld, err = 0x%08lX",
-                                          SCH_AppData.NextSlotNumber, EntryNumber, Status);
-                	}
-                	else
-                	{
-                		ActivityDeadline->State = SCH_DEADLINE_STATE_PENDED;
-                		ActivityDeadline->MsgID = CFE_SB_GetMsgId((CFE_SB_MsgPtr_t)Message);
-                	}
-        		    OS_MutSemGive(SCH_AppData.ADChildTaskMutex);
-                }
             }
             else
             {
@@ -1115,28 +966,6 @@ void SCH_ProcessNextEntry(SCH_ScheduleEntry_t *NextEntry, int32 EntryNumber)
     return;
 
 } /* End of SCH_ProcessNextEntry() */
-
-
-
-SCH_ActivityDeadlineStatus_t* SCH_GetAvailableActivityDeadline(uint32 DeadlineSlot)
-{
-	uint32 i = 0;
-
-	SCH_SlotDeadlineStatus_t *SlotDeadline = &SCH_AppData.DeadlineTable->Slot[DeadlineSlot];
-
-    OS_MutSemTake(SCH_AppData.ADChildTaskMutex);
-	for(i = 0; i < SCH_DEADLINES_PER_SLOT; ++i)
-	{
-		if(SlotDeadline->Status[i].State != SCH_DEADLINE_STATE_PENDED)
-		{
-		    OS_MutSemGive(SCH_AppData.ADChildTaskMutex);
-			return &SlotDeadline->Status[i];
-		}
-	}
-
-    OS_MutSemTake(SCH_AppData.ADChildTaskMutex);
-	return 0;
-}
 
 
 /*******************************************************************
@@ -1294,11 +1123,6 @@ int32 SCH_ValidateScheduleData(void *TableData)
         }
     }
 
-    if (TableResult == CFE_SUCCESS)
-    {
-    	TableResult = SCH_ValidateScheduleDeadlines(TableArray);
-    }
-
     /*
     ** Send event describing results
     */
@@ -1320,104 +1144,6 @@ int32 SCH_ValidateScheduleData(void *TableData)
     return(TableResult);
 
 } /* End of SCH_ValidateScheduleData() */
-
-/*******************************************************************
-**
-** SCH_ValidateScheduleDeadlines
-**
-** NOTE: For complete prolog information, see above
-********************************************************************/
-
-int32 SCH_ValidateScheduleDeadlines(void *TableData)
-{
-    SCH_ScheduleEntry_t *TableArray = (SCH_ScheduleEntry_t *) TableData;
-    int32 TableResult = CFE_SUCCESS;
-    uint32 TableIndex;
-    uint32 DeadlineSearchIndex = 0;
-    uint16 MessageIndex;
-    uint16 SearchMessageIndex;
-    uint32 Deadline;
-    uint32 FailCount = 0;
-    uint16 SearchMinorFrames = 0;
-    boolean FoundNextEntry = FALSE;
-
-    /* Iterate over each entry in SCH schedule table */
-    for (TableIndex = 0; TableIndex < SCH_TABLE_ENTRIES; TableIndex++)
-    {
-    	/* Get data for this index */
-        MessageIndex = TableArray[TableIndex].MessageIndex;
-        Deadline     = TableArray[TableIndex].Deadline;
-
-        /* If deadline is set to 0 we don't care about it */
-        if (Deadline == 0)
-        {
-        	FoundNextEntry = TRUE;
-        }
-
-        /* Search for next occurrence of this message */
-        DeadlineSearchIndex = TableIndex + 1;
-        SearchMinorFrames = 0;
-        while(!FoundNextEntry)
-        {
-        	/* Need an index safeguard in case rollover into next major frame */
-        	if(DeadlineSearchIndex >= SCH_TABLE_ENTRIES)
-        	{
-        		DeadlineSearchIndex = DeadlineSearchIndex % SCH_TABLE_ENTRIES;
-        	}
-
-        	/* Update search minor frame number */
-            if (DeadlineSearchIndex % SCH_ENTRIES_PER_SLOT == 0)
-            {
-            	SearchMinorFrames++;
-            }
-
-        	/* If we've already checked every frame within the deadline without finding
-        	 * it we can stop looking */
-			if(SearchMinorFrames > Deadline)
-			{
-				FoundNextEntry = TRUE;
-			}
-
-        	/* Get message index for the current search index */
-        	SearchMessageIndex = TableArray[DeadlineSearchIndex].MessageIndex;
-
-        	if(SearchMessageIndex == MessageIndex)
-        	{
-        		/* We found the next occurrence, did it overlap? */
-        		if(SearchMinorFrames < Deadline)
-        		{
-        			TableResult = SCH_SDT_BAD_DEADLINE;
-        			FailCount++;
-        			CFE_EVS_SendEvent(SCH_SCHEDULE_TBL_ERR_EID, CFE_EVS_ERROR,
-						  "Schedule tbl validate error - Overlapping message deadline occurrence for msg[%d]: %lu frames",
-						  MessageIndex, Deadline - SearchMinorFrames);
-        		}
-        		FoundNextEntry = TRUE;
-        	}
-
-        	DeadlineSearchIndex++;
-        }
-
-        FoundNextEntry = FALSE;
-    }
-
-    /* Send event describing results */
-	CFE_EVS_SendEvent(SCH_SCHEDULE_TABLE_EID, CFE_EVS_DEBUG,
-					  "Schedule table deadline verify results -- fails[%lu]", FailCount);
-
-	/* Maintain table verification statistics */
-	if (TableResult == CFE_SUCCESS)
-	{
-		SCH_AppData.TableVerifySuccessCount++;
-	}
-	else
-	{
-		SCH_AppData.TableVerifyFailureCount++;
-	}
-
-    return(TableResult);
-
-} /* End of SCH_ValidateScheduleDeadlines() */
 
 
 /*******************************************************************
@@ -1538,118 +1264,6 @@ int32 SCH_ValidateMessageData(void *TableData)
 
 } /* End of SCH_ValidateMessageData() */
 
-
-
-int32 SCH_ChildTaskInit(void)
-{
-	uint32 Status = CFE_SUCCESS;
-
-	/* Create the mutex to be shared between threads. */
-	Status = OS_MutSemCreate(&SCH_AppData.ADChildTaskMutex, SCH_AD_MUTEX_NAME, 0);
-    if (Status != OS_SUCCESS)
-    {
-        CFE_EVS_SendEvent(SCH_MUTEX_CREATE_ERR_EID, CFE_EVS_ERROR,
-                          "OS_MutSemCreate - err = 0x%08lX",
-                          Status);
-        return Status;
-    }
-
-    /*
-    ** Create the holdup semaphore to be used in non-realtime mode when we
-    ** want to wait for application activities to finish executing.
-    */
-    Status = OS_BinSemCreate(&SCH_AppData.ADHoldupSemaphore, SCH_AD_HOLDUP_SEM_NAME, SCH_AD_HOLDUP_SEM_VALUE, SCH_AD_HOLDUP_SEM_OPTIONS);
-    if (Status != CFE_SUCCESS)
-    {
-        CFE_EVS_SendEvent(SCH_SEM_CREATE_ERR_EID, CFE_EVS_ERROR,
-                          "Error creating Holdup Semaphore (RC=0x%08lX)",
-                          Status);
-        return(Status);
-    }
-
-    Status = CFE_ES_CreateChildTask(&SCH_AppData.ADChildTaskID,
-                                   SCH_AD_CHILD_TASK_NAME,
-                                   SCH_ADChildTask,
-                                   NULL,
-                                   CFE_ES_DEFAULT_STACK_SIZE,
-                                   SCH_AD_CHILD_TASK_PRIORITY,
-                                   0);
-    if (Status != CFE_SUCCESS)
-    {
-        CFE_EVS_SendEvent(SCH_AD_CHILD_TASK_CREATE_ERR_EID, CFE_EVS_ERROR,
-                          "AD child task create failed - err = 0x%08lX",
-                          Status);
-    }
-
-    return Status;
-}
-
-
-
-void SCH_ADChildTask(void)
-{
-	int32 Status = CFE_SUCCESS;
-
-    SCH_AppData.ADChildTaskRunStatus = CFE_ES_RegisterChildTask();
-
-    while (SCH_AppData.ADChildTaskRunStatus == CFE_SUCCESS)
-    {
-    	CFE_SB_MsgPtr_t MsgPtr;
-
-    	int32 Status = CFE_SB_RcvMsg(&MsgPtr, SCH_AppData.ADPipe, CFE_SB_PEND_FOREVER);
-
-        if (Status == CFE_SUCCESS)
-        {
-        	CFE_SB_MsgId_t MsgID = CFE_SB_GetMsgId(MsgPtr);
-
-        	if(MsgID != SCH_ACTIVITY_DONE_MID)
-        	{
-                CFE_EVS_SendEvent(SCH_AD_RCVD_UNEXPECTED_MSG_ERR_EID, CFE_EVS_ERROR,
-                                  "Received unexpected message.  MsgID = 0x%04X", MsgID);
-        	}
-        	else
-        	{
-        		SCH_ActivityDoneMsg_t *DoneMsg = (SCH_ActivityDoneMsg_t*)MsgPtr;
-
-        		SCH_ProcessActivityComplete(DoneMsg->MsgID);
-        	}
-        }
-    }
-}
-
-
-void SCH_ProcessActivityComplete(CFE_SB_MsgId_t MsgID)
-{
-	uint32 iSlot = 0;
-	uint32 iActivity = 0;
-	boolean Found = FALSE;
-
-	/* Find the pending activity that, when completed, resulted in this message. */
-    OS_MutSemTake(SCH_AppData.ADChildTaskMutex);
-	for(iSlot = 0; (iSlot < SCH_TOTAL_SLOTS) && (Found == FALSE); ++iSlot)
-	{
-		for(iActivity = 0; (iActivity < SCH_DEADLINES_PER_SLOT) && (Found == FALSE); ++iActivity)
-		{
-			SCH_ActivityDeadlineStatus_t *Activity = &SCH_AppData.DeadlineTable->Slot[iSlot].Status[iActivity];
-			if(Activity->MsgID == MsgID)
-			{
-				if(Activity->State == SCH_DEADLINE_STATE_PENDED)
-				{
-					Activity->State = SCH_DEADLINE_STATE_IDLE;
-					Found = TRUE;
-					OS_BinSemGive(SCH_AppData.ADHoldupSemaphore);
-				}
-			}
-		}
-	}
-
-	if(Found == FALSE)
-	{
-        CFE_EVS_SendEvent(SCH_UNEXPECTED_ACT_DONE_ERR_EID, CFE_EVS_ERROR,
-                          "Received unxptd act done msg.  NextSlotNumber = %u MsgID = 0x%04X", SCH_AppData.NextSlotNumber, MsgID);
-	}
-    OS_MutSemGive(SCH_AppData.ADChildTaskMutex);
-}
 
 /************************/
 /*  End of File Comment */
