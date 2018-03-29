@@ -382,11 +382,11 @@
 		        {"id": "MIXERCFG_TBL", "title": "Mixer Config", "isDumpTable": false}
 		    ],
 		    "msgs": [
-		        {"macro": "AMC_CMD_MID", "type": "CMD", "id": 7229},
-		        {"macro": "AMC_SEND_HK_MID", "type": "CMD", "id": 7230},
-		        {"macro": "AMC_UPDATE_MOTORS_MID", "id": 7231},
-		        {"macro": "AMC_OUT_DATA_MID", "type": "TLM", "id": 3136},
-		        {"macro": "AMC_HK_TLM_MID", "type": "TLM", "id": 3137}
+		        {"macro": "AMC_CMD_MID", "type": "CMD", "id": 1085},
+		        {"macro": "AMC_SEND_HK_MID", "type": "CMD", "id": 1086},
+		        {"macro": "AMC_UPDATE_MOTORS_MID", "id": 1087},
+		        {"macro": "AMC_OUT_DATA_MID", "type": "TLM", "id": 1088},
+		        {"macro": "AMC_HK_TLM_MID", "type": "TLM", "id": 1089}
 		    ]
 		},
         {
