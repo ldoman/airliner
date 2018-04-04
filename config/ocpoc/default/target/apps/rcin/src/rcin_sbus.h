@@ -161,7 +161,7 @@ extern "C" {
 **  \par Limits:
 **       0 to MAX_PRIORITY (usually 255)
 */
-#define RCIN_STREAMING_TASK_PRIORITY    (50)
+#define RCIN_STREAMING_TASK_PRIORITY    (85)
 
 /** \brief RCIN shared data mutex name. */
 #define RCIN_MUTEX_NAME                "RCIN_MUTEX"

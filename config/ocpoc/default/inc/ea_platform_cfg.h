@@ -125,9 +125,9 @@ extern "C" {
  **       higher (lower number) than the EA App priority. 
  **
  */
-#define EA_CHILD_TASK_PRIORITY              100
-#define EA_APP_UTIL_THRESHOLD	70
-#define EA_APP_NUM_THREADS		4
+#define EA_CHILD_TASK_PRIORITY              (187)
+#define EA_APP_UTIL_THRESHOLD               (70)
+#define EA_APP_NUM_THREADS                  (4)
 
 #ifdef __cplusplus
 }

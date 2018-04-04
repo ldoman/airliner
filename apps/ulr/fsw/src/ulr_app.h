@@ -89,7 +89,7 @@ typedef struct
 
 #define ULR_LISTENER_TASK_NAME  		"ULR_LISTENER"
 #define ULR_LISTENER_TASK_STACK_SIZE	16000
-#define ULR_LISTENER_TASK_PRIORITY		100
+#define ULR_LISTENER_TASK_PRIORITY		64
 #define ULR_MUTEX_NAME 					"ULR_MUTEX"
 
 extern "C" void ULR_ListenerTaskMain();

@@ -28,6 +28,8 @@ build_airliner_cfe(
         ${CMAKE_CURRENT_SOURCE_DIR}/unit_test_wrapper
 )
 
+add_subdirectory(allstop allstop)
+
 add_airliner_app(
     cfs_lib
     DEFINITION ${PROJECT_SOURCE_DIR}/apps/cfs_lib/fsw/for_build)
