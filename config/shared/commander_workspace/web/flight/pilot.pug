@@ -216,7 +216,7 @@ block main
         var psi = Math.atan2(2.0*((Q[1]*Q[2])+(Q[0]*Q[3])),1.0-2.0*((Q[2]*Q[2])+(Q[3]*Q[3])));
       
         Attitude.Pitch = theta;
-        Attitude.Roll = phi;
+        Attitude.Roll = (-1.0)*phi;
         Attitude.Yaw = psi;
 
         if (HUDStarted == false) {
