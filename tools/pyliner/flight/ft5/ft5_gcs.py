@@ -222,7 +222,7 @@ def vehicle_full_forward():
     airliner.send_telemetry(
         {'name':'/Airliner/CNTL/ManualSetpoint', 'args':[
         {'name':'Timestamp', 'value':airliner.get_time()},
-        {'name':'X', 'value':0.5},
+        {'name':'X', 'value':0.9},
         {'name':'Y', 'value':0.0},
         {'name':'Z', 'value':0.5},
         {'name':'R', 'value':0.0},
@@ -255,7 +255,7 @@ def vehicle_full_left():
         {'name':'/Airliner/CNTL/ManualSetpoint', 'args':[
         {'name':'Timestamp', 'value':airliner.get_time()},
         {'name':'X', 'value':0.0},
-        {'name':'Y', 'value':-0.5},
+        {'name':'Y', 'value':-0.9},
         {'name':'Z', 'value':0.5},
         {'name':'R', 'value':0.0},
         {'name':'Flaps', 'value':0.0},
@@ -286,7 +286,7 @@ def vehicle_full_reverse():
     airliner.send_telemetry(
         {'name':'/Airliner/CNTL/ManualSetpoint', 'args':[
         {'name':'Timestamp', 'value':airliner.get_time()},
-        {'name':'X', 'value':-0.5},
+        {'name':'X', 'value':-0.9},
         {'name':'Y', 'value':0.0},
         {'name':'Z', 'value':0.5},
         {'name':'R', 'value':0.0},
@@ -319,7 +319,7 @@ def vehicle_full_right():
         {'name':'/Airliner/CNTL/ManualSetpoint', 'args':[
         {'name':'Timestamp', 'value':airliner.get_time()},
         {'name':'X', 'value':0.0},
-        {'name':'Y', 'value':0.5},
+        {'name':'Y', 'value':0.9},
         {'name':'Z', 'value':0.5},
         {'name':'R', 'value':0.0},
         {'name':'Flaps', 'value':0.0},
