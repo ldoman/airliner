@@ -26,6 +26,7 @@ import px4_manual_control_setpoint_pb2
 import px4_vehicle_command_msg_pb2
 import sens_hk_pb2
 import gps_hk_pb2
+import px4_vehicle_global_position_msg_pb2
 
 proto_msg_map = { 
     "CFE_ES_AppNameCmd_t": es_app_name_pb2.es_app_name_pb,
@@ -54,5 +55,6 @@ proto_msg_map = {
     "PX4_VehicleCommandMsg_t": px4_vehicle_command_msg_pb2.px4_vehicle_command_msg_pb,
     "SENS_HkTlm_t": sens_hk_pb2.sens_hk_pb,
     "GPS_HkTlm_t": gps_hk_pb2.gps_hk_pb,
+    "PX4_VehicleGlobalPositionMsg_t": px4_vehicle_global_position_msg_pb2.px4_vehicle_global_position_msg_pb
 }
 
