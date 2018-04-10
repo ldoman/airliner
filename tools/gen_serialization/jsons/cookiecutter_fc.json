@@ -538,6 +538,159 @@
 				}
             },
             "required_pb_msgs": {}
+        },
+        "PX4_VehicleGlobalPositionMsg_t": {
+			"proto_msg": "px4_vehicle_global_position_msg_pb",
+			"fields": {
+				"Timestamp": {
+					"airliner_name": "Timestamp", 
+					"pb_type": "uint64",
+					"pb_field_rule": "required",
+					"airliner_type": "uint64",
+					"array_length": 0
+				},
+				"TimeUtcUsec": {
+					"airliner_name": "TimeUtcUsec", 
+					"pb_type": "uint64",
+					"pb_field_rule": "required",
+					"airliner_type": "uint64",
+					"array_length": 0
+				},
+				"Lat": {
+					"airliner_name": "Lat", 
+					"pb_type": "double",
+					"pb_field_rule": "required",
+					"airliner_type": "double",
+					"array_length": 0
+				},
+				"Lon": {
+					"airliner_name": "Lon", 
+					"pb_type": "double",
+					"pb_field_rule": "required",
+					"airliner_type": "double",
+					"array_length": 0
+				},
+				"Alt": {
+					"airliner_name": "Alt", 
+					"pb_type": "float",
+					"pb_field_rule": "required",
+					"airliner_type": "float",
+					"array_length": 0
+				},
+				"DeltaLatLon": {
+					"airliner_name": "DeltaLatLon", 
+					"pb_type": "double",
+					"pb_field_rule": "repeated",
+					"airliner_type": "double",
+					"array_length": 2
+				},
+				"DeltaAlt": {
+					"airliner_name": "DeltaAlt", 
+					"pb_type": "float",
+					"pb_field_rule": "required",
+					"airliner_type": "float",
+					"array_length": 0
+				},
+				"LatLonResetCounter": {
+					"airliner_name": "LatLonResetCounter", 
+					"pb_type": "uint32",
+					"pb_field_rule": "required",
+					"airliner_type": "uint8",
+					"array_length": 0
+				},
+				"AltResetCounter": {
+					"airliner_name": "AltResetCounter", 
+					"pb_type": "uint32",
+					"pb_field_rule": "required",
+					"airliner_type": "uint8",
+					"array_length": 0
+				},
+				"VelN": {
+					"airliner_name": "VelN", 
+					"pb_type": "float",
+					"pb_field_rule": "required",
+					"airliner_type": "float",
+					"array_length": 0
+				},
+				"VelE": {
+					"airliner_name": "VelE", 
+					"pb_type": "float",
+					"pb_field_rule": "required",
+					"airliner_type": "float",
+					"array_length": 0
+				},
+				"VelD": {
+					"airliner_name": "VelD", 
+					"pb_type": "float",
+					"pb_field_rule": "required",
+					"airliner_type": "float",
+					"array_length": 0
+				},
+				"Yaw": {
+					"airliner_name": "Yaw", 
+					"pb_type": "float",
+					"pb_field_rule": "required",
+					"airliner_type": "float",
+					"array_length": 0
+				},
+				"EpH": {
+					"airliner_name": "EpH", 
+					"pb_type": "float",
+					"pb_field_rule": "required",
+					"airliner_type": "float",
+					"array_length": 0
+				},
+				"EpV": {
+					"airliner_name": "EpV", 
+					"pb_type": "float",
+					"pb_field_rule": "required",
+					"airliner_type": "float",
+					"array_length": 0
+				},
+				"EvH": {
+					"airliner_name": "EvH", 
+					"pb_type": "float",
+					"pb_field_rule": "required",
+					"airliner_type": "float",
+					"array_length": 0
+				},
+				"EvV": {
+					"airliner_name": "EvV", 
+					"pb_type": "float",
+					"pb_field_rule": "required",
+					"airliner_type": "float",
+					"array_length": 0
+				},
+				"TerrainAlt": {
+					"airliner_name": "TerrainAlt", 
+					"pb_type": "float",
+					"pb_field_rule": "required",
+					"airliner_type": "float",
+					"array_length": 0
+				},
+				"PressureAlt": {
+					"airliner_name": "PressureAlt", 
+					"pb_type": "float",
+					"pb_field_rule": "required",
+					"airliner_type": "float",
+					"array_length": 0
+				},
+				"TerrainAltValid": {
+					"airliner_name": "TerrainAltValid", 
+					"pb_type": "bool",
+					"pb_field_rule": "required",
+					"airliner_type": "boolean",
+					"array_length": 0
+				},
+				"DeadReckoning": {
+					"airliner_name": "DeadReckoning", 
+					"pb_type": "bool",
+					"pb_field_rule": "required",
+					"airliner_type": "boolean",
+					"array_length": 0
+				}
+            },
+            "required_pb_msgs": {}
         }
 	},
 	"operations": {
@@ -555,6 +708,11 @@
             "airliner_msg": "PX4_VehicleCommandMsg_t",
             "airliner_cc": -1,
             "airliner_mid": "0x0a4d"
+        },
+        "VehicleGlobalPosition": {			
+            "airliner_msg": "PX4_VehicleGlobalPositionMsg_t",
+            "airliner_cc": -1,
+            "airliner_mid": "0x0a50"
         }
 	},
 	"autogen_version": "",
