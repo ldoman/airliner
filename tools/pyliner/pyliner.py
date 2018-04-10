@@ -12,6 +12,7 @@ import socket
 import SocketServer
 import threading
 from junit_xml import TestSuite, TestCase
+from flufl.enum import Enum
 
 DEFAULT_CI_PORT = 5008
 DEFAULT_TO_PORT = 5011
@@ -19,6 +20,13 @@ DEFAULT_TO_PORT = 5011
 # Custom exceptions
 class InvalidCommandException(Exception): pass
 class InvalidOperationException(Exception): pass
+
+# Enums
+class LogLevel(Enum):
+    Debug                      = 1
+    Info                       = 2
+    Warn                       = 3
+    Error                      = 4
 
 class Pyliner(object):
 
@@ -232,7 +240,7 @@ class Pyliner(object):
         
         serial_cmd = self.serialize(header, payload)      
         self.send_to_airliner(serial_cmd)
-        logging.info('Sending command to airliner: %s' % (cmd))
+        self.log('Sending command to airliner: %s' % (cmd))
 
     def send_telemetry(self, tlm):
         """ User accessible function to send a command to the software bus. 
@@ -270,7 +278,7 @@ class Pyliner(object):
         
         serial_cmd = self.serialize(header, payload)      
         self.send_to_airliner(serial_cmd)
-        logging.info('Sending telemetry to airliner: %s' % (tlm))
+        self.log('Sending telemetry to airliner: %s' % (tlm))
         #header.print_base10()
 
     def __get_pb_value(self, pb_msg, op_path):
@@ -329,12 +337,12 @@ class Pyliner(object):
             return
         
         self.all_telemetry.append(tlm)
-        logging.debug("Recvd tlm: " + str(tlm))
+        self.log("Recvd tlm: " + str(tlm), LogLevel.Debug)
         
         # TODO: Check if needed
         hdr = tlm[0][:12]
         if len(hdr) < 12:
-            logging.debug("Rcvd tlm with header length: " + str(len(hdr)))
+            self.log("Rcvd tlm with header length: " + str(len(hdr)), LogLevel.Debug)
             #print "Rcvd tlm with header length: " + str(len(hdr))
         
         # Get python CCSDS object #TODO: Check what causes this to fail on some tlm pkts
@@ -344,7 +352,7 @@ class Pyliner(object):
             tlm_pkt.set_decoded(header)
             tlm_time = tlm_pkt.get_time()
         except Exception as e:
-            logging.debug("Exception when decoding tlm in ccsds: " + str(e))
+            self.log("Exception when decoding tlm in ccsds: " + str(e), LogLevel.Debug)
             #print e
 
         # Iterate over subscribed telemetry to check if we care
@@ -387,7 +395,7 @@ class Pyliner(object):
             op = self.__get_airliner_op(tlm_item)
             if not op:
                 err_msg = "Invalid telemetry operational name received. Operation (%s) not defined." % tlm_item
-                logging.error(err_msg)
+                self.log(err_msg, LogLevel.Error)
                 raise InvalidOperationException(err_msg)
 
             # Add entry to subscribers list
@@ -402,7 +410,7 @@ class Pyliner(object):
                                         'value': 'NULL',
                                         'time': 'NULL'}
             
-            logging.info('Subscribing to the following telemetry: %s' % (tlm))
+            self.log('Subscribing to the following telemetry: %s' % (tlm))
 
     def send_to_airliner(self, msg):
         """ Publish the passed message to airliner """
@@ -424,43 +432,44 @@ class Pyliner(object):
         """ Assert for Pyliner that tracks passes and failures """
         if a == b:
             self.passes += 1
-            logging.info('Valid assertion made: %s == %s' % (a, b))
+            self.log('Valid assertion made: %s == %s' % (a, b))
         else:
             self.fails += 1
-            logging.warn('Invalid assertion made: %s == %s' % (a, b))
+            self.log('Invalid assertion made: %s == %s' % (a, b), LogLevel.Warn)
             
     def assert_not_equals(self, a, b, description, result):
         """ Assert for Pyliner that tracks passes and failures """
         if a != b:
             self.passes += 1
             self.test_description.update(description)
-            logging.info('Valid assertion made: %s != %s' % (a, b))
+            self.log('Valid assertion made: %s != %s' % (a, b))
+
         else:
             self.fails += 1
             self.test_description.update(description)
-            logging.warn('Invalid assertion made: %s != %s' % (a, b))
+            self.log('Invalid assertion made: %s != %s' % (a, b), LogLevel.Warn)
             
     def assert_true(self, expr, description):
         """ Assert for Pyliner that tracks passes and failures """
         if expr:
             self.passes += 1
             self.test_description.append(description)
-            logging.info("Valid true assertion made")
+            self.log("Valid true assertion made")
         else:
             self.fails += 1
             self.test_description.append(description)
-            logging.warn("Invalid true assertion made")
+            self.log("Invalid true assertion made", LogLevel.Warn)
             
     def assert_false(self, expr, description):
         """ Assert for Pyliner that tracks passes and failures """
         if not expr:
             self.passes += 1
             self.test_description.append(description)
-            logging.info("Valid false assertion made")
+            self.log("Valid false assertion made")
         else:
             self.fails += 1
             self.test_description.append(description)
-            logging.warn("Invalid false assertion made")
+            self.log("Invalid false assertion made", LogLevel.Warn)
 
     def dump_tlm(self):
         """ Dump all received telemetry to file """
@@ -492,6 +501,19 @@ class Pyliner(object):
         self.dump_tlm()
         print self.get_test_results()
         self.generate_junit()
+
+    def log(self, text, level = LogLevel.Info):
+        """ Wrapper for logging function """
+        if level == LogLevel.Debug:
+            logging.debug(text)
+        elif level == LogLevel.Info:
+            logging.info(text)
+        elif level == LogLevel.Warn:
+            logging.warn(text)
+        elif level == LogLevel.Error:
+            logging.error(text)
+        else:
+            logging.debug("Specified log mode unsupported")
         
     def generate_junit(self):
         # Get the test count
