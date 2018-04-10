@@ -20,6 +20,7 @@ DEFAULT_TO_PORT = 5011
 # Custom exceptions
 class InvalidCommandException(Exception): pass
 class InvalidOperationException(Exception): pass
+class NotImplementedException(Exception): pass
 
 # Enums
 class LogLevel(Enum):
