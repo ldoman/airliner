@@ -48,6 +48,8 @@ extern "C" {
 /************************************************************************
 ** Local Defines
 *************************************************************************/
+
+/* Configuration */
 /** \brief SPI Device path of the MS5611 */
 #define MS5611_SPI_DEVICE_PATH              MS5611_DEVICE_PATH
 
@@ -65,7 +67,20 @@ extern "C" {
 
 /** \brief SPI device receive delay */
 #define MS5611_SPI_RX_DELAY                 (0)
-/* SPI Commands */
+
+/** \brief Retry attemps for interrupted ioctl calls. */
+#define MS5611_MAX_RETRY_ATTEMPTS           (2)
+
+/** \brief Sleep time micro seconds for interrupted calls. */
+#define MS5611_MAX_RETRY_SLEEP_USEC         (10)
+
+/** \brief Sleep time for D1 and D2 conversion. */
+#define MS5611_CONVERSION_DELAY             (10000)
+
+/** \brief Sleep time for device reset. */
+#define MS5611_RESET_DELAY                  (100000)
+
+/* Commands */
 /** \brief MS5611 command reset */
 #define MS5611_SPI_CMD_RESET                (0x1e)
 
@@ -105,11 +120,6 @@ extern "C" {
 /** \brief MS5611 command convert D2 with OSR mask */
 #define MS5611_SPI_CMD_CONVERT_D2           (MS5611_SPI_CMD_CONVERT_D2_MASK + MS5611_SPI_CMD_OSR_1024_MASK)
 
-/** \brief Retry attemps for interrupted ioctl calls. */
-#define MS5611_MAX_RETRY_ATTEMPTS           (2)
-
-/** \brief Sleep time micro seconds for interrupted calls. */
-#define MS5611_MAX_RETRY_SLEEP_USEC         (10)
 
 
 /************************************************************************

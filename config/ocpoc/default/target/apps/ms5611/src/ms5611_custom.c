@@ -101,7 +101,7 @@ struct spi_ioc_transfer MS5611_SPI_Xfer[2];
 int32 MS5611_Ioctl(int fh, int request, void *arg)
 {
     int32 returnCode = 0;
-    uint32 i = 0;
+    uint32 i         = 0;
 
     for (i=0; i < MS5611_MAX_RETRY_ATTEMPTS; i++)
     {
@@ -132,7 +132,6 @@ boolean MS5611_Custom_Init()
 {
     boolean returnBool = TRUE;
     int ret            = 0;
-    int i              = 0;
     int8 mode          = MS5611_SPI_DEVICE_MODE;
     int8 bits          = MS5611_SPI_DEVICE_BITS;
     uint32 speed       = MS5611_SPI_DEVICE_SPEED;
@@ -244,14 +243,13 @@ boolean MS5611_Custom_Uninit(void)
 
 void MS5611_Critical_Cleanup(void)
 {
-    close(MS5611_AppCustomData.DeviceFd);
+    (void) close(MS5611_AppCustomData.DeviceFd);
 }
 
 
 int32 MS5611_ResetDevice(void)
 {
     int ret = 0;
-
     unsigned char   txBuf[2];
     unsigned char   rxBuf[2];
 
@@ -271,7 +269,7 @@ int32 MS5611_ResetDevice(void)
     }
     else
     {
-        usleep(100000);
+        usleep(MS5611_RESET_DELAY);
     }
     return (ret);
 }
@@ -280,7 +278,6 @@ int32 MS5611_ResetDevice(void)
 boolean MS5611_ReadPROM(uint8 Addr, uint16 *returnVal)
 {
     int ret            = 0;
-    uint32 i           = 0;
     boolean returnBool = TRUE;
     
     /* Null pointer check */
@@ -321,7 +318,6 @@ end_of_function:
 boolean MS5611_D1Conversion(void)
 {
     int ret            = 0;
-    int32 result       = 0;
     boolean returnBool = TRUE;
 
     unsigned char   txBuf[1];
@@ -344,7 +340,7 @@ boolean MS5611_D1Conversion(void)
     }
     else
     {
-        usleep(10000);
+        usleep(MS5611_CONVERSION_DELAY);
     }
     return (returnBool);
 }
@@ -353,7 +349,6 @@ boolean MS5611_D1Conversion(void)
 boolean MS5611_D2Conversion(void)
 {
     int ret            = 0;
-    int32 result       = 0;
     boolean returnBool = TRUE;
 
     unsigned char   txBuf[1];
@@ -376,7 +371,7 @@ boolean MS5611_D2Conversion(void)
     }
     else
     {
-        usleep(10000);
+        usleep(MS5611_CONVERSION_DELAY);
     }
     return (returnBool);
 }
@@ -385,10 +380,7 @@ boolean MS5611_D2Conversion(void)
 boolean MS5611_ReadADCResult(uint32 *returnVal)
 {
     int ret            = 0;
-    int32 result       = 0;
-    uint32 i           = 0;
     boolean returnBool = TRUE;
-    
     unsigned char   txBuf[30];
     unsigned char   rxBuf[30];
 
