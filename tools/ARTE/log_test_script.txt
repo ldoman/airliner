@@ -1,0 +1,31 @@
+- ARTE python2 ft4_gcs_rt.py 20180402_14:30:41 - 
+sending ready to ARTE server
+waiting for response from ARTE server
+('sequence count from ARTE server = ', 1)
+Arming vehicle
+Auto takeoff
+Position control
+Move left
+Move backwards
+Move right
+Move right
+Move backwards
+Move left
+RTL
+es_hk_cmdcnt: 1
+accel_sensor_combined_z: -9.42265701294
+baro_sensor_combined: 0.416214853525
+/Airliner/ES/GPS/Lat: 473977424
+/Airliner/ES/GPS/Lon: 85455908
+passed check gravity vector -9.42265701294
+passed check baro height 0.416214853525
+passed check command count
+=================================================
+Pyliner test complete
+Test case:  FT4_GCS
+Result:     PASS
+Passes:     3
+Fails:      0
+Duration:   2 minutes 11 seconds
+=================================================
+sending shutdown to ARTE server

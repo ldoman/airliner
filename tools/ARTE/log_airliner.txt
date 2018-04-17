@@ -1,0 +1,345 @@
+- ARTE taskset -c 1 ./core-bin 20180402_14:30:41 - 
+CFE_PSP: Default Reset Type = PO
+CFE_PSP: Default Reset SubType = 1
+CFE_PSP: Default CPU ID = 1
+CFE_PSP: Default Spacecraft ID = 66
+CFE_PSP: Default CPU Name: CPU1
+CFE_PSP: Default Reset Type = NORMAL
+CFE_PSP: Starting the cFE with a POWER ON reset.
+Unable to set main thread priority to max
+CFE_PSP: CLOCK_REALTIME resolution is 0s 1ns
+CFE_PSP: CLOCK_MONOTONIC resolution is 0s 1ns
+CFE_PSP: CLOCK_PROCESS_CPUTIME_ID resolution is 0s 1ns
+CFE_PSP: CLOCK_THREAD_CPUTIME_ID resolution is 0s 1ns
+2028-092-19:30:42.07089 POWER ON RESET due to Power Cycle (Power Cycle).
+2028-092-19:30:42.07091 ES Startup: CFE_ES_Main in EARLY_INIT state
+CFE_PSP: CFE_PSP_AttachExceptions Called
+2028-092-19:30:42.07093 ES Startup: CFE_ES_Main entering CORE_STARTUP state
+2028-092-19:30:42.07093 ES Startup: Starting Object Creation calls.
+2028-092-19:30:42.07094 ES Startup: Calling CFE_ES_CDSEarlyInit
+2028-092-19:30:42.07104 ES Startup: Calling CFE_EVS_EarlyInit
+2028-092-19:30:42.07105 Event Log cleared following power-on reset
+2028-092-19:30:42.07105 ES Startup: Calling CFE_SB_EarlyInit
+2028-092-19:30:42.07112 ES Startup: Calling CFE_TIME_EarlyInit
+1980-012-14:03:20.00000 ES Startup: Calling CFE_TBL_EarlyInit
+1980-012-14:03:20.00010 ES Startup: Calling CFE_FS_EarlyInit
+1980-012-14:03:20.00016 ES Startup: Core App: CFE_EVS created. App ID: 0
+EVS Port1 66/1/CFE_EVS 14: No subscribers for MsgId 0x808,sender CFE_EVS
+EVS Port1 66/1/CFE_EVS 1: cFE EVS Initialized. cFE Version 6.5.0.0
+1980-012-14:03:20.05032 ES Startup: Core App: CFE_SB created. App ID: 1
+1980-012-14:03:20.05034 SB:Registered 4 events for filtering
+EVS Port1 66/1/CFE_SB 14: No subscribers for MsgId 0x808,sender CFE_SB
+EVS Port1 66/1/CFE_SB 1: cFE SB Initialized
+1980-012-14:03:20.10049 ES Startup: Core App: CFE_ES created. App ID: 2
+EVS Port1 66/1/CFE_SB 14: No subscribers for MsgId 0x808,sender CFE_ES
+EVS Port1 66/1/CFE_ES 1: cFE ES Initialized
+EVS Port1 66/1/CFE_SB 14: No subscribers for MsgId 0x808,sender CFE_ES
+EVS Port1 66/1/CFE_ES 2: Versions:cFE 6.5.0.0, OSAL 4.2.1.0, PSP 1.3.0.0, chksm 14535
+1980-012-14:03:20.15065 ES Startup: Core App: CFE_TIME created. App ID: 3
+EVS Port1 66/1/CFE_SB 14: No subscribers for MsgId 0x808,sender CFE_TIME
+EVS Port1 66/1/CFE_TIME 1: cFE TIME Initialized
+1980-012-14:03:20.20082 ES Startup: Core App: CFE_TBL created. App ID: 4
+EVS Port1 66/1/CFE_TBL 1: cFE TBL Initialized.  cFE Version 6.5.0.0
+1980-012-14:03:20.25093 ES Startup: Finished ES CreateObject table entries.
+1980-012-14:03:20.25093 ES Startup: CFE_ES_Main entering CORE_READY state
+1980-012-14:03:20.25096 ES Startup: Opened ES App Startup file: /cf/apps/cfe_es_startup.scr
+1980-012-14:03:20.25104 ES Startup: Loading shared library: /cf/apps/CFS_LIB.so
+CFS Lib Initialized.  Version 2.2.0.01980-012-14:03:20.25119 ES Startup: Loading shared library: /cf/apps/PBLIB.so
+PBLIB Initialized.  Version 1.0.0.0
+1980-012-14:03:20.25139 ES Startup: Loading shared library: /cf/apps/PRMLIB.so
+PRMLIB Initialized.  Version 1.0.0.0
+1980-012-14:03:20.25151 ES Startup: Loading shared library: /cf/apps/PX4LIB.so
+PX4 Library Initialized.  Version 1.0.0.0
+1980-012-14:03:20.25305 ES Startup: Loading shared library: /cf/apps/SIMLIB.so
+SIM Interface Initialized.  Version 1.0.0.0
+1980-012-14:03:20.25317 ES Startup: Loading file: /cf/apps/SIM.so, APP: SIM
+1980-012-14:03:20.25329 ES Startup: SIM loaded and created
+1980-012-14:03:20.25336 ES Startup: Loading file: /cf/apps/AMC.so, APP: AMC
+1980-012-14:03:20.25347 ES Startup: AMC loaded and created
+1980-012-14:03:20.25353 ES Startup: Loading file: /cf/apps/SENS.so, APP: SENS
+1980-012-14:03:20.25363 ES Startup: SENS loaded and created
+1980-012-14:03:20.25370 ES Startup: Loading file: /cf/apps/MPU9250.so, APP: MPU9250
+1980-012-14:03:20.25380 ES Startup: MPU9250 loaded and created
+1980-012-14:03:20.25387 ES Startup: Loading file: /cf/apps/HMC5883.so, APP: HMC5883
+1980-012-14:03:20.25396 ES Startup: HMC5883 loaded and created
+1980-012-14:03:20.25403 ES Startup: Loading file: /cf/apps/MS5611.so, APP: MS5611
+1980-012-14:03:20.25411 ES Startup: MS5611 loaded and created
+1980-012-14:03:20.25418 ES Startup: Loading file: /cf/apps/ULR.so, APP: ULR
+1980-012-14:03:20.25430 ES Startup: ULR loaded and created
+1980-012-14:03:20.25438 ES Startup: Loading file: /cf/apps/MAC.so, APP: MAC
+1980-012-14:03:20.25449 ES Startup: MAC loaded and created
+1980-012-14:03:20.25457 ES Startup: Loading file: /cf/apps/GPS.so, APP: GPS
+1980-012-14:03:20.25469 ES Startup: GPS loaded and created
+1980-012-14:03:20.25476 ES Startup: Loading file: /cf/apps/CI.so, APP: CI
+Warning: Last System Log Message Truncated.
+1980-012-14:03:20.25491 ES Startup: CI loaded and created
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25497 ES Startup: Loading file: /cf/apps/TO.so, APP: TO
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25509 ES Startup: TO loaded and created
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25515 ES Startup: Loading file: /cf/apps/CF.so, APP: CF
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25541 ES Startup: CF loaded and created
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25549 ES Startup: Loading file: /cf/apps/BAT.so, APP: BAT
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25562 ES Startup: BAT loaded and created
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25569 ES Startup: Loading file: /cf/apps/DS.so, APP: DS
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25580 ES Startup: DS loaded and created
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25587 ES Startup: Loading file: /cf/apps/FM.so, APP: FM
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25598 ES Startup: FM loaded and created
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25606 ES Startup: Loading file: /cf/apps/HK.so, APP: HK
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25616 ES Startup: HK loaded and created
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25623 ES Startup: Loading file: /cf/apps/LC.so, APP: LC
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25634 ES Startup: LC loaded and created
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25640 ES Startup: Loading file: /cf/apps/MM.so, APP: MM
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25650 ES Startup: MM loaded and created
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25657 ES Startup: Loading file: /cf/apps/SC.so, APP: SC
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25668 ES Startup: SC loaded and created
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25674 ES Startup: Loading file: /cf/apps/MD.so, APP: MD
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25683 ES Startup: MD loaded and created
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25690 ES Startup: Loading file: /cf/apps/EA.so, APP: EA
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25699 ES Startup: EA loaded and created
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25706 ES Startup: Loading file: /cf/apps/VC.so, APP: VC
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25716 ES Startup: VC loaded and created
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25723 ES Startup: Loading file: /cf/apps/PE.so, APP: PE
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25744 ES Startup: PE loaded and created
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25752 ES Startup: Loading file: /cf/apps/QAE.so, APP: QAE
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25766 ES Startup: QAE loaded and created
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25772 ES Startup: Loading file: /cf/apps/MPC.so, APP: MPC
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25786 ES Startup: MPC loaded and created
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25793 ES Startup: Loading file: /cf/apps/NAV.so, APP: NAV
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25807 ES Startup: NAV loaded and created
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25814 ES Startup: Loading file: /cf/apps/VM.so, APP: VM
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25870 ES Startup: VM loaded and created
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25877 ES Startup: Loading file: /cf/apps/CS.so, APP: CS
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25893 ES Startup: CS loaded and created
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25899 ES Startup: Loading file: /cf/apps/RCIN.so, APP: RCIN
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25910 ES Startup: RCIN loaded and created
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25916 ES Startup: Loading file: /cf/apps/LD.so, APP: LD
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25926 ES Startup: LD loaded and created
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25933 ES Startup: Loading file: /cf/apps/LGC.so, APP: LGC
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25945 ES Startup: LGC loaded and created
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25953 ES Startup: Loading file: /cf/apps/SCH.so, APP: SCH
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.25966 ES Startup: SCH loaded and created
+Warning: System Log full, log entry discarded.
+EVS Port1 66/1/LD 1: Initialized.  Version 1.0.0.0
+EVS Port1 66/1/SCH 1: SCH Initialized. Version 2.2.1.0
+EVS Port1 66/1/DS 10: Destination file table verify results: desc text = OK, good entries = 7, bad = 0, unused = 9
+EVS Port1 66/1/DS 12: Filter table verify results: desc text = OK, good entries = 105, bad = 0, unused = 151
+EVS Port1 66/1/DS 1: Application initialized, version 2.5.1.0, data at 0xED5631E0
+EVS Port1 66/1/HK 1: HK Initialized.  Version 2.4.1.0
+EVS Port1 66/1/FM 104: Free Space Table verify results: good entries = 3, bad = 0, unused = 5
+EVS Port1 66/1/MM 1: MM Initialized. Version 2.4.1.0
+EVS Port1 66/1/LC 56: WDT verify results: good = 0, bad = 0, unused = 176
+EVS Port1 66/1/SC 21: RTS table file load count = 2
+EVS Port1 66/1/FM 1: Initialization complete: version 2.5.2.0
+EVS Port1 66/1/MD 52: MD Dwell Tbl verify results: good = 0, bad = 0, unused = 25
+EVS Port1 66/1/CS 144: CS Eeprom Table verification results: good = 0, bad = 0, unused = 16
+RCIN:  Could not bind to joystick at '/dev/input/futaba-t8j-0'.  No such file or directory.
+1980-012-14:03:20.26458 RCIN - Application failed to initialize
+Warning: System Log full, log entry discarded.
+1980-012-14:03:20.26459 Application RCIN called CFE_ES_ExitApp
+Warning: System Log full, log entry discarded.
+EVS Port1 66/1/LC 66: ADT verify results: good = 0, bad = 0, unused = 176
+EVS Port1 66/1/SC 9: SC Initialized. Version 2.5.0.0
+EVS Port1 66/1/VC 8: VC UDP output enabled channel 0 to 127.0.0.1:3001
+EVS Port1 66/1/ULR 1: Initialized.  Version 1.0.0.0
+EVS Port1 66/1/MPU9250 1: Initialized. Version 1.0.0.0
+EVS Port1 66/1/HMC5883 1: Initialized.  Version 1.0.0.0
+EVS Port1 66/1/MS5611 1: Initialized.  Version 1.0.0.0
+EVS Port1 66/1/MD 52: MD Dwell Tbl verify results: good = 0, bad = 0, unused = 25
+EVS Port1 66/1/CS 107: CS Eeprom Table: No valid entries in the table
+EVS Port1 66/1/CF 1: CF Initialized.  Version 2.2.1.0
+EVS Port1 66/1/SIM 1: Initialized.  Version 1.0.0
+EVS Port1 66/1/LC 23: LC use of Critical Data Store disabled, activity mask = 0x00991990
+EVS Port1 66/1/VC 7: VC Device initialized channel 0
+EVS Port1 66/1/GPS 1: Initialized.  Version 1.0.0.0
+EVS Port1 66/1/BAT 1: Initialized.  Version 1.0.0.0
+EVS Port1 66/1/MD 52: MD Dwell Tbl verify results: good = 0, bad = 0, unused = 25
+EVS Port1 66/1/CS 143: CS Memory Table verification results: good = 0, bad = 0, unused = 16
+EVS Port1 66/1/EA 4: Successfully setup CDS
+EVS Port1 66/1/LC 2: LC Initialized. Version 2.1.0.0
+EVS Port1 66/1/VC 2: Initialized.  Version 0.0.0.0
+EVS Port1 66/1/QAE 1: Initialized.  Version 1.0.0.0
+EVS Port1 66/1/CI 4: Successfully setup CDS
+EVS Port1 66/1/MD 52: MD Dwell Tbl verify results: good = 0, bad = 0, unused = 25
+EVS Port1 66/1/CS 107: CS Memory Table: No valid entries in the table
+EVS Port1 66/1/LGC 1: Initialized.  Version 1.0.0.0
+EVS Port1 66/1/EA 2: Initialized.  Version 1.0.0.0
+EVS Port1 66/1/CI 18: UDP command input enabled on port 5010.
+EVS Port1 66/1/MD 7: Dwell Tables Recovered: 0, Dwell Tables Initialized: 4
+EVS Port1 66/1/CS 142: CS Apps Table verification results: good = 0, bad = 0, unused = 24
+EVS Port1 66/1/AMC 1: Initialized.  Version 1.0.0.0
+EVS Port1 66/1/CI 18: UDP serialized command input enabled on port 5009.
+EVS Port1 66/1/MD 1: MD Initialized.  Version 2.3.1.0
+EVS Port1 66/1/CS 108: CS Apps Table: No valid entries in the table
+EVS Port1 66/1/CI 2: Initialized.  Version 1.0.0.0
+EVS Port1 66/1/CS 139: CS Tables Table verification results: good = 2, bad = 0, unused = 22
+EVS Port1 66/1/CS 127: OS Text Segment disabled due to platform
+EVS Port1 66/1/PE 1: Initialized.  Version 1.0.0.0
+EVS Port1 66/1/CS 1: CS Initialized. Version 2.4.0.0
+EVS Port1 66/1/MPC 1: Initialized.  Version 1.0.0.0
+EVS Port1 66/1/SENS 1: Initialized.  Version 1.0.0.0
+EVS Port1 66/1/NAV 1: Initialized.  Version 1.0.0.0
+EVS Port1 66/1/MAC 2: Initialized.  Version 0.0.0.0
+EVS Port1 66/1/VM 1: Initialized.  Version 1.0.0.0
+EVS Port1 66/1/CFE_SB 7: Duplicate Subscription,MsgId 0xc54 on TO_GRND-BIN pipe,app TO
+EVS Port1 66/1/TO 30: UDP telemetry output enabled channel 0 to 127.0.0.1:5011
+EVS Port1 66/1/TO 30: UDP telemetry output enabled channel 1 to 127.0.0.1:5012
+EVS Port1 66/1/TO 2: Initialized.  Version 0.0.0.0
+EVS Port1 66/1/FM 100: Child Task initialization complete
+EVS Port1 66/1/CFE_SB 17: Msg Limit Err,MsgId 0xa52,pipe VM_SCH_PIPE,sender GPS.GPS_STREAM
+EVS Port1 66/1/CFE_SB 17: Msg Limit Err,MsgId 0xa52,pipe NAV_SCH_PIPE,sender GPS.GPS_STREAM
+EVS Port1 66/1/CFE_SB 17: Msg Limit Err,MsgId 0xa52,pipe PE_SCH_PIPE,sender GPS.GPS_STREAM
+EVS Port1 66/1/CFE_SB 17: Msg Limit Err,MsgId 0xa52,pipe VM_SCH_PIPE,sender GPS.GPS_STREAM
+EVS Port1 66/1/CFE_SB 17: Msg Limit Err,MsgId 0xa52,pipe NAV_SCH_PIPE,sender GPS.GPS_STREAM
+EVS Port1 66/1/CFE_SB 17: Msg Limit Err,MsgId 0xa52,pipe PE_SCH_PIPE,sender GPS.GPS_STREAM
+EVS Port1 66/1/CFE_SB 17: Msg Limit Err,MsgId 0xa52,pipe VM_SCH_PIPE,sender GPS.GPS_STREAM
+EVS Port1 66/1/CFE_SB 17: Msg Limit Err,MsgId 0xa52,pipe NAV_SCH_PIPE,sender GPS.GPS_STREAM
+EVS Port1 66/1/CFE_SB 17: Msg Limit Err,MsgId 0xa52,pipe PE_SCH_PIPE,sender GPS.GPS_STREAM
+EVS Port1 66/1/CFE_ES 14: Exit Application RCIN on Error Completed.
+EVS Port1 66/1/VM 15: Arming::Standby
+EVS Port1 66/1/VM 19: Navigation::Manual
+EVS Port1 66/1/CFE_SB 17: Msg Limit Err,MsgId 0xa52,pipe VM_SCH_PIPE,sender GPS.GPS_STREAM
+EVS Port1 66/1/PE 21: GPS initialized origin. Lat:  47.40 Lon:   8.55 Alt: 488.3 m
+EVS Port1 66/1/PE 21: GPS initialized. Lat:  47.40 Lon:   8.55 Alt: 488.3 m
+1980-012-14:03:50.31368 ES Startup: Startup Sync failed - Applications may not have all started
+Warning: System Log full, log entry discarded.
+1980-012-14:03:50.31369 ES Startup: CFE_ES_Main entering OPERATIONAL state
+Warning: System Log full, log entry discarded.
+
+    ___    ________  __    _____   ____________ 
+   /   |  /  _/ __ \/ /   /  _/ | / / ____/ __ \
+  / /| |  / // /_/ / /    / //  |/ / __/ / /_/ /
+ / ___ |_/ // _, _/ /____/ // /|  / /___/ _, _/ 
+/_/  |_/___/_/ |_/_____/___/_/ |_/_____/_/ |_|  
+
+
+By Windhover Labs
+
+
+  @@& @@*                                                 
+@@@@@@@@@@@@@*                                            
+@@@@@@@@@@@@@@@@@#                                        
+@@@@@@@@@@@@@@@@@@@@@*                                    
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*                            
+ @@@@@@@@@@@@@@@@@@@@@@@@@@@@@&                           
+ @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                     ,*@@@@
+  &@@@@@@@@@@@@@@@@@@@@@@@@@@@@                 &@@@@     
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@            %@@@@@         
+     @@@@@@@@@@@@@@@@@@@@@@@@@     %@@@@@@@@@@@           
+        @@@@@@@@@@@@@@@@@@@@@@&@@@@@@@@@@@                
+        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                    
+        @@@@@@@@@@@@@@@@@@@@@@@@@@@@                      
+        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                    
+        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                  
+         @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                  
+           *@@@@@@@@@@@@@@@@@@@@@@@@@@@@                  
+            @@@@@@@@@@@@@@@@@@    @@@@@                   
+            @@@@@@@@@@@@@@        *@@                     
+           @@@@@@@@@@@@@@                                 
+          %@@@@@@@@@@@@@@@#                               
+          @@@@@@@@@@@@@@@@@&                              
+          @@@@@@@@@@@@@@@@@@@                             
+          @@@@@@@@@@@@@@@@@@@@*                           
+          @@@@@@@@@@@@@@@@@@@@@*                          
+          @@@@@@@@@@@@@@@@@@@@@                           
+          @@@@@@@@@@@@@@@@@@@                             
+           @@@@@@@@@@@@@@@@@@                             
+           @@ @@@@@@@ @@@&                                
+               @@ @@@  @@                                 
+
+Unable to set main thread priority to minimum
+EVS Port1 66/1/CF 73: SemGetId Err:Chan 0 downlink PDUs cannot be throttled.0xFFFFFFEF
+EVS Port1 66/1/LD 15: Land detected
+EVS Port1 66/1/PE 19: GPS timeout
+EVS Port1 66/1/QAE 13: Degenerate input data accel vector length 0.000000
+EVS Port1 66/1/CFE_SB 17: Msg Limit Err,MsgId 0xa5c,pipe TO_GRND-BIN,sender VM
+EVS Port1 66/1/CFE_SB 17: Msg Limit Err,MsgId 0xa5c,pipe TO_GRND-BIN,sender VM
+EVS Port1 66/1/CFE_SB 17: Msg Limit Err,MsgId 0xa5c,pipe TO_GRND-BIN,sender VM
+EVS Port1 66/1/CFE_SB 17: Msg Limit Err,MsgId 0xa5c,pipe TO_GRND-BIN,sender VM
+EVS Port1 66/1/CFE_SB 17: Msg Limit Err,MsgId 0xa5c,pipe TO_GRND-BIN,sender VM
+EVS Port1 66/1/CFE_SB 17: Msg Limit Err,MsgId 0xa53,pipe TO_GRND-BIN,sender LD
+EVS Port1 66/1/PE 23: Land detector initialized
+EVS Port1 66/1/LD 14: Freefall detected
+EVS Port1 66/1/LD 15: Land detected
+EVS Port1 66/1/PE 23: Land detector OK
+EVS Port1 66/1/PE 17: Baro initialized. Mean: (0) Std dev: (10) cm
+EVS Port1 66/1/PE 17: Baro OK
+EVS Port1 66/1/PE 13: Local estimation initialized
+EVS Port1 66/1/PE 16: Baro fault, r 10.74 m, beta 12.10
+EVS Port1 66/1/PE 22: Land detector fault, beta 293261.75
+EVS Port1 66/1/SC 73: RTS Number 001 Started
+EVS Port1 66/1/PE 17: Baro OK
+EVS Port1 66/1/PE 16: Baro fault, r  9.68 m, beta 10.34
+EVS Port1 66/1/PE 17: Baro OK
+EVS Port1 66/1/PE 16: Baro fault, r  9.55 m, beta 10.08
+EVS Port1 66/1/PE 17: Baro OK
+EVS Port1 66/1/PE 16: Baro fault, r  9.05 m, beta  9.05
+EVS Port1 66/1/PE 17: Baro OK
+EVS Port1 66/1/PE 16: Baro fault, r  9.27 m, beta  9.50
+EVS Port1 66/1/PE 17: Baro OK
+EVS Port1 66/1/PE 16: Baro fault, r  9.27 m, beta  9.52
+EVS Port1 66/1/PE 17: Baro OK
+EVS Port1 66/1/PE 16: Baro fault, r  9.20 m, beta  9.36
+EVS Port1 66/1/PE 17: Baro OK
+EVS Port1 66/1/SC 50: RTS 001 Command Failed Checksum: RTS Stopped
+EVS Port1 66/1/PE 23: Land detector OK
+EVS Port1 66/1/PE 21: GPS OK
+EVS Port1 66/1/PE 14: Global estimation initialized
+EVS Port1 66/1/VM 30: Home Position set. [Lat -> 47.40 | Lon -> 8.55 | Alt ->487.14]
+EVS Port1 66/1/SCH 18: Multiple slots processed: slot = 7, count = 3
+EVS Port1 66/1/SCH 18: Multiple slots processed: slot = 26, count = 2
+EVS Port1 66/1/SCH 18: Multiple slots processed: slot = 223, count = 3
+EVS Port1 66/1/SCH 18: Multiple slots processed: slot = 117, count = 3
+EVS Port1 66/1/SCH 18: Multiple slots processed: slot = 76, count = 2
+EVS Port1 66/1/SCH 18: Multiple slots processed: slot = 215, count = 3
+EVS Port1 66/1/VM 14: Illegal Nav transition [MANUAL -> MANUAL].  Command rejected.
+EVS Port1 66/1/SCH 18: Multiple slots processed: slot = 0, count = 2
+EVS Port1 66/1/VM 42: Arm engaged by rc 
+EVS Port1 66/1/VM 30: Home Position set. [Lat -> 47.40 | Lon -> 8.55 | Alt ->488.24]
+EVS Port1 66/1/VM 16: Arming::Armed
+EVS Port1 66/1/SCH 18: Multiple slots processed: slot = 6, count = 2
+EVS Port1 66/1/VM 27: Navigation::AutoTakeoff
+EVS Port1 66/1/VM 48: Mode switched to auto takeoff by rc
+EVS Port1 66/1/NAV 16: Comm
