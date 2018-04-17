@@ -938,38 +938,42 @@ void MPC::Execute(void)
 
 void MPC::UpdateRef(void)
 {
-	if (VehicleLocalPositionMsg.RefTimestamp != RefTimestamp)
-	{
-		double LatitudeSetpoint;
-		double LongitudeSetpoint;
-		float AltitudeSetpoint = 0.0f;
-		uint64 currentTime;
+    
+    if(VehicleStatusMsg.ArmingState == PX4_ARMING_STATE_STANDBY)
+    {
+	    if (VehicleLocalPositionMsg.RefTimestamp != RefTimestamp)
+	    {
+		    double LatitudeSetpoint;
+    		double LongitudeSetpoint;
+	    	float AltitudeSetpoint = 0.0f;
+		    uint64 currentTime;
 
-		if(RefTimestamp != 0)
-		{
-			/* Calculate current position setpoint in global frame. */
-			map_projection_reproject(&RefPos, PositionSetpoint[0], PositionSetpoint[1], &LatitudeSetpoint, &LongitudeSetpoint);
+    		if(RefTimestamp != 0)
+	    	{
+		    	/* Calculate current position setpoint in global frame. */
+			    map_projection_reproject(&RefPos, PositionSetpoint[0], PositionSetpoint[1], &LatitudeSetpoint, &LongitudeSetpoint);
 
-			/* The altitude setpoint is the reference altitude (Z up) plus the (Z down)
-			 * NED setpoint, multiplied out to minus*/
-			AltitudeSetpoint = RefAlt - PositionSetpoint[2];
-		}
+    			/* The altitude setpoint is the reference altitude (Z up) plus the (Z down)
+	    		 * NED setpoint, multiplied out to minus*/
+		    	AltitudeSetpoint = RefAlt - PositionSetpoint[2];
+    		}
 
-		/* Update local projection reference including altitude. */
-		currentTime = PX4LIB_GetPX4TimeUs();
-		map_projection_init(&RefPos, VehicleLocalPositionMsg.RefLat, VehicleLocalPositionMsg.RefLon, currentTime);
-		RefAlt = VehicleLocalPositionMsg.RefAlt;
+	    	/* Update local projection reference including altitude. */
+		    currentTime = PX4LIB_GetPX4TimeUs();
+    		map_projection_init(&RefPos, VehicleLocalPositionMsg.RefLat, VehicleLocalPositionMsg.RefLon, currentTime);
+	    	RefAlt = VehicleLocalPositionMsg.RefAlt;
 
-		if (RefTimestamp != 0)
-		{
-			/* Reproject position setpoint to new reference this effectively
-			 * adjusts the position setpoint to keep the vehicle in its
-			 * current local position. It would only change its global
-			 * position on the next setpoint update. */
-			//map_projection_project(&RefPos, LatitudeSetpoint, LongitudeSetpoint, &PositionSetpoint[0], &PositionSetpoint[1]);
-			PositionSetpoint[2] = -(AltitudeSetpoint - RefAlt);
-		}
-		RefTimestamp = VehicleLocalPositionMsg.RefTimestamp;
+    		if (RefTimestamp != 0)
+	    	{
+		    	/* Reproject position setpoint to new reference this effectively
+			     * adjusts the position setpoint to keep the vehicle in its
+			     * current local position. It would only change its global
+			     * position on the next setpoint update. */
+			    map_projection_project(&RefPos, LatitudeSetpoint, LongitudeSetpoint, &PositionSetpoint[0], &PositionSetpoint[1]);
+			    PositionSetpoint[2] = -(AltitudeSetpoint - RefAlt);
+		    }
+		    RefTimestamp = VehicleLocalPositionMsg.RefTimestamp;
+        }
 	}
 }
 
@@ -2021,7 +2025,7 @@ void MPC::CalculateVelocitySetpoint(float dt)
 	{
 		InTakeoff = TakeoffVelLimit < -VelocitySetpoint[2];
 		/* Ramp vertical velocity limit up to takeoff speed. */
-		TakeoffVelLimit += ConfigTblPtr->TKO_SPEED * dt / ConfigTblPtr->TKO_RAMP_T;
+		TakeoffVelLimit += -VelocitySetpoint[2] * dt / ConfigTblPtr->TKO_RAMP_T;
 		/* Limit vertical velocity to the current ramp value. */
 		VelocitySetpoint[2] = math::max(VelocitySetpoint[2], -TakeoffVelLimit);
 	}

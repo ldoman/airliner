@@ -53,7 +53,57 @@ block main
             p(style="margin:5px;") M
           td
             p#AltitudeOffsetStatus(style="color:green;width:500px;text-align:end") [OK]
-
+            
+  .row.row-fluid
+    article.col-xs-10.col-sm-8.col-md-6.col-lg-6(style='max-width:450px')
+      #wid-VM-ArmingState.jarviswidget.jarviswidget-color-blueDark(data-widget-editbutton='false')
+        header
+          span.widget-icon
+            i.fa.fa-table
+          h2 Arming State
+        div
+          .jarviswidget-editbox
+            input.form-control(type='text')
+          .widget-body
+            .table-responsive
+              table.table.table-condensed
+                tbody
+                  tr
+                    th Arming State
+                    td
+                      span(data-sage={tlm: [{name:'/CFS/VM/ArmingState'}]}) ---
+              button.btn.btn-primary(data-sage={cmd: {name:'/CFS/VM/Arm'}}) Arm
+              button.btn.btn-primary(data-sage={cmd: {name:'/CFS/VM/Disarm'}}) Disarm
+              
+  .row.row-fluid
+    article.col-xs-10.col-sm-8.col-md-6.col-lg-6(style='max-width:450px')
+      #wid-VM-NavState.jarviswidget.jarviswidget-color-blueDark(data-widget-editbutton='false')
+        header
+          span.widget-icon
+            i.fa.fa-table
+          h2 Navigation State
+        div
+          .jarviswidget-editbox
+            input.form-control(type='text')
+          .widget-body
+            .table-responsive
+              table.table.table-condensed
+                tbody
+                  tr
+                    th Nav State
+                    td
+                      span(data-sage={tlm: [{name:'/CFS/VM/NavState'}]}) ---
+            footer
+              button.btn.btn-primary(data-sage={cmd: {name:'/CFS/VM/SetNavManual'}}) Manual
+              button.btn.btn-primary(data-sage={cmd: {name:'/CFS/VM/SetNavAltCtl'}}) AltCtl
+              button.btn.btn-primary(data-sage={cmd: {name:'/CFS/VM/SetNavPosCtl'}}) PosCtl
+              button.btn.btn-primary(data-sage={cmd: {name:'/CFS/VM/SetNavAutoLoiter'}}) Loiter 
+              button.btn.btn-primary(data-sage={cmd: {name:'/CFS/VM/SetNavAutoRTL'}}) Auto RTL 
+              button.btn.btn-primary(data-sage={cmd: {name:'/CFS/VM/SetNavAcro'}}) Acro 
+              button.btn.btn-primary(data-sage={cmd: {name:'/CFS/VM/SetNavStabilize'}}) Stabilize  
+              button.btn.btn-primary(data-sage={cmd: {name:'/CFS/VM/SetNavRattitude'}}) Rattitude  
+              button.btn.btn-primary(data-sage={cmd: {name:'/CFS/VM/SetNavAutoTakeoff'}}) Auto Takeoff  
+              button.btn.btn-primary(data-sage={cmd: {name:'/CFS/VM/SetNavAutoLand'}}) Auto Land
 
   script.
     var Position = {Lat: 0, Lon: 0, Alt: 0};
@@ -166,7 +216,7 @@ block main
         var psi = Math.atan2(2.0*((Q[1]*Q[2])+(Q[0]*Q[3])),1.0-2.0*((Q[2]*Q[2])+(Q[3]*Q[3])));
       
         Attitude.Pitch = theta;
-        Attitude.Roll = phi;
+        Attitude.Roll = (-1.0)*phi;
         Attitude.Yaw = psi;
 
         if (HUDStarted == false) {

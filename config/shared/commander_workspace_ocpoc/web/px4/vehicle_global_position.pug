@@ -10,7 +10,20 @@ block header
 block main
     .row.row-fluid
       +msg_macro_specific_telemetry_control([{macro: 'PX4_VEHICLE_GLOBAL_POSITION_MID'}])
-      
+    
+    .row.row-fluid
+      article.col-xs-10.col-sm-6.col-md-6.col-lg-6
+        #wid-SM.jarviswidget.jarviswidget-color-blueDark(data-widget-editbutton='false')
+          header(style="overflow:hidden;")
+            span.widget-icon
+              i.fa.fa-table
+            h2 Global Altitude
+          div
+            .jarviswidget-editbox
+              input.form-control(type='text')
+            .widget-body
+              #Altitude(style='width:100%; height:300px;')  
+    
     .row.row-fluid
       article.col-xs-10.col-sm-6.col-md-6.col-lg-6(style="max-width:450px")
         #wid-SA.jarviswidget.jarviswidget-color-blueDark(data-widget-editbutton='false')
@@ -105,3 +118,23 @@ block main
                       th Dead Reckoning:
                       td
                         span(data-sage={'tlm': [{'name': '/CFS/PX4/VGP_DeadReckoning'}]}) ---
+
+    script.
+        $(function () {
+            var dataplotDef = {
+                'data': [
+                    { 'tlm': {'name': '/CFS/PX4/VGP_Alt'},
+                      'label': 'Global Altitude',
+                      'color': '#ff00ff'
+                    },
+                    { 'tlm': {'name': '/CFS/PX4/VGP_TerrainAlt'},
+                      'label': 'Terrain Altitude',
+                      'color': '#00ffff'
+                    }
+                ],
+                'options': {
+                }
+            };
+    
+            var dataplot = new SageTimeSeriesDataplot($('#Altitude'), dataplotDef);
+        });

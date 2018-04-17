@@ -79,6 +79,7 @@ block main
                   button.btn.btn-primary(data-sage={cmd: {name:'/CFS/TO/QueryMessageFlow'}}) Query Message Flow
                   button.btn.btn-primary(data-sage={cmd: {name:'/CFS/TO/QueryPriorityQueue'}}) Query Priority Queue
                   button.btn.btn-primary(data-sage={cmd: {name:'/CFS/TO/QueryOutputQueue'}}) Query Output Queue
+                  button.btn.btn-primary(data-sage={cmd: {name:'/CFS/TO/EnableChannel', argument:[{name:'ChannelIdx', value:'GROUND'},{name:'Port', value:'5011'}]}}) Enable Ground
   .row
     article.col-xs-12.col-sm-12.col-md-8.col-lg-7(style='width:750px')
       #wid-TO-Diag.jarviswidget.jarviswidget-color-blueDark(data-widget-editbutton='false')

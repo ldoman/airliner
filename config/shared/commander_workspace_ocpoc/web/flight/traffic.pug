@@ -45,25 +45,42 @@ block main
                     tr
                       th Timestamp:
                       td
-                        span(data-sage={'tlm': [{'name': '/CFS/PX4/VGP_Timestamp'}]}) ---
+                        span#ts ---
                     tr
                       th Lat:
                       td
-                        span(data-sage={'tlm': [{'name': '/CFS/PX4/VGP_Lat'}]}) ---
+                        span#lat ---
                     tr
                       th Lon:
                       td
-                        span(data-sage={'tlm': [{'name': '/CFS/PX4/VGP_Lon'}]}) ---
+                        span#lon ---
                     tr
                       th Altitude:
                       td
-                        span(data-sage={'tlm': [{'name': '/CFS/PX4/VGP_PressureAlt'}]}) ---
+                        span#alt ---
                     tr
                       th Satellites Used:
                       td
-                        span(data-sage={'tlm': [{'name': '/CFS/PX4/VGPP_SatellitesUsed'}]}) ---
+                        span#sat ---
 
   script.
+  
+  
+    session.subscribe({tlm: [{'name': '/CFS/PX4/VGP_Timestamp'}]}, function (param) {
+        $("#ts").text(param.engValue.uint32Value);
+    });
+    session.subscribe({tlm: [{'name': '/CFS/PX4/VGP_Lat'}]}, function (param) {
+        $("#lat").text(param.engValue.floatValue);
+    });
+    session.subscribe({tlm: [{'name': '/CFS/PX4/VGP_Lon'}]}, function (param) {
+        $("#lon").text(param.engValue.floatValue);
+    });
+    session.subscribe({tlm: [{'name': '/CFS/PX4/VGP_PressureAlt'}]}, function (param) {
+        $("#alt").text(param.engValue.floatValue);
+    });
+    session.subscribe({tlm: [{'name': '/CFS/PX4/VGPP_SatellitesUsed'}]}, function (param) {
+        $("#sat").text(param.engValue.uint32Value);
+    });
     loadScript('node_modules/cesium/Build/CesiumUnminified/Cesium.js',function(){
                                 
       Cesium.BingMapsApi.defaultKey = 'Anb5ZQS9_Qvje--nom_9ZKwQyQVnOOU04Fctd1uxMHnYoQKIcp1XFDrZuXN6evOQ';
@@ -75,9 +92,9 @@ block main
       var outdated_seconds = 30;
       
       function AddMyVehicle(){
-        var lat = parseFloat($("[data-sage]")[1].innerHTML);
-        var lon = parseFloat($("[data-sage]")[2].innerHTML);
-        var alt = parseFloat($("[data-sage]")[3].innerHTML);
+        var lat = parseFloat($("#lat").text());
+        var lon = parseFloat($("#lon").text());
+        var alt = parseFloat($("#alt").text());
         mystruct = {};
         mystruct.lat  = lat;
         mystruct.lon  = lon;
@@ -195,8 +212,8 @@ block main
       }
       
       function CleanSlate(current_time){
-      	RemovePoints(ALLMYLINES);
-      	ALLMYLINES = [];
+        RemovePoints(ALLMYLINES);
+        ALLMYLINES = [];
         for(var k in AIRCRAFT){
         var PQ = AIRCRAFT[k];
         if(PQ.length <1){
@@ -220,9 +237,9 @@ block main
       }
       
       function RemovePoints(arr){
-      	for(var e in arr){
-      	viewer.entities.removeById(arr[e]);
-      	} 
+        for(var e in arr){
+        viewer.entities.removeById(arr[e]);
+        } 
       }
      
       function ExecuteQuery(){

@@ -1294,18 +1294,18 @@ void MAC::UpdateParams(void)
 
 	/* angular rate limits */
 	m_Params.mc_rate_max[0] = (ParamTblPtr->roll_rate_max / 180.0f) * M_PI;
-	m_Params.mc_rate_max[1] = (ParamTblPtr->roll_rate_max / 180.0f) * M_PI;
-	m_Params.mc_rate_max[2] = (ParamTblPtr->roll_rate_max / 180.0f) * M_PI;
+	m_Params.mc_rate_max[1] = (ParamTblPtr->pitch_rate_max / 180.0f) * M_PI;
+	m_Params.mc_rate_max[2] = (ParamTblPtr->yaw_rate_max / 180.0f) * M_PI;
 
 	/* auto angular rate limits */
 	m_Params.auto_rate_max[0] = (ParamTblPtr->roll_rate_max / 180.0f) * M_PI;
-	m_Params.auto_rate_max[1] = (ParamTblPtr->roll_rate_max / 180.0f) * M_PI;
-	m_Params.auto_rate_max[2] = (ParamTblPtr->roll_rate_max / 180.0f) * M_PI;
+	m_Params.auto_rate_max[1] = (ParamTblPtr->pitch_rate_max / 180.0f) * M_PI;
+	m_Params.auto_rate_max[2] = (ParamTblPtr->yaw_auto_max / 180.0f) * M_PI;
 
 	/* manual rate control scale and auto mode roll/pitch rate limits */
-	m_Params.acro_rate_max[0] = (ParamTblPtr->roll_rate_max / 180.0f) * M_PI;
-	m_Params.acro_rate_max[1] = (ParamTblPtr->roll_rate_max / 180.0f) * M_PI;
-	m_Params.acro_rate_max[2] = (ParamTblPtr->roll_rate_max / 180.0f) * M_PI;
+	m_Params.acro_rate_max[0] = (ParamTblPtr->acro_roll_max / 180.0f) * M_PI;
+	m_Params.acro_rate_max[1] = (ParamTblPtr->acro_pitch_max / 180.0f) * M_PI;
+	m_Params.acro_rate_max[2] = (ParamTblPtr->acro_yaw_max / 180.0f) * M_PI;
 
 	/* stick deflection needed in rattitude mode to control rates not angles */
 	m_Params.rattitude_thres = ParamTblPtr->rattitude_thres;
