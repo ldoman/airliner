@@ -600,7 +600,7 @@ MPC_ConfigTbl_t MPC_ConfigTbl =
 	 * @max 1
 	 * @group Multicopter Position Control
 	 */
-	0.4f,
+	0.1f,
 
     /**
      * MC_YAWRATE_MAX
