@@ -275,11 +275,11 @@ MPC_ConfigTbl_t MPC_ConfigTbl =
 	 * @decimal 2
 	 * @group Multicopter Position Control
 	 */
-	2.0f,
+	3.0f,
 
 	/**
 	 * MPC_VEL_MAN_MAX
-	 * Nominal horizontal velocity for manual controlled mode
+	 * Nominal horizontal velocity for manual controlled mode NOTE: POSCTL uses the min of this and MPC_XY_VEL_MAX as its max
 	 *
 	 * @unit m/s
 	 * @min 3.0
@@ -288,7 +288,7 @@ MPC_ConfigTbl_t MPC_ConfigTbl =
 	 * @decimal 2
 	 * @group Multicopter Position Control
 	 */
-	5.0f,
+	7.0f,
 
 	/**
 	 * MPC_TARGET_THRE
@@ -313,6 +313,7 @@ MPC_ConfigTbl_t MPC_ConfigTbl =
 	 *
 	 * Maximum horizontal velocity in AUTO mode. If higher speeds
 	 * are commanded in a mission they will be capped to this velocity.
+     * NOTE: POSCTL uses the min of this and MPC_VEL_MAN_MAX as its max
 	 *
 	 * @unit m/s
 	 * @min 0.0
@@ -321,7 +322,7 @@ MPC_ConfigTbl_t MPC_ConfigTbl =
 	 * @decimal 2
 	 * @group Multicopter Position Control
 	 */
-	10.0f,
+	7.0f,
 
 	/**
 	 * MPC_XY_FF

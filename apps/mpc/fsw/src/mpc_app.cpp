@@ -428,8 +428,6 @@ int32 MPC::RcvSchPipeMsg(int32 iBlocking)
 
             case PX4_VEHICLE_CONTROL_MODE_MID:
                 memcpy(&VehicleControlModeMsg, MsgPtr, sizeof(VehicleControlModeMsg));
-//                OS_printf("%d\n",VehicleControlModeMsg.ControlPositionEnabled);
-//                OS_printf("%d\n",VehicleControlModeMsg.ControlVelocityEnabled);
                 break;
 
             case PX4_POSITION_SETPOINT_TRIPLET_MID:
@@ -868,7 +866,8 @@ void MPC::Execute(void)
 			VehicleControlModeMsg.ControlAccelerationEnabled)
 	{
 		DoControl(dt);
-
+        OS_printf("vx: %f\n", VelocitySetpoint[0]);
+        OS_printf("vy: %f\n", VelocitySetpoint[1]);
 		/* Fill local position, velocity and thrust setpoint */
 		VehicleLocalPositionSetpointMsg.Timestamp = PX4LIB_GetPX4TimeUs();
 		VehicleLocalPositionSetpointMsg.X = PositionSetpoint[0];
@@ -1416,7 +1415,6 @@ void MPC::ControlNonManual(float dt)
 		PositionSetpointTripletMsg.Current.PositionValid)
 	{
 		math::Vector3F ft_vel(PositionSetpointTripletMsg.Current.VX, PositionSetpointTripletMsg.Current.VY, 0);
-
 		float cos_ratio = (ft_vel * VelocitySetpoint) / (ft_vel.Length() * VelocitySetpoint.Length());
 
 		/* Only override velocity set points when uav is traveling in same
@@ -1461,7 +1459,6 @@ void MPC::ControlNonManual(float dt)
 	{
 		/* Idle state, don't run controller and set zero thrust. */
 		RSetpoint.Identity();
-
 		math::Quaternion qd(RSetpoint);
 		qd.copyTo(VehicleAttitudeSetpointMsg.Q_D);
 		VehicleAttitudeSetpointMsg.Q_D_Valid = true;
@@ -1955,6 +1952,19 @@ void MPC::CalculateVelocitySetpoint(float dt)
 			VelocitySetpoint[0] = 0.0f;
 			VelocitySetpoint[1] = 0.0f;
 		}
+
+    	/* Constrain xy velocities to defined limits after position scaling */
+	    float vel_mag = (ConfigTblPtr->XY_CRUISE < VelMaxXY) ? ConfigTblPtr->XY_CRUISE : VelMaxXY;
+        float vel_norm_xy = sqrtf(VelocitySetpoint[0] * VelocitySetpoint[0] +
+			VelocitySetpoint[1] * VelocitySetpoint[1]);
+
+        if (vel_norm_xy > vel_mag)
+        {
+            float scale = 1.0f;
+            scale = vel_mag/vel_norm_xy;
+            VelocitySetpoint[0] *= scale;
+            VelocitySetpoint[1] *= scale;
+        }
 	}
 
 	LimitAltitude();
