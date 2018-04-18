@@ -866,8 +866,7 @@ void MPC::Execute(void)
 			VehicleControlModeMsg.ControlAccelerationEnabled)
 	{
 		DoControl(dt);
-        OS_printf("vx: %f\n", VelocitySetpoint[0]);
-        OS_printf("vy: %f\n", VelocitySetpoint[1]);
+
 		/* Fill local position, velocity and thrust setpoint */
 		VehicleLocalPositionSetpointMsg.Timestamp = PX4LIB_GetPX4TimeUs();
 		VehicleLocalPositionSetpointMsg.X = PositionSetpoint[0];
