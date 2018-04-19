@@ -89,7 +89,7 @@ typedef enum
 ** Global Variables
 *************************************************************************/
 MS5611_AppCustomData_t MS5611_AppCustomData;
-struct spi_ioc_transfer MS5611_SPI_Xfer[2];
+struct spi_ioc_transfer MS5611_SPI_Xfer[1];
 
 /************************************************************************
 ** Local Variables
@@ -250,16 +250,14 @@ void MS5611_Critical_Cleanup(void)
 int32 MS5611_ResetDevice(void)
 {
     int ret = 0;
-    unsigned char   txBuf[2];
-    unsigned char   rxBuf[2];
+    unsigned char   txBuf[1];
 
     memset(txBuf, 0, sizeof(txBuf));
-    memset(rxBuf, 0, sizeof(rxBuf));
     txBuf[0] = MS5611_SPI_CMD_RESET;
 
     MS5611_SPI_Xfer[0].tx_buf = (unsigned long)txBuf;
-    MS5611_SPI_Xfer[0].rx_buf = (unsigned long)rxBuf;
-    MS5611_SPI_Xfer[0].len = 2;
+    MS5611_SPI_Xfer[0].rx_buf = 0;
+    MS5611_SPI_Xfer[0].len = 1;
 
     ret = MS5611_Ioctl(MS5611_AppCustomData.DeviceFd, SPI_IOC_MESSAGE(1), MS5611_SPI_Xfer);
     if (-1 == ret) 
@@ -289,8 +287,8 @@ boolean MS5611_ReadPROM(uint8 Addr, uint16 *returnVal)
         goto end_of_function;
     }
 
-    unsigned char   txBuf[30];
-    unsigned char   rxBuf[30];
+    unsigned char   txBuf[3];
+    unsigned char   rxBuf[3];
 
     memset(txBuf, 0, sizeof(txBuf));
     memset(rxBuf, 0, sizeof(rxBuf));
@@ -298,7 +296,7 @@ boolean MS5611_ReadPROM(uint8 Addr, uint16 *returnVal)
 
     MS5611_SPI_Xfer[0].tx_buf = (unsigned long)txBuf;
     MS5611_SPI_Xfer[0].rx_buf = (unsigned long)rxBuf;
-    MS5611_SPI_Xfer[0].len = 30;
+    MS5611_SPI_Xfer[0].len = 3;
 
     ret = MS5611_Ioctl(MS5611_AppCustomData.DeviceFd, SPI_IOC_MESSAGE(1), MS5611_SPI_Xfer);
     if (-1 == ret) 
@@ -321,14 +319,12 @@ boolean MS5611_D1Conversion(void)
     boolean returnBool = TRUE;
 
     unsigned char   txBuf[1];
-    unsigned char   rxBuf[1];
 
     memset(txBuf, 0, sizeof(txBuf));
-    memset(rxBuf, 0, sizeof(rxBuf));
     txBuf[0] = MS5611_SPI_CMD_CONVERT_D1;
 
     MS5611_SPI_Xfer[0].tx_buf = (unsigned long)txBuf;
-    MS5611_SPI_Xfer[0].rx_buf = (unsigned long)rxBuf;
+    MS5611_SPI_Xfer[0].rx_buf = 0;
     MS5611_SPI_Xfer[0].len = 1;
 
     ret = MS5611_Ioctl(MS5611_AppCustomData.DeviceFd, SPI_IOC_MESSAGE(1), MS5611_SPI_Xfer);
@@ -352,14 +348,12 @@ boolean MS5611_D2Conversion(void)
     boolean returnBool = TRUE;
 
     unsigned char   txBuf[1];
-    unsigned char   rxBuf[1];
 
     memset(txBuf, 0, sizeof(txBuf));
-    memset(rxBuf, 0, sizeof(rxBuf));
     txBuf[0] = MS5611_SPI_CMD_CONVERT_D2;
 
     MS5611_SPI_Xfer[0].tx_buf = (unsigned long)txBuf;
-    MS5611_SPI_Xfer[0].rx_buf = (unsigned long)rxBuf;
+    MS5611_SPI_Xfer[0].rx_buf = 0;
     MS5611_SPI_Xfer[0].len = 1;
 
     ret = MS5611_Ioctl(MS5611_AppCustomData.DeviceFd, SPI_IOC_MESSAGE(1), MS5611_SPI_Xfer);
@@ -381,8 +375,8 @@ boolean MS5611_ReadADCResult(uint32 *returnVal)
 {
     int ret            = 0;
     boolean returnBool = TRUE;
-    unsigned char   txBuf[30];
-    unsigned char   rxBuf[30];
+    unsigned char   txBuf[4];
+    unsigned char   rxBuf[4];
 
     /* Null pointer check */
     if(0 == returnVal)
@@ -399,7 +393,7 @@ boolean MS5611_ReadADCResult(uint32 *returnVal)
 
     MS5611_SPI_Xfer[0].tx_buf = (unsigned long)txBuf;
     MS5611_SPI_Xfer[0].rx_buf = (unsigned long)rxBuf;
-    MS5611_SPI_Xfer[0].len = 30;
+    MS5611_SPI_Xfer[0].len = 4;
 
     ret = MS5611_Ioctl(MS5611_AppCustomData.DeviceFd, SPI_IOC_MESSAGE(1), MS5611_SPI_Xfer);
     if (-1 == ret) 
