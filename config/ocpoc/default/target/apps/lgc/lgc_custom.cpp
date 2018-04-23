@@ -102,14 +102,14 @@ int32 LGC::InitDevice(void)
         goto end_of_function;
     }
 
-    // Note: this appears to be required actuators to initialize
-    for (i = MOTOR_OUTPUTS_SKIPPED; i < (MOTOR_OUTPUTS_SKIPPED + LGC_MAX_GEAR_OUTPUTS); ++i) 
-    {
-        LGC_SharedMemCmd->PeriodHi[i].Period =
-                LGC_Freq2tick(LGC_FREQUENCY_PWM);
-        LGC_SharedMemCmd->PeriodHi[i].Hi     =
-                LGC_Freq2tick(LGC_FREQUENCY_PWM) / 2;
-    }
+    /* Note: this appears to be required actuators to initialize */
+    //for (i = MOTOR_OUTPUTS_SKIPPED; i < (MOTOR_OUTPUTS_SKIPPED + LGC_MAX_GEAR_OUTPUTS); ++i) 
+    //{
+        //LGC_SharedMemCmd->PeriodHi[i].Period =
+                //LGC_Freq2tick(LGC_FREQUENCY_PWM);
+        //LGC_SharedMemCmd->PeriodHi[i].Hi     =
+                //LGC_Freq2tick(LGC_FREQUENCY_PWM) / 2;
+    //}
 
 end_of_function:
     return returnVal;
