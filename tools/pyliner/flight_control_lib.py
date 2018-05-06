@@ -1,6 +1,7 @@
 from os import path, sys
 from pyliner import Pyliner
 from time import sleep
+from datetime.datetime import n
 from flufl.enum import Enum
 
 # Enums
@@ -53,6 +54,67 @@ def vehicle_move(airliner, direction, speed = 0.5, time = 1, stop = True, stop_w
         vehicle_stable_hover(airliner)
         if stop_wait:
             sleep(stop_wait)
+
+def vehicle_move_dist(airliner, direction, dist, timeout = 30):
+    """ Router for move commands. Note: speed is stick position percentage, not velocity. """
+
+    # Move in the specified direction
+    if direction == Direction.Up:
+        vehicle_move_cl_up(airliner, dist, timeout)
+    elif direction == Direction.Down:
+        vehicle_move_cl_down(airliner, dist, timeout)
+#    elif direction == Direction.Forward:
+#        vehicle_move_cl_forward(airliner, dist, timeout)
+#    elif direction == Direction.Backward:
+#        vehicle_move_cl_backward(airliner, dist, timeout)
+#    elif direction == Direction.Right:
+#        vehicle_move_cl_right(airliner, dist, timeout)
+#    elif direction == Direction.Left:
+#        vehicle_move_cl_left(airliner, dist, timeout)
+    else:
+        airliner.log("Unknown move direction specified", LogLevel.Error)
+
+def vehicle_move_cl_up(airliner, deltaZ, timeout = 30):
+    print "%s: Move up %s meters" % (airliner.script_name, deltaZ)
+    airliner.log("%s: Move up %s meters" % (airliner.script_name, deltaZ))
+    
+    initial_alt = airliner.get_tlm_value('/Airliner/CNTL/VehicleGlobalPosition/Alt')
+    print "initial_alt: " + str(initial_alt)
+    intial_time = now()
+    
+    current_alt = initial_alt
+    current_time = intial_time
+    
+    while((current_alt < (initial_alt + deltaZ)) or (current_time - intial_time) > timeout):
+        vehicle_move_up(airliner, .75, -1)
+        time.sleep(1)
+        current_alt = airliner.get_tlm_value('/Airliner/CNTL/VehicleGlobalPosition/Alt')
+        current_time = now()
+        print "alt: " + str(current_alt)
+        print "time: " + str(current_time - intial_time)
+        
+    vehicle_stable_hover()
+
+def vehicle_move_cl_down(airliner, deltaZ, timeout = 30):
+    print "%s: Move down %s meters" % (airliner.script_name, deltaZ)
+    airliner.log("%s: Move down %s meters" % (airliner.script_name, deltaZ))
+    
+    initial_alt = airliner.get_tlm_value('/Airliner/CNTL/VehicleGlobalPosition/Alt')
+    print "initial_alt: " + str(initial_alt)
+    intial_time = now()
+    
+    current_alt = initial_alt
+    current_time = intial_time
+    
+    while((current_alt > (initial_alt - deltaZ)) or (current_time - intial_time) > timeout):
+        vehicle_move_down(airliner, .75, -1)
+        time.sleep(1)
+        current_alt = airliner.get_tlm_value('/Airliner/CNTL/VehicleGlobalPosition/Alt')
+        current_time = now()
+        print "alt: " + str(current_alt)
+        print "time: " + str(current_time - intial_time)
+        
+    vehicle_stable_hover()
 
 def vehicle_arm(airliner):
     print "%s: Arming vehicle" % airliner.script_name
@@ -446,3 +508,25 @@ def vehicle_rtl(airliner):
         {'name':'ModeSlot', 'value':0},
         {'name':'DataSource', 'value':0}]})
 
+#move = {Direction.Forward: vehicle_move_forward(airliner, speed, time),
+#        Direction.Backward: 
+#        Direction.Left:
+#        Direction.Right:
+#        Direction.Up:
+#        Direction.Down:
+#}
+
+def move(airliner, direction, speed, time)
+    # Move in the specified direction
+    if direction == Direction.Forward:
+        vehicle_move_forward(airliner, speed, time)
+    elif direction == Direction.Backward:
+        vehicle_move_backward(airliner, speed, time)
+    elif direction == Direction.Right:
+        vehicle_move_right(airliner, speed, time)
+    elif direction == Direction.Left:
+        vehicle_move_left(airliner, speed, time)
+    elif direction == Direction.Up:
+        vehicle_move_up(airliner, speed, time)
+    else:
+        airliner.log("Unknown move direction specified", LogLevel.Error)
