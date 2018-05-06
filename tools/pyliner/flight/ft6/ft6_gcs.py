@@ -31,10 +31,17 @@ while rocky.get_tlm_value('/Airliner/CNTL/VehicleGlobalPosition/Alt') == 'NULL':
 alt = rocky.get_tlm_value('/Airliner/CNTL/VehicleGlobalPosition/Alt')
 print "Alt: " + str(alt)
 
+atp(rocky, "Arm")
 vehicle_arm(rocky)
 atp(rocky, "Takeoff")
 vehicle_takeoff(rocky)
 vehicle_flight_mode(rocky, FlightMode.PosCtl)
+
+alt = rocky.get_tlm_value('/Airliner/CNTL/VehicleGlobalPosition/Alt')
+print "Alt: " + str(alt)
+
+atp(rocky, "Move up")
+vehicle_move(rocky, Direction.Up, speed = 1.0, time = 2, stop = True, stop_wait = 3)
 
 alt = rocky.get_tlm_value('/Airliner/CNTL/VehicleGlobalPosition/Alt')
 print "Alt: " + str(alt)

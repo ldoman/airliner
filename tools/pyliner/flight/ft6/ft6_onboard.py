@@ -16,6 +16,8 @@ rocky = Pyliner(**{"airliner_map": join(dirname(abspath(__file__)), "cookiecutte
 vehicle_arm(rocky)
 vehicle_takeoff(rocky)
 vehicle_flight_mode(rocky, FlightMode.PosCtl)
+
+vehicle_move(rocky, Direction.Up, speed = 1.0, time = 2, stop = True, stop_wait = 3)
 vehicle_move(rocky, Direction.Forward, speed = .75, time = 2, stop = True, stop_wait = 3)
 vehicle_move(rocky, Direction.Left, speed = .75, time = 2, stop = True, stop_wait = 3)
 vehicle_move(rocky, Direction.Backward, speed = .75, time = 2, stop = True, stop_wait = 3)
