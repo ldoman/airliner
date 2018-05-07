@@ -1,7 +1,7 @@
 from os import path, sys
 from pyliner import Pyliner
 from time import sleep
-from datetime.datetime import n
+from datetime import datetime
 from flufl.enum import Enum
 
 # Enums
@@ -80,7 +80,7 @@ def vehicle_move_cl_up(airliner, deltaZ, timeout = 30):
     
     initial_alt = airliner.get_tlm_value('/Airliner/CNTL/VehicleGlobalPosition/Alt')
     print "initial_alt: " + str(initial_alt)
-    intial_time = now()
+    intial_time = datetime.now()
     
     current_alt = initial_alt
     current_time = intial_time
@@ -89,7 +89,7 @@ def vehicle_move_cl_up(airliner, deltaZ, timeout = 30):
         vehicle_move_up(airliner, .75, -1)
         time.sleep(1)
         current_alt = airliner.get_tlm_value('/Airliner/CNTL/VehicleGlobalPosition/Alt')
-        current_time = now()
+        current_time = datetime.now()
         print "alt: " + str(current_alt)
         print "time: " + str(current_time - intial_time)
         
@@ -101,7 +101,7 @@ def vehicle_move_cl_down(airliner, deltaZ, timeout = 30):
     
     initial_alt = airliner.get_tlm_value('/Airliner/CNTL/VehicleGlobalPosition/Alt')
     print "initial_alt: " + str(initial_alt)
-    intial_time = now()
+    intial_time = datetime.now()
     
     current_alt = initial_alt
     current_time = intial_time
@@ -110,7 +110,7 @@ def vehicle_move_cl_down(airliner, deltaZ, timeout = 30):
         vehicle_move_down(airliner, .75, -1)
         time.sleep(1)
         current_alt = airliner.get_tlm_value('/Airliner/CNTL/VehicleGlobalPosition/Alt')
-        current_time = now()
+        current_time = datetime.now()
         print "alt: " + str(current_alt)
         print "time: " + str(current_time - intial_time)
         
@@ -516,7 +516,7 @@ def vehicle_rtl(airliner):
 #        Direction.Down:
 #}
 
-def move(airliner, direction, speed, time)
+def move(airliner, direction, speed, time):
     # Move in the specified direction
     if direction == Direction.Forward:
         vehicle_move_forward(airliner, speed, time)
