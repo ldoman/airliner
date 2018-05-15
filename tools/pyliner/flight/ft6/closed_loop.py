@@ -47,9 +47,71 @@ def  vehicle_fly_spiral_ccw(deltaZ):
         vehicle_spiral_ccw()
         time.sleep(1.0)
         current_altitude = rocky.get_tlm_value('/Airliner/CNTL/VehicleGlobalPosition/Alt')
-        print "altitude: " + str(current_altitude)
+        print "Alt: " + str(current_altitude)
+        print "heading: " + str(get_heading())
     vehicle_stable_hover(rocky)
     time.sleep(1)
+    
+def get_heading():
+    heading = rocky.get_tlm_value('/Airliner/CNTL/VehicleGlobalPosition/Yaw')
+    heading = math.degrees(heading) + 180
+    return heading
+
+def turn_left(forward_speed, delta_heading):
+   print "Turn left " + str(delta_heading) +" degrees"
+   previous_heading = rocky.get_tlm_value('/Airliner/CNTL/VehicleGlobalPosition/Yaw')
+   current_heading = previous_heading
+   print "initial heading: " + str(get_heading())
+   total_rotation = 0
+   while(total_rotation < math.radians(delta_heading)):
+        vehicle_turn_left(forward_speed)
+        time.sleep(1.0)
+        current_heading = rocky.get_tlm_value('/Airliner/CNTL/VehicleGlobalPosition/Yaw')
+        delta_rotation = math.fabs(current_heading - previous_heading)
+        if (delta_rotation > math.pi):
+            delta_rotation -= 2*math.pi
+        
+        total_rotation += delta_rotation
+            
+        print "current heading: " + str(get_heading())
+        print "current_heading (radians): " + str(current_heading)
+        print "previous_heading (radians): " + str(previous_heading)
+        print "delta rotation (radians): " + str(delta_rotation)
+        print "total rotation (radians): " + str(total_rotation)
+        print "delta rotation (radians): " + str(math.radians(delta_heading))
+        previous_heading = current_heading
+                
+   vehicle_stable_hover(rocky)
+
+def vehicle_turn_left(fwd):
+    rocky.send_telemetry(
+        {'name':'/Airliner/CNTL/ManualSetpoint', 'args':[
+        {'name':'Timestamp', 'value':rocky.get_time()},
+        {'name':'X', 'value':fwd},
+        {'name':'Y', 'value':0.0},
+        {'name':'Z', 'value':0.5},
+        {'name':'R', 'value':-0.1},
+        {'name':'Flaps', 'value':0.0},
+        {'name':'Aux1', 'value':0.0},
+        {'name':'Aux2', 'value':0.0},
+        {'name':'Aux3', 'value':0.0},
+        {'name':'Aux4', 'value':0.0},
+        {'name':'Aux5', 'value':0.0},
+        {'name':'ModeSwitch', 'value':0},
+        {'name':'ReturnSwitch', 'value':0},
+        {'name':'RattitudeSwitch', 'value':0},
+        {'name':'PosctlSwitch', 'value':1},
+        {'name':'LoiterSwitch', 'value':0},
+        {'name':'AcroSwitch', 'value':0},
+        {'name':'OffboardSwitch', 'value':0},
+        {'name':'KillSwitch', 'value':0},
+        {'name':'TransitionSwitch', 'value':0},
+        {'name':'GearSwitch', 'value':0},
+        {'name':'ArmSwitch', 'value':1},
+        {'name':'StabSwitch', 'value':0},
+        {'name':'ManSwitch', 'value':0},
+        {'name':'ModeSlot', 'value':0},
+        {'name':'DataSource', 'value':0}]})
 
 
 # Initialize pyliner object
@@ -76,24 +138,34 @@ while rocky.get_tlm_value('/Airliner/CNTL/VehicleGlobalPosition/Alt') == 'NULL':
 alt = rocky.get_tlm_value('/Airliner/CNTL/VehicleGlobalPosition/Alt')
 print "Alt: " + str(alt)
 
-atp(rocky, "Arm")
+#atp(rocky, "Arm")
 vehicle_arm(rocky)
-atp(rocky, "Takeoff")
+#atp(rocky, "Takeoff")
 vehicle_takeoff(rocky)
 vehicle_flight_mode(rocky, FlightMode.PosCtl)
-
-alt = rocky.get_tlm_value('/Airliner/CNTL/VehicleGlobalPosition/Alt')
-print "Alt: " + str(alt)
-
-atp(rocky, "Move up")
 vehicle_move(rocky, Direction.Up, speed = .85, time = 1, stop = True, stop_wait = 3)
+atp(rocky, "Turn left 720")
+turn_left(0,720)
+atp(rocky, "Turn left 45")
+turn_left(0, 45)
+atp(rocky, "Turn left fly forward")
+turn_left(0.35, 360)
+atp(rocky, "Turn left 90")
+turn_left(0, 90)
+#alt = rocky.get_tlm_value('/Airliner/CNTL/VehicleGlobalPosition/Alt')
+#print "Alt: " + str(alt)
 
-alt = rocky.get_tlm_value('/Airliner/CNTL/VehicleGlobalPosition/Alt')
-print "Alt: " + str(alt)
+#atp(rocky, "Move up")
+#vehicle_move(rocky, Direction.Up, speed = .85, time = 1, stop = True, stop_wait = 3)
 
-atp(rocky, "Fly spiral")
-print "Fly spiral up `0 meters"
-vehicle_fly_spiral_ccw(10)
+#alt = rocky.get_tlm_value('/Airliner/CNTL/VehicleGlobalPosition/Alt')
+#heading = rocky.get_tlm_value('/Airliner/CNTL/VehicleGlobalPosition/Yaw')
+#print "Alt: " + str(alt)
+#print "Heading: " + str(heading)
+
+#atp(rocky, "Fly spiral")
+#print "Fly spiral up `0 meters"
+#vehicle_fly_spiral_ccw(10)
 
 #atp(rocky, "Move forward")
 #vehicle_move(rocky, Direction.Forward, speed = .75, time = 2, stop = True, stop_wait = 3)
