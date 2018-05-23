@@ -2,10 +2,13 @@
 
 pkill -x gazebo || true
 
+
 if [ -x "$(command -v gazebo)" ]
 then
 	# setup Gazebo env and update package path
 	export GAZEBO_PLUGIN_PATH=@GAZEBO_PLUGIN_BUILD_DIR@:${GAZEBO_PLUGIN_PATH}
+    # Add gazebo 8 built-in plugins to path
+    export GAZEBO_PLUGIN_PATH=/usr/lib/x86_64-linux-gnu/gazebo-8/plugins:${GAZEBO_PLUGIN_PATH}
 	export GAZEBO_MODEL_PATH=${GAZEBO_MODEL_PATH}:@GAZEBO_MODELS_DIR@
 	# Disabling the remote model download seems only necessary with Gazebo 6
 	#export GAZEBO_MODEL_DATABASE_URI=""
