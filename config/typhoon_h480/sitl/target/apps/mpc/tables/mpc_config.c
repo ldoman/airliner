@@ -470,7 +470,7 @@ MPC_ConfigTbl_t MPC_ConfigTbl =
 	 * @decimal 2
 	 * @group Multicopter Position Control
 	 */
-	5.0f,
+	10.0f,
 
 	/**
 	 * MPC_DEC_HOR_MAX
@@ -483,7 +483,7 @@ MPC_ConfigTbl_t MPC_ConfigTbl =
 	 * @decimal 2
 	 * @group Multicopter Position Control
 	 */
-	4.0f,
+	5.0f,
 
 	/**
 	 * MPC_ACC_UP_MAX
@@ -496,7 +496,7 @@ MPC_ConfigTbl_t MPC_ConfigTbl =
 	 * @decimal 2
 	 * @group Multicopter Position Control
 	 */
-	3.0f,
+	10.0f,
 
 	/**
 	 * MPC_ACC_DOWN_MAX
@@ -509,7 +509,7 @@ MPC_ConfigTbl_t MPC_ConfigTbl =
 	 * @decimal 2
 	 * @group Multicopter Position Control
 	 */
-	3.0f,
+	10.0f,
 
 	/**
 	 * MPC_ALT_MODE
@@ -691,6 +691,18 @@ MPC_ConfigTbl_t MPC_ConfigTbl =
      * @group Multicopter Position Control
      */
     7.0f,
+
+    /**
+     * Acceleration for auto and for manual
+     *
+     * @unit m/s/s
+     * @min 2.0
+     * @max 15.0
+     * @increment 1
+     * @decimal 2
+     * @group Multicopter Position Control
+     */
+    5.0f,
 
     /**
      * Acceptance Radius
