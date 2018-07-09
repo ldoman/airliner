@@ -63,3 +63,28 @@ $(TARGET_NAMES)::
 
 clean::
 	rm -rf build
+
+start:: start-sitl
+
+start-sitl:: check-env
+	@echo "Launching simulations and flight software in SITL mode."
+	@-(xterm -title "Gazebo Sim" -geometry 96x24+997+392 -e "cd build/typhoon_h480/sitl/host; ./start-gazebo") & echo $$! >> run/airliner_sim.pid
+	@-(xterm -title "Airliner SITL Flight Software" -geometry 165x24+0+0 -e "cd build/typhoon_h480/sitl/target/exe; ./airliner") & echo $$! >> run/airliner.pid
+	@-(xterm -title "YAMCS Server" -geometry 96x26+0+392 -e "cd /opt/yamcs; bin/yamcs-server.sh") & echo $$! >> run/yamcs_server.pid
+	make setup-ground-system
+	@-(xterm -title "CommanderJS Server" -geometry 96x26+0+784 -e "cd tools/commanderjs; bin/www") & echo $$! >> run/commanderjs.pid
+
+setup-ground-system:: check-env
+	cd tools/commanderjs; \
+      npm install; \
+      bower install;
+
+check-env::
+ifndef YAMCS_WORKSPACE
+    $(error YAMCS_WORKSPACE is not set.  Suggested value is 'export YAMCS_WORKSPACE="<path-to-airliner>/airliner/config/typhoon_h480/sitl/commander_workspace"')
+endif
+
+
+
+
+
