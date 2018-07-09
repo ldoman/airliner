@@ -73,6 +73,7 @@ start-sitl:: check-env
 	@-(xterm -title "YAMCS Server" -geometry 96x26+0+392 -e "cd /opt/yamcs; bin/yamcs-server.sh") & echo $$! >> run/yamcs_server.pid
 	make setup-ground-system
 	@-(xterm -title "CommanderJS Server" -geometry 96x26+0+784 -e "cd tools/commanderjs; bin/www") & echo $$! >> run/commanderjs.pid
+	firefox localhost:3000
 
 setup-ground-system:: check-env
 	cd tools/commanderjs; \
