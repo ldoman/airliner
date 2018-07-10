@@ -64,21 +64,32 @@ $(TARGET_NAMES)::
 clean::
 	rm -rf build
 
-start:: start-sitl
 
-start-sitl:: check-env
+start:: start-typhoon-sitl
+
+
+build-sitl::
+	make typhoon_h480/sitl
+	make setup-commander
+
+
+start-typhoon-sitl:: check-env
 	@echo "Launching simulations and flight software in SITL mode."
-	@-(xterm -title "Gazebo Sim" -geometry 96x24+997+392 -e "cd build/typhoon_h480/sitl/host; ./start-gazebo") & echo $$! >> run/airliner_sim.pid
-	@-(xterm -title "Airliner SITL Flight Software" -geometry 165x24+0+0 -e "cd build/typhoon_h480/sitl/target/exe; ./airliner") & echo $$! >> run/airliner.pid
-	@-(xterm -title "YAMCS Server" -geometry 96x26+0+392 -e "cd /opt/yamcs; bin/yamcs-server.sh") & echo $$! >> run/yamcs_server.pid
-	make setup-ground-system
-	@-(xterm -title "CommanderJS Server" -geometry 96x26+0+784 -e "cd tools/commanderjs; bin/www") & echo $$! >> run/commanderjs.pid
-	firefox localhost:3000
+	@-(xterm -title "Gazebo Sim" -geometry 96x24+997+392 -e "cd build/typhoon_h480/sitl/host; ./start-gazebo") &
+	@-(xterm -title "Airliner SITL Flight Software" -geometry 165x24+0+0 -e "cd build/typhoon_h480/sitl/target/exe; ./airliner") &
+	make start-commander
 
-setup-ground-system:: check-env
+
+setup-commander:: check-env
 	cd tools/commanderjs; \
       npm install; \
       bower install;
+
+
+start-commander:: check-env
+	@-(xterm -title "YAMCS Server" -geometry 96x26+0+392 -e "cd /opt/yamcs; bin/yamcs-server.sh") &
+	@-(xterm -title "CommanderJS Server" -geometry 96x26+0+784 -e "cd tools/commanderjs; bin/www") &
+	firefox localhost:3000
 
 check-env::
 ifndef YAMCS_WORKSPACE
