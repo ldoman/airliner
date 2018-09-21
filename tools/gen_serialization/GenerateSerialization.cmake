@@ -2,8 +2,8 @@ function(generate_serialization_code)
     # Define the function arguments.
     cmake_parse_arguments(PARSED_ARGS "" "INPUT_FILE;OPS_FILE;MSGS_FILE;OUTPUT_DIR" "" ${ARGN})
     
-    add_custom_target(gen_serialization 
-        DEPENDS explain_cookie 
+    add_custom_target(serialization
+        DEPENDS cookie 
         COMMAND ${PROJECT_SOURCE_DIR}/tools/gen_serialization/generate
          	${PARSED_ARGS_INPUT_FILE}
         	${PARSED_ARGS_OUTPUT_DIR} 
@@ -14,7 +14,7 @@ function(generate_serialization_code)
          	${PARSED_ARGS_OUTPUT_DIR}/airliner.json
     )
 
-    add_dependencies(ground_tools gen_serialization)
+    add_dependencies(ground_tools serialization)
     
 endfunction(generate_serialization_code)
 
