@@ -185,41 +185,41 @@ class BinaryDecoder extends CdrGroundPlugin {
     
     
     processTlmDefReq( tlmReqs, cb ) {
-        var found = false;
-        
-        var self = this;
-        
-        if ( typeof tlmReqs.length === 'number' ) {
-            /* This must be an array. */
-            var outTlmDefs = [];
-            for ( var i = 0; i < tlmReqs.length; ++i ) {
-                var tlmDef = self.getTlmDefByName( self.stripArrayIdentifiers( tlmReqs[ i ].name ) );
-                if ( typeof tlmDef !== 'undefined' ) {
-                    tlmDef.opsPath = tlmReqs[ i ].name;
-                    outTlmDefs.push( tlmDef );
-                    found = true;
-                } else {
-                    self.logDebug( 'TlmDefReq: Telemetry not found.  \'' + tlmReqs[ i ].name + '\'' );
-                }
-            }
-            
-            if(found == true) {
-                cb( outTlmDefs );
-            }
-        } else {
-            /* This is a single request. */
-            var tlmDef = self.getTlmDefByName( self.stripArrayIdentifiers( tlmReqs.name ) );
-            if ( typeof tlmDef === 'undefined' ) {
-                self.logDebug('TlmDefReq: Telemetry not found.  \'' + tlmReqs.name + '\'' );
-            } else {
-                tlmDef.opsPath = tlmReqs.name;
-                found = true;
-            }
-            
-            if(found == true) {
-                cb( tlmDef );
-            }
-        }
+//        var found = false;
+//        
+//        var self = this;
+//        
+//        if ( typeof tlmReqs.length === 'number' ) {
+//            /* This must be an array. */
+//            var outTlmDefs = [];
+//            for ( var i = 0; i < tlmReqs.length; ++i ) {
+//                var tlmDef = self.getTlmDefByName( self.stripArrayIdentifiers( tlmReqs[ i ].name ) );
+//                if ( typeof tlmDef !== 'undefined' ) {
+//                    tlmDef.opsPath = tlmReqs[ i ].name;
+//                    outTlmDefs.push( tlmDef );
+//                    found = true;
+//                } else {
+//                    self.logDebug( 'TlmDefReq: Telemetry not found.  \'' + tlmReqs[ i ].name + '\'' );
+//                }
+//            }
+//            
+//            if(found == true) {
+//                cb( outTlmDefs );
+//            }
+//        } else {
+//            /* This is a single request. */
+//            var tlmDef = self.getTlmDefByName( self.stripArrayIdentifiers( tlmReqs.name ) );
+//            if ( typeof tlmDef === 'undefined' ) {
+//                self.logDebug('TlmDefReq: Telemetry not found.  \'' + tlmReqs.name + '\'' );
+//            } else {
+//                tlmDef.opsPath = tlmReqs.name;
+//                found = true;
+//            }
+//            
+//            if(found == true) {
+//                cb( tlmDef );
+//            }
+//        }
     };
 
 
@@ -230,61 +230,61 @@ class BinaryDecoder extends CdrGroundPlugin {
      * @return {Object}      telemetry definition object
      */
     getTlmDefByName( name ) {
-        var fieldDef = this.getTlmDefByPath( name );
-
-        if ( typeof fieldDef === 'undefined' ) {
-            return undefined;
-        } else {
-            var outTlmDef = {
-                    opsPath: name
-            };
-            switch ( fieldDef.airliner_type ) {
-            case 'char':
-            case 'uint8':
-            case 'int8':
-            case 'string':
-            case 'uint16':
-            case 'int16':
-            case 'uint32':
-            case 'int32':
-            case 'float':
-            case 'double':
-            case 'boolean':
-            case 'uint64':
-            case 'int64':
-                outTlmDef.dataType = fieldDef.airliner_type;
-                break;
-
-            default:
-                switch ( fieldDef.pb_type ) {
-                case 'char':
-                case 'uint8':
-                case 'int8':
-                case 'string':
-                case 'uint16':
-                case 'int16':
-                case 'uint32':
-                case 'int32':
-                case 'float':
-                case 'double':
-                case 'boolean':
-                case 'uint64':
-                case 'int64':
-                    outTlmDef.dataType = fieldDef.pb_type;
-                    break;
-
-                default:
-                    // console.log( "Data type not found" );
-                    outTlmDef.dataType = undefined;
-                }
-            }
-
-            if ( fieldDef.array_length != 0 ) {
-                outTlmDef.arrayLength = fieldDef.array_length;
-            }
-
-            return outTlmDef;
-        }
+//        var fieldDef = this.getTlmDefByPath( name );
+//
+//        if ( typeof fieldDef === 'undefined' ) {
+//            return undefined;
+//        } else {
+//            var outTlmDef = {
+//                    opsPath: name
+//            };
+//            switch ( fieldDef.airliner_type ) {
+//            case 'char':
+//            case 'uint8':
+//            case 'int8':
+//            case 'string':
+//            case 'uint16':
+//            case 'int16':
+//            case 'uint32':
+//            case 'int32':
+//            case 'float':
+//            case 'double':
+//            case 'boolean':
+//            case 'uint64':
+//            case 'int64':
+//                outTlmDef.dataType = fieldDef.airliner_type;
+//                break;
+//
+//            default:
+//                switch ( fieldDef.pb_type ) {
+//                case 'char':
+//                case 'uint8':
+//                case 'int8':
+//                case 'string':
+//                case 'uint16':
+//                case 'int16':
+//                case 'uint32':
+//                case 'int32':
+//                case 'float':
+//                case 'double':
+//                case 'boolean':
+//                case 'uint64':
+//                case 'int64':
+//                    outTlmDef.dataType = fieldDef.pb_type;
+//                    break;
+//
+//                default:
+//                    // console.log( "Data type not found" );
+//                    outTlmDef.dataType = undefined;
+//                }
+//            }
+//
+//            if ( fieldDef.array_length != 0 ) {
+//                outTlmDef.arrayLength = fieldDef.array_length;
+//            }
+//
+//            return outTlmDef;
+//        }
     }
 
 
@@ -322,12 +322,7 @@ class BinaryDecoder extends CdrGroundPlugin {
      * @return {Object}         application object
      */
     getAppDefinition( appName ) {
-        for ( var appID in this.defs.Airliner.apps ) {
-            var app = this.defs.Airliner.apps[ appID ];
-            if ( app.app_name == appName ) {
-                return app;
-            }
-        }
+    	return this.defs.Airliner.modules[appName];
     }
 
 
@@ -337,50 +332,50 @@ class BinaryDecoder extends CdrGroundPlugin {
      * @return {Object}      telemetry definition
      */
     getTlmDefByPath( path ) {
-        var self = this;
-        var appName = self.getAppNameFromPath( path );
-        var operationName = self.getOperationFromPath( path );
-        if ( typeof operationName === 'undefined' ) {
-            this.logDebug( 'getTlmDefByPath: Ops path not found. \'' + path + '\'' );
-            return undefined;
-        } else {
-            var appDefinition = this.getAppDefinition( appName );
-
-            if ( typeof appDefinition === 'undefined' ) {
-                this.logDebug( 'getTlmDefByPath: App not found. \'' + appName + '\'' );
-                return undefined;
-            } else {
-                var operation = appDefinition.operations[ operationName ];
-                if ( typeof operation !== 'undefined' ) {
-                    if ( operation.hasOwnProperty( 'airliner_msg' ) ) {
-                        var msgDef = this.getMsgDefByName( operation.airliner_msg );
-
-                        if ( typeof msgDef === 'undefined' ) {
-                            return undefined;
-                        } else {
-                            var splitName = path.split( '/' );
-                            var opNameID = self.stripArrayIdentifier( splitName[ 3 ] );
-
-                            var fieldObj = msgDef.operational_names[ opNameID ];
-
-                            if ( typeof fieldObj === 'undefined' ) {
-                                return undefined;
-                            } else {
-                                var fieldPath = fieldObj.field_path;
-
-                                if ( typeof fieldPath === 'undefined' ) {
-                                    return undefined;
-                                } else {
-                                    var fieldDef = self.getFieldFromOperationalName( msgDef, fieldPath, 0 );
-
-                                    return fieldDef.fieldDef;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+//        var self = this;
+//        var appName = self.getAppNameFromPath( path );
+//        var operationName = self.getOperationFromPath( path );
+//        if ( typeof operationName === 'undefined' ) {
+//            this.logDebug( 'getTlmDefByPath: Ops path not found. \'' + path + '\'' );
+//            return undefined;
+//        } else {
+//            var appDefinition = this.getAppDefinition( appName );
+//
+//            if ( typeof appDefinition === 'undefined' ) {
+//                this.logDebug( 'getTlmDefByPath: App not found. \'' + appName + '\'' );
+//                return undefined;
+//            } else {
+//                var operation = appDefinition.operations[ operationName ];
+//                if ( typeof operation !== 'undefined' ) {
+//                    if ( operation.hasOwnProperty( 'airliner_msg' ) ) {
+//                        var msgDef = this.getMsgDefByName( operation.airliner_msg );
+//
+//                        if ( typeof msgDef === 'undefined' ) {
+//                            return undefined;
+//                        } else {
+//                            var splitName = path.split( '/' );
+//                            var opNameID = self.stripArrayIdentifier( splitName[ 3 ] );
+//
+//                            var fieldObj = msgDef.operational_names[ opNameID ];
+//
+//                            if ( typeof fieldObj === 'undefined' ) {
+//                                return undefined;
+//                            } else {
+//                                var fieldPath = fieldObj.field_path;
+//
+//                                if ( typeof fieldPath === 'undefined' ) {
+//                                    return undefined;
+//                                } else {
+//                                    var fieldDef = self.getFieldFromOperationalName( msgDef, fieldPath, 0 );
+//
+//                                    return fieldDef.fieldDef;
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
 
 
@@ -454,82 +449,54 @@ class BinaryDecoder extends CdrGroundPlugin {
      */
     getMsgDefByName( msgName ) {
         var self = this;
+        var msgDef = undefined;
+        
         try {
-            for ( var appID in this.defs.Airliner.apps ) {
-                var app = this.defs.Airliner.apps[ appID ];
-                for ( var protoID in app.proto_msgs ) {
-                    var protomsg = app.proto_msgs[ protoID ];
-                    if ( protoID == msgName ) {
-                        return protomsg;
-                    }
+        	for(var appID in this.defs.Airliner.modules) {
+                var app = this.defs.Airliner.modules[appID];
+                
+                if(app.symbols.hasOwnProperty(msgName)) {
+                	msgDef = app.symbols[msgName];
                 }
-            }
+        	}
         } catch ( e ) {
             self.logError('getMsgDefByName: Cannot get definition by name.' );
         }
-        return undefined;
+        
+        return msgDef;
     }
 
 
+    
     /**
      * Get telemetry definition by message id
      * @param  {Number} msgID message id
      * @return {Object}       telemetry definition object
      */
     getMsgDefByMsgID( msgID ) {
-        for ( var appID in this.defs.Airliner.apps ) {
-            var app = this.defs.Airliner.apps[ appID ];
-            for ( var opID in app.operations ) {
-                var operation = app.operations[ opID ];
-                if ( typeof msgID === 'number' && operation.airliner_mid == msgID ) {
-                    var opsPath = '/' + appID + '/' + opID;
-                    return {
-                        opsPath: opsPath,
-                        msgDef: this.getMsgDefByName( operation.airliner_msg )
-                    };
-                }
-            }
-        }
-        return undefined;
-    }
-
-
-    /**
-     * Get field from protobuf message
-     * @param  {Object} pbMsgDef       protobuf message
-     * @param  {Object} fieldPathArray field path array
-     * @param  {Number} bitOffset      bit offset
-     * @return {Object}                field object
-     */
-    getFieldObjFromPbMsg( pbMsgDef, fieldPathArray, bitOffset ) {
         var self = this;
-        if ( fieldPathArray.hasOwnProperty( 'length' ) ) {
-            try {
-                var fieldName = fieldPathArray[ 0 ];
-                var fieldDef = pbMsgDef.fields[ fieldName ];
-                var pbType = fieldDef.pb_type;
-            } catch ( e ) {
-                self.logError('getFieldObjFromPbMsg: Unable to retrive field.  \'' + e + '\'' );
-            }
-            if ( fieldPathArray.length == 1 ) {
-                return {
-                    fieldDef: fieldDef,
-                    bitOffset: fieldDef.bit_offset + bitOffset
-                };
-            } else {
-                try {
-                    var childMsgDef = pbMsgDef.required_pb_msgs[ fieldDef.pb_type ];
+        var msgDefOut = undefined;
+        
+        try {
+        	for(var appID in this.defs.Airliner.modules) {
+                var app = this.defs.Airliner.modules[appID];
 
-                    fieldPathArray.shift();
-
-                    return self.getFieldObjFromPbMsg( childMsgDef, fieldPathArray, fieldDef.bit_offset + bitOffset );
-                } catch ( e ) {
-                    self.logError('getFieldObjFromPbMsg: Unable to retrive field.  \'' + e + '\'' );
-                }
-            }
+            	for(var symbolName in app.symbols) {
+            		var msgDef = app.symbols[symbolName];
+                    if(msgDef.hasOwnProperty('mid')) {
+                	    if(msgDef.mid == msgID) {
+                	    	msgDefOut = msgDef;
+                	    }
+                    }
+            	}
+        	}
+        } catch ( e ) {
+            self.logError('getMsgDefByMsgID: Cannot get definition by msgID.' );
         }
-        return undefined;
+        
+        return msgDefOut;
     }
+    
 
 
     /**
@@ -540,16 +507,16 @@ class BinaryDecoder extends CdrGroundPlugin {
      * @return {Object}           field object
      */
     getFieldFromOperationalName( msgDef, opName, bitOffset ) {
-        var self = this;
-        var pbMsg = undefined;
-        try {
-            var op = msgDef.operational_names[ opName ];
-            var fieldPathArray = opName.split( '.' );
-            pbMsg = self.getFieldObjFromPbMsg( msgDef, fieldPathArray, bitOffset );
-        } catch ( e ) {
-            self.logError('getFieldFromOperationalName: Unable to retrive field.  \'' + e + '\'' );
-        }
-        return pbMsg;
+//        var self = this;
+//        var pbMsg = undefined;
+//        try {
+//            var op = msgDef.operational_names[ opName ];
+//            var fieldPathArray = opName.split( '.' );
+//            pbMsg = self.getFieldObjFromPbMsg( msgDef, fieldPathArray, bitOffset );
+//        } catch ( e ) {
+//            self.logError('getFieldFromOperationalName: Unable to retrive field.  \'' + e + '\'' );
+//        }
+//        return pbMsg;
     }
 
 
@@ -569,330 +536,41 @@ class BinaryDecoder extends CdrGroundPlugin {
 
             var msgTime = this.cfeTimeToJsTime( message.SecHdr.seconds, message.SecHdr.subSeconds );
 
-            var def = this.getMsgDefByMsgID( msgID );
+            var msgDef = this.getMsgDefByMsgID( msgID );
 
             var tlmObj = {};
 
-            if ( typeof def !== 'undefined' ) {
-                if ( def.hasOwnProperty( 'msgDef' ) ) {
-                    if ( typeof def.msgDef !== 'undefined' ) {
-                        var fields = def.msgDef.fields;
-                        for ( var fieldName in fields ) {
-                            var field = fields[ fieldName ];
-                            try {
-                                tlmObj[ fieldName ] = this.getFieldValue( buffer, field, field.bit_offset, def.msgDef );
+            if ( typeof msgDef !== 'undefined' ) {
+                var fields = msgDef.fields;
+                for ( var fieldName in fields ) {
+                   var field = fields[ fieldName ];
+                   try {
+                        tlmObj[ fieldName ] = this.getFieldValue( buffer, field, field.bit_offset, msgDef );
                                 
-                                self.hk.content.paramsParsed++;
-                            } catch ( e ) {
-                                /* TODO: Do nothing for now. */
-                            }
-                        }
-
-                        var pbMsg = def.msgDef.proto_msg;
-                        var symbolName = pbMsg.substring( 0, pbMsg.length - 3 );
-                        
-                        var output = {
-                                content: tlmObj,
-                                opsPath: def.opsPath,
-                                symbol: symbolName,
-                                msgID: msgID,
-                                msgTime: msgTime
-                            };
-                        
-                        this.namespace.send( config.get( 'jsonOutputStreamID' ), output );
+                        self.hk.content.paramsParsed++;
+                    } catch ( e ) {
+                       /* TODO: Do nothing for now. */
                     }
                 }
+
+                //var pbMsg = def.msgDef.proto_msg;
+                //var symbolName = pbMsg.substring( 0, pbMsg.length - 3 );
+                //
+                var output = {
+                        content: tlmObj,
+                //        opsPath: def.opsPath,
+                //        symbol: symbolName,
+                        msgID: msgID,
+                        msgTime: msgTime
+                };
+                        
+                this.namespace.send( config.get( 'jsonOutputStreamID' ), output );
             }
         } catch ( e ) {
             self.logError('processBinaryMessage: Unable to decode buffer.  \'' + e + '\'' );
         }
     };
-
-
-    /**
-     * Gets field value ad protobuf type
-     * @param  {Object} buffer    buffer object
-     * @param  {Object} fieldDef  field definition
-     * @param  {Number} bitOffset bit offset
-     * @param  {Object} rootDef   root definition
-     * @return {Object}           value object
-     */
-    getFieldValueAsPbType( buffer, fieldDef, bitOffset, rootDef ) {
-        var self = this;
-
-        try {
-            var value;
-
-            if ( fieldDef.airliner_type === 'CFE_SB_PipeId_t' ) {
-                fieldDef.pb_type = 'uint8';
-            }
-
-            if ( fieldDef.array_length > 1 ) {
-                var value = [];
-                var fieldLength = 0;
-                switch ( fieldDef.pb_type ) {
-                case 'uint8':
-                    if(buffer.length >= (( bitOffset / 8 ) + fieldDef.array_length )) {
-                        /* This field is not truncated. */
-                        fieldLength = fieldDef.array_length;
-                    } else {
-                        /* This field is truncated. */
-                        fieldLength = ( buffer.length - ( bitOffset / 8 ) );
-                    }
-
-                    for ( var i = 0; i < fieldLength; ++i ) {
-                        value.push( buffer.readUInt8( ( bitOffset / 8 ) + i ) );
-                    }
-                    break;
-
-                case 'int8':
-                    if(buffer.length >= (( bitOffset / 8 ) + fieldDef.array_length )) {
-                        /* This field is not truncated. */
-                        fieldLength = fieldDef.array_length;
-                    } else {
-                        /* This field is truncated. */
-                        fieldLength = ( buffer.length - ( bitOffset / 8 ) );
-                    }
-
-                    for ( var i = 0; i < fieldDef.array_length; ++i ) {
-                        value.push( buffer.readInt8( ( bitOffset / 8 ) + i ) );
-                    }
-                    break;
-
-                case 'string':
-                case 'char':
-                    /* I wish there was a way around this, but we cannot automatically
-                     * determine the difference between a string and char array.  
-                     * Therefore, we will treat everything as a string.  However, some
-                     * messages may really have char arrays containing binary data.
-                     * To make it worse, some of these are actually variable size at 
-                     * runtime.  In other words, the flight software truncates them.  
-                     * So, to accomodate those, we are going to try to read the entire
-                     * length, or up to the end of the buffer.
-                     */
-                    var fieldLength = 0;
-                    if(buffer.length >= (( bitOffset / 8 ) + fieldDef.array_length )) {
-                        /* This field is not truncated. */
-                        fieldLength = fieldDef.array_length;
-                    } else {
-                        /* This field is truncated. */
-                        fieldLength = ( buffer.length - ( bitOffset / 8 ) );
-                    }
-
-                    value = buffer.toString( 'utf8', bitOffset / 8, fieldLength );
-                    break;
-
-                case 'uint16':
-                case 'CFE_SB_MsgId_t':
-                    for ( var i = 0; i < fieldDef.array_length; ++i ) {
-                        if ( this.endian == 'little' ) {
-                            value.push( buffer.readUInt16LE( ( bitOffset / 8 ) + ( i * 2 ) ) );
-                        } else {
-                            value.push( buffer.readUInt16BE( ( bitOffset / 8 ) + ( i * 2 ) ) );
-                        }
-                    }
-                    break;
-
-                case 'int16':
-                    for ( var i = 0; i < fieldDef.array_length; ++i ) {
-                        if ( this.endian == 'little' ) {
-                            value.push( buffer.readInt16LE( ( bitOffset / 8 ) + ( i * 2 ) ) );
-                        } else {
-                            value.push( buffer.readInt16BE( ( bitOffset / 8 ) + ( i * 2 ) ) );
-                        }
-                    }
-                    break;
-
-                case 'uint32':
-                    for ( var i = 0; i < fieldDef.array_length; ++i ) {
-                        if ( this.endian == 'little' ) {
-                            value.push( buffer.readUInt32LE( ( bitOffset / 8 ) + ( i * 4 ) ) );
-                        } else {
-                            value.push( buffer.readUInt32BE( ( bitOffset / 8 ) + ( i * 4 ) ) );
-                        }
-                    }
-                    break;
-
-                case 'int32':
-                    for ( var i = 0; i < fieldDef.array_length; ++i ) {
-                        if ( this.endian == 'little' ) {
-                            value.push( buffer.readInt32LE( ( bitOffset / 8 ) + ( i * 4 ) ) );
-                        } else {
-                            value.push( buffer.readInt32BE( ( bitOffset / 8 ) + ( i * 4 ) ) );
-                        }
-                    }
-                    break;
-
-                case 'float':
-                    for ( var i = 0; i < fieldDef.array_length; ++i ) {
-                        if ( this.endian == 'little' ) {
-                            value.push( buffer.readFloatLE( ( bitOffset / 8 ) + ( i * 4 ) ) );
-                        } else {
-                            value.push( buffer.readFloatBE( ( bitOffset / 8 ) + ( i * 4 ) ) );
-                        }
-                    }
-                    break;
-
-                case 'double':
-                    for ( var i = 0; i < fieldDef.array_length; ++i ) {
-                        if ( this.endian == 'little' ) {
-                            value.push( buffer.readDoubleLE( ( bitOffset / 8 ) + ( i * 8 ) ) );
-                        } else {
-                            value.push( buffer.readDoubleBE( ( bitOffset / 8 ) + ( i * 8 ) ) );
-                        }
-                    }
-                    break;
-
-                case 'boolean':
-                    for ( var i = 0; i < fieldDef.array_length; ++i ) {
-                        value.push( buffer.readUInt8( ( bitOffset / 8 ) + ( i * 4 ) ) );
-                    }
-                    break;
-
-                case 'uint64':
-                    for ( var i = 0; i < fieldDef.array_length; ++i ) {
-                        if ( this.endian == 'little' ) {
-                            var uint64Value = new Uint64LE( buffer, ( bitOffset / 8 ) + ( i * 8 ) );
-                        } else {
-                            var uint64Value = new Uint64BE( buffer, ( bitOffset / 8 ) + ( i * 8 ) );
-                        }
-                        value.push( uint64Value.toString( 10 ) );
-                    }
-                    break;
-
-                case 'int64':
-                    for ( var i = 0; i < fieldDef.array_length; ++i ) {
-                        if ( this.endian == 'little' ) {
-                            var int64Value = new Int64LE( buffer, ( bitOffset / 8 ) + ( i * 8 ) );
-                        } else {
-                            var int64Value = new Int64BE( buffer, ( bitOffset / 8 ) + ( i * 8 ) );
-                        }
-                        value.push( int64Value.toString( 10 ) );
-                    }
-                    break;
-
-                default:
-                    var nextFieldDef = rootDef.required_pb_msgs[ fieldDef.pb_type ];
-                var elementBitSize = fieldDef.bit_size / fieldDef.array_length;
-                for ( var i = 0; i < fieldDef.array_length; ++i ) {
-                    var nextBitOffset = bitOffset + ( elementBitSize * i );
-
-                    var nextValue = {};
-                    var fields = nextFieldDef.fields;
-                    for ( var fieldName in fields ) {
-                        var field = fields[ fieldName ];
-
-                        nextValue[ fieldName ] = self.getFieldValueAsPbType( buffer, field, nextBitOffset + field.bit_offset, rootDef );
-                    }
-                    value.push( nextValue );
-                }
-                }
-            } else {
-                switch ( fieldDef.pb_type ) {
-                case 'string':
-                case 'char':
-                    value = buffer.readUInt8( bitOffset / 8 );
-                    break;
-
-                case 'uint8':
-                    value = buffer.readUInt8( bitOffset / 8 );
-                    break;
-
-                case 'int8':
-                    value = buffer.readInt8( bitOffset / 8 );
-                    break;
-
-                case 'uint16':
-                case 'CFE_SB_MsgId_t':
-                    if ( this.endian == 'little' ) {
-                        value = buffer.readUInt16LE( bitOffset / 8 );
-                    } else {
-                        value = buffer.readUInt16BE( bitOffset / 8 );
-                    }
-                    break;
-
-                case 'int16':
-                    if ( this.endian == 'little' ) {
-                        value = buffer.readInt16LE( bitOffset / 8 );
-                    } else {
-                        value = buffer.readInt16BE( bitOffset / 8 );
-                    }
-                    break;
-
-                case 'uint32':
-                    if ( this.endian == 'little' ) {
-                        value = buffer.readUInt32LE( bitOffset / 8 );
-                    } else {
-                        value = buffer.readUInt32BE( bitOffset / 8 );
-                    }
-                    break;
-
-                case 'int32':
-                    if ( this.endian == 'little' ) {
-                        value = buffer.readInt32LE( bitOffset / 8 );
-                    } else {
-                        value = buffer.readInt32BE( bitOffset / 8 );
-                    }
-                    break;
-
-                case 'float':
-                    if ( this.endian == 'little' ) {
-                        value = buffer.readFloatLE( bitOffset / 8 );
-                    } else {
-                        value = buffer.readFloatBE( bitOffset / 8 );
-                    }
-                    break;
-
-                case 'double':
-                    if ( this.endian == 'little' ) {
-                        value = buffer.readDoubleLE( bitOffset / 8 );
-                    } else {
-                        value = buffer.readDoubleBE( bitOffset / 8 );
-                    }
-                    break;
-
-                case 'boolean':
-                    value = buffer.readUInt8( bitOffset / 8 );
-                    break;
-
-                case 'uint64':
-                    if ( this.endian == 'little' ) {
-                        var uint64Value = new Uint64LE( buffer, bitOffset / 8 );
-                    } else {
-                        var uint64Value = new Uint64BE( buffer, bitOffset / 8 );
-                    }
-                    value = uint64Value.toString( 10 );
-                    break;
-
-                case 'int64':
-                    if ( this.endian == 'little' ) {
-                        var int64Value = new Int64LE( buffer, bitOffset / 8 );
-                    } else {
-                        var int64Value = new Int64BE( buffer, bitOffset / 8 );
-                    }
-                    value = int64Value.toString( 10 );
-                    break;
-
-                default:
-                    var nextFieldDef = rootDef.required_pb_msgs[ fieldDef.pb_type ];
-                var elementBitSize = fieldDef.bit_size;
-                var nextBitOffset = elementBitSize;
-
-                var value = {};
-                var fields = nextFieldDef.fields;
-                for ( var fieldName in fields ) {
-                    var field = fields[ fieldName ];
-
-                    value[ fieldName ] = self.getFieldValueAsPbType( buffer, field, bitOffset + field.bit_offset, rootDef );
-                }
-                }
-            }
-        } catch ( err ) {
-            this.logError('getFieldValueAsPbType: Unhandled exception. \'' + err + ' - ' + err.stack + '\'' );
-        }
-
-        return value;
-    }
+    
 
 
     /**
@@ -904,275 +582,285 @@ class BinaryDecoder extends CdrGroundPlugin {
      * @return {Object}           value object
      */
     getFieldValue( buffer, fieldDef, bitOffset, rootDef ) {
-        try {
-            var value;
-
-            if ( fieldDef.array_length > 1 ) {
-                var value = [];
-                switch ( fieldDef.airliner_type ) {
-                case 'uint8':
-                    if(buffer.length >= (( bitOffset / 8 ) + fieldDef.array_length )) {
-                        /* This field is not truncated. */
-                        fieldLength = fieldDef.array_length;
-                    } else {
-                        /* This field is truncated. */
-                        fieldLength = ( buffer.length - ( bitOffset / 8 ) );
-                    }
-
-                    for ( var i = 0; i < fieldLength; ++i ) {
-                        value.push( buffer.readUInt8( ( bitOffset / 8 ) + i ) );
-                    }
-                    break;
-
-                case 'int8':
-                    if(buffer.length >= (( bitOffset / 8 ) + fieldDef.array_length )) {
-                        /* This field is not truncated. */
-                        fieldLength = fieldDef.array_length;
-                    } else {
-                        /* This field is truncated. */
-                        fieldLength = ( buffer.length - ( bitOffset / 8 ) );
-                    }
-                    for ( var i = 0; i < fieldLength; ++i ) {
-                        value.push( buffer.readInt8( ( bitOffset / 8 ) + i ) );
-                    }
-                    break;
-
-                case 'string':
-                case 'char':
-                    /* I wish there was a way around this, but we cannot automatically
-                     * determine the difference between a string and char array.  
-                     * Therefore, we will treat everything as a string.  However, some
-                     * messages may really have char arrays containing binary data.
-                     * To make it worse, some of these are actually variable size at 
-                     * runtime.  In other words, the flight software truncates them.  
-                     * So, to accomodate those, we are going to try to read the entire
-                     * length, or up to the end of the buffer.
-                     */
-                    var fieldLength = 0;
-                    if(buffer.length >= (( bitOffset / 8 ) + fieldDef.array_length )) {
-                        /* This field is not truncated. */
-                        fieldLength = fieldDef.array_length;
-                    } else {
-                        /* This field is truncated. */
-                        fieldLength = ( buffer.length - ( bitOffset / 8 ) );
-                    }
-
-                    value = buffer.toString( 'utf8', bitOffset / 8, fieldLength );
-                    break;
-
-                case 'uint16':
-                case 'CFE_SB_MsgId_t':
-                    for ( var i = 0; i < fieldDef.array_length; ++i ) {
-                        if ( this.endian == 'little' ) {
-                            value.push( buffer.readUInt16LE( ( bitOffset / 8 ) + ( i * 2 ) ) );
-                        } else {
-                            value.push( buffer.readUInt16BE( ( bitOffset / 8 ) + ( i * 2 ) ) );
-                        }
-                    }
-                    break;
-
-                case 'int16':
-                    for ( var i = 0; i < fieldDef.array_length; ++i ) {
-                        if ( this.endian == 'little' ) {
-                            value.push( buffer.readInt16LE( ( bitOffset / 8 ) + ( i * 2 ) ) );
-                        } else {
-                            value.push( buffer.readInt16BE( ( bitOffset / 8 ) + ( i * 2 ) ) );
-                        }
-                    }
-                    break;
-
-                case 'uint32':
-                    for ( var i = 0; i < fieldDef.array_length; ++i ) {
-                        if ( this.endian == 'little' ) {
-                            value.push( buffer.readUInt32LE( ( bitOffset / 8 ) + ( i * 4 ) ) );
-                        } else {
-                            value.push( buffer.readUInt32BE( ( bitOffset / 8 ) + ( i * 4 ) ) );
-                        }
-                    }
-                    break;
-
-                case 'int32':
-                    for ( var i = 0; i < fieldDef.array_length; ++i ) {
-                        if ( this.endian == 'little' ) {
-                            value.push( buffer.readInt32LE( ( bitOffset / 8 ) + ( i * 4 ) ) );
-                        } else {
-                            value.push( buffer.readInt32BE( ( bitOffset / 8 ) + ( i * 4 ) ) );
-                        }
-                    }
-                    break;
-
-                case 'float':
-                    for ( var i = 0; i < fieldDef.array_length; ++i ) {
-                        if ( this.endian == 'little' ) {
-                            value.push( buffer.readFloatLE( ( bitOffset / 8 ) + ( i * 4 ) ) );
-                        } else {
-                            value.push( buffer.readFloatBE( ( bitOffset / 8 ) + ( i * 4 ) ) );
-                        }
-                    }
-                    break;
-
-                case 'double':
-                    for ( var i = 0; i < fieldDef.array_length; ++i ) {
-                        if ( this.endian == 'little' ) {
-                            value.push( buffer.readDoubleLE( ( bitOffset / 8 ) + ( i * 8 ) ) );
-                        } else {
-                            value.push( buffer.readDoubleBE( ( bitOffset / 8 ) + ( i * 8 ) ) );
-                        }
-                    }
-                    break;
-
-                case 'boolean':
-                    for ( var i = 0; i < fieldDef.array_length; ++i ) {
-                        value.push( buffer.readUInt8( ( bitOffset / 8 ) + ( i * 4 ) ) );
-                    }
-                    break;
-
-                case 'uint64':
-                    for ( var i = 0; i < fieldDef.array_length; ++i ) {
-                        if ( this.endian == 'little' ) {
-                            var uint64Value = new Uint64LE( buffer, ( bitOffset / 8 ) + ( i * 8 ) );
-                        } else {
-                            var uint64Value = new Uint64BE( buffer, ( bitOffset / 8 ) + ( i * 8 ) );
-                        }
-                        value.push( uint64Value.toString( 10 ) );
-                    }
-                    break;
-
-                case 'int64':
-                    for ( var i = 0; i < fieldDef.array_length; ++i ) {
-                        if ( this.endian == 'little' ) {
-                            var int64Value = new Int64LE( buffer, ( bitOffset / 8 ) + ( i * 8 ) );
-                        } else {
-                            var int64Value = new Int64BE( buffer, ( bitOffset / 8 ) + ( i * 8 ) );
-                        }
-                        value.push( int64Value.toString( 10 ) );
-                    }
-                    break;
-
-                default:
-                    var nextFieldDef = this.getMsgDefByName( fieldDef.airliner_type );
-
-                if ( typeof nextFieldDef === 'undefined' ) {
-                    value = this.getFieldValueAsPbType( buffer, fieldDef, bitOffset, rootDef );
-                } else {
-                    var nextFields = nextFieldDef.fields;
-                    var value = [];
-                    for ( var i = 0; i < fieldDef.array_length; ++i ) {
-                        var nextValue = {};
-                        var elementBitSize = fieldDef.bit_size / fieldDef.array_length;
-                        var nextBitOffset = bitOffset + ( ( fieldDef.bit_size / fieldDef.array_length ) * i );
-
-                        for ( var fieldName in nextFields ) {
-                            var nextField = nextFields[ fieldName ];
-                            nextValue[ fieldName ] = this.getFieldValue( buffer, nextField, nextField.bit_offset + nextBitOffset, nextFieldDef );
-                        }
-                        value.push( nextValue );
-                    }
-                }
-                }
-            } else {
-                switch ( fieldDef.airliner_type ) {        	
-                case 'char':
-                    value = buffer.readUInt8( bitOffset / 8 );
-                    break;
-
-                case 'uint8':
-                    value = buffer.readUInt8( bitOffset / 8 );
-                    break;
-
-                case 'int8':
-                    value = buffer.readInt8( bitOffset / 8 );
-                    break;
-
-                case 'uint16':
-                case 'CFE_SB_MsgId_t':
-                    if ( this.endian == 'little' ) {
-                        value = buffer.readUInt16LE( bitOffset / 8 );
-                    } else {
-                        value = buffer.readUInt16BE( bitOffset / 8 );
-                    }
-                    break;
-
-                case 'int16':
-                    if ( this.endian == 'little' ) {
-                        value = buffer.readInt16LE( bitOffset / 8 );
-                    } else {
-                        value = buffer.readInt16BE( bitOffset / 8 );
-                    }
-                    break;
-
-                case 'uint32':
-                    if ( this.endian == 'little' ) {
-                        value = buffer.readUInt32LE( bitOffset / 8 );
-                    } else {
-                        value = buffer.readUInt32BE( bitOffset / 8 );
-                    }
-                    break;
-
-                case 'int32':
-                    if ( this.endian == 'little' ) {
-                        value = buffer.readInt32LE( bitOffset / 8 );
-                    } else {
-                        value = buffer.readInt32BE( bitOffset / 8 );
-                    }
-                    break;
-
-                case 'float':
-                    if ( this.endian == 'little' ) {
-                        value = buffer.readFloatLE( bitOffset / 8 );
-                    } else {
-                        value = buffer.readFloatBE( bitOffset / 8 );
-                    }
-                    break;
-
-                case 'double':
-                    if ( this.endian == 'little' ) {
-                        value = buffer.readDoubleLE( bitOffset / 8 );
-                    } else {
-                        value = buffer.readDoubleBE( bitOffset / 8 );
-                    }
-                    break;
-
-                case 'boolean':
-                    value = buffer.readUInt8( bitOffset / 8 );
-                    break;
-
-                case 'uint64':
-                    if ( this.endian == 'little' ) {
-                        var uint64Value = new Uint64LE( buffer, bitOffset / 8 );
-                    } else {
-                        var uint64Value = new Uint64BE( buffer, bitOffset / 8 );
-                    }
-                    value = uint64Value.toString( 10 );
-                    break;
-
-                case 'int64':
-                    if ( this.endian == 'little' ) {
-                        var int64Value = new Int64LE( buffer, bitOffset / 8 );
-                    } else {
-                        var int64Value = new Int64BE( buffer, bitOffset / 8 );
-                    }
-                    value = int64Value.toString( 10 );
-                    break;
-
-                default:
-                    var nextFieldDef = this.getMsgDefByName( fieldDef.airliner_type );
-
-                if ( typeof nextFieldDef === 'undefined' ) {
-                    value = this.getFieldValueAsPbType( buffer, fieldDef, bitOffset, rootDef );
-                } else {
-                    var nextFields = nextFieldDef.fields;
-                    var value = {};
-                    for ( var fieldName in nextFields ) {
-                        var nextField = nextFields[ fieldName ];
-                        value[ fieldName ] = this.getFieldValue( buffer, nextField, nextField.bit_offset + bitOffset, nextFieldDef );
-                    }
-                }
-                }
-            }
-        } catch ( err ) {
-            this.logError('getFieldValue: Unhandled exception. \'' + err + '\'' );
-        }
+//        try {
+//            var value;
+//            
+//            
+//            
+//            
+//            
+//            
+//            
+//            
+//            
+//            console.log(fieldDef);
+//
+//            if ( fieldDef.array_length > 1 ) {
+//                var value = [];
+//                switch ( fieldDef.airliner_type ) {
+//                case 'uint8':
+//                    if(buffer.length >= (( bitOffset / 8 ) + fieldDef.array_length )) {
+//                        /* This field is not truncated. */
+//                        fieldLength = fieldDef.array_length;
+//                    } else {
+//                        /* This field is truncated. */
+//                        fieldLength = ( buffer.length - ( bitOffset / 8 ) );
+//                    }
+//
+//                    for ( var i = 0; i < fieldLength; ++i ) {
+//                        value.push( buffer.readUInt8( ( bitOffset / 8 ) + i ) );
+//                    }
+//                    break;
+//
+//                case 'int8':
+//                    if(buffer.length >= (( bitOffset / 8 ) + fieldDef.array_length )) {
+//                        /* This field is not truncated. */
+//                        fieldLength = fieldDef.array_length;
+//                    } else {
+//                        /* This field is truncated. */
+//                        fieldLength = ( buffer.length - ( bitOffset / 8 ) );
+//                    }
+//                    for ( var i = 0; i < fieldLength; ++i ) {
+//                        value.push( buffer.readInt8( ( bitOffset / 8 ) + i ) );
+//                    }
+//                    break;
+//
+//                case 'string':
+//                case 'char':
+//                    /* I wish there was a way around this, but we cannot automatically
+//                     * determine the difference between a string and char array.  
+//                     * Therefore, we will treat everything as a string.  However, some
+//                     * messages may really have char arrays containing binary data.
+//                     * To make it worse, some of these are actually variable size at 
+//                     * runtime.  In other words, the flight software truncates them.  
+//                     * So, to accomodate those, we are going to try to read the entire
+//                     * length, or up to the end of the buffer.
+//                     */
+//                    var fieldLength = 0;
+//                    if(buffer.length >= (( bitOffset / 8 ) + fieldDef.array_length )) {
+//                        /* This field is not truncated. */
+//                        fieldLength = fieldDef.array_length;
+//                    } else {
+//                        /* This field is truncated. */
+//                        fieldLength = ( buffer.length - ( bitOffset / 8 ) );
+//                    }
+//
+//                    value = buffer.toString( 'utf8', bitOffset / 8, fieldLength );
+//                    break;
+//
+//                case 'uint16':
+//                case 'CFE_SB_MsgId_t':
+//                    for ( var i = 0; i < fieldDef.array_length; ++i ) {
+//                        if ( this.endian == 'little' ) {
+//                            value.push( buffer.readUInt16LE( ( bitOffset / 8 ) + ( i * 2 ) ) );
+//                        } else {
+//                            value.push( buffer.readUInt16BE( ( bitOffset / 8 ) + ( i * 2 ) ) );
+//                        }
+//                    }
+//                    break;
+//
+//                case 'int16':
+//                    for ( var i = 0; i < fieldDef.array_length; ++i ) {
+//                        if ( this.endian == 'little' ) {
+//                            value.push( buffer.readInt16LE( ( bitOffset / 8 ) + ( i * 2 ) ) );
+//                        } else {
+//                            value.push( buffer.readInt16BE( ( bitOffset / 8 ) + ( i * 2 ) ) );
+//                        }
+//                    }
+//                    break;
+//
+//                case 'uint32':
+//                    for ( var i = 0; i < fieldDef.array_length; ++i ) {
+//                        if ( this.endian == 'little' ) {
+//                            value.push( buffer.readUInt32LE( ( bitOffset / 8 ) + ( i * 4 ) ) );
+//                        } else {
+//                            value.push( buffer.readUInt32BE( ( bitOffset / 8 ) + ( i * 4 ) ) );
+//                        }
+//                    }
+//                    break;
+//
+//                case 'int32':
+//                    for ( var i = 0; i < fieldDef.array_length; ++i ) {
+//                        if ( this.endian == 'little' ) {
+//                            value.push( buffer.readInt32LE( ( bitOffset / 8 ) + ( i * 4 ) ) );
+//                        } else {
+//                            value.push( buffer.readInt32BE( ( bitOffset / 8 ) + ( i * 4 ) ) );
+//                        }
+//                    }
+//                    break;
+//
+//                case 'float':
+//                    for ( var i = 0; i < fieldDef.array_length; ++i ) {
+//                        if ( this.endian == 'little' ) {
+//                            value.push( buffer.readFloatLE( ( bitOffset / 8 ) + ( i * 4 ) ) );
+//                        } else {
+//                            value.push( buffer.readFloatBE( ( bitOffset / 8 ) + ( i * 4 ) ) );
+//                        }
+//                    }
+//                    break;
+//
+//                case 'double':
+//                    for ( var i = 0; i < fieldDef.array_length; ++i ) {
+//                        if ( this.endian == 'little' ) {
+//                            value.push( buffer.readDoubleLE( ( bitOffset / 8 ) + ( i * 8 ) ) );
+//                        } else {
+//                            value.push( buffer.readDoubleBE( ( bitOffset / 8 ) + ( i * 8 ) ) );
+//                        }
+//                    }
+//                    break;
+//
+//                case 'boolean':
+//                    for ( var i = 0; i < fieldDef.array_length; ++i ) {
+//                        value.push( buffer.readUInt8( ( bitOffset / 8 ) + ( i * 4 ) ) );
+//                    }
+//                    break;
+//
+//                case 'uint64':
+//                    for ( var i = 0; i < fieldDef.array_length; ++i ) {
+//                        if ( this.endian == 'little' ) {
+//                            var uint64Value = new Uint64LE( buffer, ( bitOffset / 8 ) + ( i * 8 ) );
+//                        } else {
+//                            var uint64Value = new Uint64BE( buffer, ( bitOffset / 8 ) + ( i * 8 ) );
+//                        }
+//                        value.push( uint64Value.toString( 10 ) );
+//                    }
+//                    break;
+//
+//                case 'int64':
+//                    for ( var i = 0; i < fieldDef.array_length; ++i ) {
+//                        if ( this.endian == 'little' ) {
+//                            var int64Value = new Int64LE( buffer, ( bitOffset / 8 ) + ( i * 8 ) );
+//                        } else {
+//                            var int64Value = new Int64BE( buffer, ( bitOffset / 8 ) + ( i * 8 ) );
+//                        }
+//                        value.push( int64Value.toString( 10 ) );
+//                    }
+//                    break;
+//
+//                default:
+//                    var nextFieldDef = this.getMsgDefByName( fieldDef.airliner_type );
+//
+//                if ( typeof nextFieldDef === 'undefined' ) {
+//                    value = this.getFieldValueAsPbType( buffer, fieldDef, bitOffset, rootDef );
+//                } else {
+//                    var nextFields = nextFieldDef.fields;
+//                    var value = [];
+//                    for ( var i = 0; i < fieldDef.array_length; ++i ) {
+//                        var nextValue = {};
+//                        var elementBitSize = fieldDef.bit_size / fieldDef.array_length;
+//                        var nextBitOffset = bitOffset + ( ( fieldDef.bit_size / fieldDef.array_length ) * i );
+//
+//                        for ( var fieldName in nextFields ) {
+//                            var nextField = nextFields[ fieldName ];
+//                            nextValue[ fieldName ] = this.getFieldValue( buffer, nextField, nextField.bit_offset + nextBitOffset, nextFieldDef );
+//                        }
+//                        value.push( nextValue );
+//                    }
+//                }
+//                }
+//            } else {
+//                switch ( fieldDef.airliner_type ) {        	
+//                case 'char':
+//                    value = buffer.readUInt8( bitOffset / 8 );
+//                    break;
+//
+//                case 'uint8':
+//                    value = buffer.readUInt8( bitOffset / 8 );
+//                    break;
+//
+//                case 'int8':
+//                    value = buffer.readInt8( bitOffset / 8 );
+//                    break;
+//
+//                case 'uint16':
+//                case 'CFE_SB_MsgId_t':
+//                    if ( this.endian == 'little' ) {
+//                        value = buffer.readUInt16LE( bitOffset / 8 );
+//                    } else {
+//                        value = buffer.readUInt16BE( bitOffset / 8 );
+//                    }
+//                    break;
+//
+//                case 'int16':
+//                    if ( this.endian == 'little' ) {
+//                        value = buffer.readInt16LE( bitOffset / 8 );
+//                    } else {
+//                        value = buffer.readInt16BE( bitOffset / 8 );
+//                    }
+//                    break;
+//
+//                case 'uint32':
+//                    if ( this.endian == 'little' ) {
+//                        value = buffer.readUInt32LE( bitOffset / 8 );
+//                    } else {
+//                        value = buffer.readUInt32BE( bitOffset / 8 );
+//                    }
+//                    break;
+//
+//                case 'int32':
+//                    if ( this.endian == 'little' ) {
+//                        value = buffer.readInt32LE( bitOffset / 8 );
+//                    } else {
+//                        value = buffer.readInt32BE( bitOffset / 8 );
+//                    }
+//                    break;
+//
+//                case 'float':
+//                    if ( this.endian == 'little' ) {
+//                        value = buffer.readFloatLE( bitOffset / 8 );
+//                    } else {
+//                        value = buffer.readFloatBE( bitOffset / 8 );
+//                    }
+//                    break;
+//
+//                case 'double':
+//                    if ( this.endian == 'little' ) {
+//                        value = buffer.readDoubleLE( bitOffset / 8 );
+//                    } else {
+//                        value = buffer.readDoubleBE( bitOffset / 8 );
+//                    }
+//                    break;
+//
+//                case 'boolean':
+//                    value = buffer.readUInt8( bitOffset / 8 );
+//                    break;
+//
+//                case 'uint64':
+//                    if ( this.endian == 'little' ) {
+//                        var uint64Value = new Uint64LE( buffer, bitOffset / 8 );
+//                    } else {
+//                        var uint64Value = new Uint64BE( buffer, bitOffset / 8 );
+//                    }
+//                    value = uint64Value.toString( 10 );
+//                    break;
+//
+//                case 'int64':
+//                    if ( this.endian == 'little' ) {
+//                        var int64Value = new Int64LE( buffer, bitOffset / 8 );
+//                    } else {
+//                        var int64Value = new Int64BE( buffer, bitOffset / 8 );
+//                    }
+//                    value = int64Value.toString( 10 );
+//                    break;
+//
+//                default:
+//                    var nextFieldDef = this.getMsgDefByName( fieldDef.airliner_type );
+//
+//                if ( typeof nextFieldDef === 'undefined' ) {
+//                    value = this.getFieldValueAsPbType( buffer, fieldDef, bitOffset, rootDef );
+//                } else {
+//                    var nextFields = nextFieldDef.fields;
+//                    var value = {};
+//                    for ( var fieldName in nextFields ) {
+//                        var nextField = nextFields[ fieldName ];
+//                        value[ fieldName ] = this.getFieldValue( buffer, nextField, nextField.bit_offset + bitOffset, nextFieldDef );
+//                    }
+//                }
+//                }
+//            }
+//        } catch ( err ) {
+//            this.logError('getFieldValue: Unhandled exception. \'' + err + '\'' );
+//        }
         return value;
     }
 
@@ -1328,6 +1016,7 @@ class BinaryDecoder extends CdrGroundPlugin {
     }
     
     
+    
     initCommands() {
     	var self = this;
     	
@@ -1343,6 +1032,7 @@ class BinaryDecoder extends CdrGroundPlugin {
         });
     }
 }
+
 
 
 module.exports = BinaryDecoder;
