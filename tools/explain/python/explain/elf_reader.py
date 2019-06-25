@@ -58,6 +58,7 @@ Notes:
 
 import argparse
 import hashlib
+import json
 import logging
 import os
 import sqlite3
@@ -73,6 +74,9 @@ from explain.loggable import Loggable
 
 class ElfReaderError(ExplainError):
     """Base class for ElfReader Errors."""
+
+class DuplicateElfError(ElfReaderError):
+    """Error for duplicate parsed ELF """
 
 
 class ElfReader(Loggable):
@@ -164,7 +168,7 @@ class ElfReader(Loggable):
         the database."""
         return '\n'.join(line for line in self.database.iterdump())
 
-    def insert_elf(self, file_name):
+    def insert_elf(self, file_name, module_name = None):
         """Insert an ELF file and symbols into ElfReader.
 
         Return True if successful.
@@ -177,7 +181,7 @@ class ElfReader(Loggable):
             return False
         elf = ELFFile(stream)
         checksum = self.checksum(file_name)
-        base = os.path.basename(file_name)
+        name = module_name if module_name else os.path.basename(file_name)
 
         # Insert ELF file into elfs table.
         c = self.database.cursor()
@@ -186,13 +190,25 @@ class ElfReader(Loggable):
             # to pass in checksum.
             c.execute('INSERT INTO elfs(name, checksum, little_endian) '
                       'VALUES (?, ?, ?)',
-                      (base, sqlite3.Binary(checksum), elf.little_endian))
+                      (name, sqlite3.Binary(checksum), elf.little_endian))
         except sqlite3.IntegrityError as e:
+            # Check if the error is due to duplicate entry
             c.execute('SELECT date FROM elfs WHERE name=? AND checksum=?',
-                      (base, sqlite3.Binary(checksum)))
+                      (name, sqlite3.Binary(checksum)))
             duplicate = c.fetchone()
-            raise ElfReaderError('{!r} matched previously loaded ELF uploaded '
-                                 'on {}'.format(base, duplicate[0])) from e
+            if duplicate:
+                raise DuplicateElfError('{!r} matched previously loaded ELF uploaded '
+                                        'on {}'.format(name, duplicate[0])) from e
+            
+            # Check if the error is due to duplicate name, but mismatched checksum
+            c.execute('SELECT date FROM elfs WHERE name=?',(name,))
+            old_version = c.fetchone()
+            if old_version:
+                raise ElfReaderError('Old version of {!r} was previously loaded '
+                                     'on {}'.format(name, old_version[0])) from e
+
+            # Raise original exception if neither of above cases are true
+            raise e
 
         # Insert symbols from ELF
         elf_id = c.lastrowid
@@ -683,6 +699,7 @@ def main():
                         help='stdout the SQL database')
     parser.add_argument('-v', '--verbose', action='store_true',
                         help='verbose')
+    parser.add_argument('--config', help='pass a config file specifying ELFs to parse')
     args = parser.parse_args()
 
     # Logging
@@ -700,17 +717,44 @@ def main():
 
     # Insert ELF files
     loaded = True
-    for file in args.files:
-        try:
-            logger.info('Adding ELF {}'.format(file))
-            elf_reader.insert_elf(file)
-        except Exception as e:
-            if args.cont:
-                logger.exception('Problem adding ELF:')
-            else:
-                traceback.print_exc()
-                loaded = False
-                break
+    
+    # Check if passed config file
+    if args.config:
+        with open(args.config, 'r') as config_json:
+            config = json.load(config_json)
+            for name, elf in config["Airliner"]["modules"].items():
+                try:
+                    logger.info('Adding ELF {}'.format(elf["elf_file"]))
+                    elf_reader.insert_elf(elf["elf_file"], name)
+                except DuplicateElfError:
+                    logger.info('Skipping previously parsed ELF: {}'.format(name))
+                    continue
+                # TODO: This can be updated later to intelligently remove old 
+                # elf data and parse new one
+                except ElfReaderError:
+                    logger.exception('CRC mismatch for previously parsed ELF: {}. '
+                                     'Please create a new database.' .format(name))
+                    loaded = False
+                    break
+                except Exception as e:
+                    if args.cont:
+                        logger.exception('Problem adding ELF:')
+                    else:
+                        traceback.print_exc()
+                        loaded = False
+                        break
+    else:
+        for file in args.files:
+            try:
+                logger.info('Adding ELF {}'.format(file))
+                elf_reader.insert_elf(file)
+            except Exception as e:
+                if args.cont:
+                    logger.exception('Problem adding ELF:')
+                else:
+                    traceback.print_exc()
+                    loaded = False
+                    break
     if not loaded:
         print('Errors encountered. Database not saved.')
         exit(1)
