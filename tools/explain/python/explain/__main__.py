@@ -100,11 +100,33 @@ def main():
         out['cmds'] = {}
         out['tlm'] = {}
         out['symbols'] = sorted_symbols
-        with open(args.out, 'w') as fp:
-            json.dump(out, fp, indent='    ')
             
         if args.cookiecutter:
             cookie_json = convert(out, dirname(abspath(args.out)))
+
+        # Export to new format version
+        out = {}
+        out["Airliner"] = {}
+        out["Airliner"]["modules"] = {}
+        modules = out["Airliner"]["modules"]
+        
+        for elf_name in elf_names:
+            elf = ElfMap.from_name(db, elf_name)
+            modules[elf_name] = {}
+            modules[elf_name]['little_endian'] = elf['little_endian'] == 1
+            modules[elf_name]['crc'] = str(elf['checksum'])
+            modules[elf_name]['symbols'] = {}
+            
+            symbols = [explain_symbol(s) for s in elf.symbols()]
+            for sym in symbols:
+                #print(sym)
+                if sym["name"][0] == '*':
+                    continue
+                modules[elf_name]['symbols'][str(sym["name"])] = sym
+                del modules[elf_name]['symbols'][sym["name"]]["name"]
+
+        with open(args.out, 'w') as fp:
+            json.dump(out, fp, indent='    ')
             
     else:
         if args.file:
