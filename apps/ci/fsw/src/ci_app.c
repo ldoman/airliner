@@ -366,7 +366,7 @@ int32 CI_InitApp()
     }
 
     /* Register the cleanup callback */
-    iStatus = OS_TaskInstallDeleteHandler(&CI_CleanupCallback);
+    iStatus = OS_TaskInstallDeleteHandler((void*)&CI_CleanupCallback);
     if (iStatus != CFE_SUCCESS)
     {
         (void) CFE_EVS_SendEvent(CI_INIT_ERR_EID, CFE_EVS_ERROR,
@@ -384,9 +384,6 @@ int32 CI_InitApp()
                                  (unsigned int)iStatus);
         goto CI_InitApp_Exit_Tag;
     }
-
-    /* Register the cleanup callback */
-    OS_TaskInstallDeleteHandler((void*)&CI_CleanupCallback);
 
 CI_InitApp_Exit_Tag:
     if (iStatus == CFE_SUCCESS)
