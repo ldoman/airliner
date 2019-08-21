@@ -1155,7 +1155,7 @@ void MPC::Execute(void)
         m_TakeoffVelLimit = -.5f;
     }
 
-    else if (!m_VehicleControlModeMsg.Armed == PX4_ARMING_STATE_ARMED) {
+    else if (m_VehicleControlModeMsg.Armed != PX4_ARMING_STATE_ARMED) {
         /* If we're disarmed and for some reason were in a smooth takeoff, we reset that. */
         m_InTakeoff = FALSE;
     }
