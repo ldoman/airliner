@@ -132,8 +132,8 @@ int32 PE::ValidateConfigTbl(void* ConfigTblPtr)
         goto PE_ValidateConfigTbl_Exit_Tag;
     }
     
-    if (PE_ConfigTblPtr->BARO_FUSE < BARO_FUSE_MIN ||
-        PE_ConfigTblPtr->BARO_FUSE > BARO_FUSE_MAX)
+    if (PE_ConfigTblPtr->BARO_FUSE == BARO_FUSE_MIN ||
+        PE_ConfigTblPtr->BARO_FUSE == BARO_FUSE_MAX)
     {
         snprintf(Param, PE_PARAM_NAME_MAX_LEN, "BARO_FUSE");
         iStatus = -1;
@@ -148,8 +148,8 @@ int32 PE::ValidateConfigTbl(void* ConfigTblPtr)
         goto PE_ValidateConfigTbl_Exit_Tag;
     }
     
-    if (PE_ConfigTblPtr->GPS_FUSE < GPS_FUSE_MIN ||
-        PE_ConfigTblPtr->GPS_FUSE > GPS_FUSE_MAX)
+    if (PE_ConfigTblPtr->GPS_FUSE == GPS_FUSE_MIN ||
+        PE_ConfigTblPtr->GPS_FUSE == GPS_FUSE_MAX)
     {
         snprintf(Param, PE_PARAM_NAME_MAX_LEN, "GPS_FUSE");
         iStatus = -1;
@@ -212,8 +212,8 @@ int32 PE::ValidateConfigTbl(void* ConfigTblPtr)
         goto PE_ValidateConfigTbl_Exit_Tag;
     }
     
-    if (PE_ConfigTblPtr->LAND_FUSE < LAND_FUSE_MIN ||
-        PE_ConfigTblPtr->LAND_FUSE > LAND_FUSE_MAX)
+    if (PE_ConfigTblPtr->LAND_FUSE == LAND_FUSE_MIN ||
+        PE_ConfigTblPtr->LAND_FUSE == LAND_FUSE_MAX)
     {
         snprintf(Param, PE_PARAM_NAME_MAX_LEN, "LAND_FUSE");
         iStatus = -1;
@@ -300,8 +300,8 @@ int32 PE::ValidateConfigTbl(void* ConfigTblPtr)
         goto PE_ValidateConfigTbl_Exit_Tag;
     }
     
-    if (PE_ConfigTblPtr->DIST_FUSE < DIST_FUSE_MIN ||
-        PE_ConfigTblPtr->DIST_FUSE > DIST_FUSE_MAX)
+    if (PE_ConfigTblPtr->DIST_FUSE == DIST_FUSE_MIN ||
+        PE_ConfigTblPtr->DIST_FUSE == DIST_FUSE_MAX)
     {
         snprintf(Param, PE_PARAM_NAME_MAX_LEN, "DIST_FUSE");
         iStatus = -1;
@@ -324,8 +324,8 @@ int32 PE::ValidateConfigTbl(void* ConfigTblPtr)
         goto PE_ValidateConfigTbl_Exit_Tag;
     }
     
-    if (PE_ConfigTblPtr->FLOW_FUSE < FLOW_FUSE_MIN ||
-        PE_ConfigTblPtr->FLOW_FUSE > FLOW_FUSE_MAX)
+    if (PE_ConfigTblPtr->FLOW_FUSE == FLOW_FUSE_MIN ||
+        PE_ConfigTblPtr->FLOW_FUSE == FLOW_FUSE_MAX)
     {
         snprintf(Param, PE_PARAM_NAME_MAX_LEN, "FLOW_FUSE");
         iStatus = -1;
