@@ -51,10 +51,11 @@ extern "C" {
 /*************************************************************************
 ** Macro Definitions
 *************************************************************************/
+#define PRMLIB_ERROR                (-1)
 #define PRMLIB_PARAM_TBL_MAX_ENTRY  (1000)
 #define PRMLIB_PARAM_TBL_MUTEX_NAME ("PRMLIB_PARAM_TBL_MUTEX")
-#define PRMLIB_MSG_PARAM_NAME_LEN  (64)
-#define PRMLIB_PARAM_VALUE_MAX_LEN (8)
+#define PRMLIB_MSG_PARAM_NAME_LEN   (64)
+#define PRMLIB_PARAM_VALUE_MAX_LEN  (8)
 
 /************************************************************************
 ** Local Structure Definitions

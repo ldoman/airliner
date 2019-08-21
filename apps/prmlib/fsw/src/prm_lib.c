@@ -116,7 +116,7 @@ void PRMLIB_InitDefaultParameters(void)
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 int32 PRMLIB_AddParam(PRMLIB_ParamData_t param)
 {
-	int32 Status = -1;
+	int32 Status = PRMLIB_ERROR;
     int i = 0;
 
 	/* Lock the mutex */
@@ -154,7 +154,7 @@ int32 PRMLIB_AddParam(PRMLIB_ParamData_t param)
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 int32 PRMLIB_GetParamData(PRMLIB_ParamData_t* InOutParam, uint16* ParamIndex, uint16* ParamCount)
 {
-	int32 Status = -1;
+	int32 Status = PRMLIB_ERROR;
 	uint16 idx = 0;
     int i = 0;
 
@@ -196,7 +196,7 @@ int32 PRMLIB_GetParamData(PRMLIB_ParamData_t* InOutParam, uint16* ParamIndex, ui
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 int32 PRMLIB_GetParamDataAtIndex(PRMLIB_ParamData_t* InOutParam, uint16 ParamIndex)
 {
-	int32 Status = -1;
+	int32 Status = PRMLIB_ERROR;
 	uint16 idx = 0;
     int i = 0;
 
@@ -288,7 +288,7 @@ boolean PRMLIB_ParamExists(char param_name[])
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 int32 PRMLIB_UpdateParam(PRMLIB_ParamData_t param_data)
 {
-	int32 Status = -1;
+	int32 Status = PRMLIB_ERROR;
     int i = 0;
 
 	/* Lock the mutex */
@@ -324,7 +324,7 @@ int32 PRMLIB_UpdateParam(PRMLIB_ParamData_t param_data)
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 int32 PRMLIB_RemoveParam(PRMLIB_ParamData_t param_data)
 {
-	int32 Status;
+	int32 Status = PRMLIB_ERROR;
     int i = 0;
 
 	/* Lock the mutex */
@@ -431,7 +431,7 @@ void PRMLIB_GetParams(PRMLIB_ParamData_t* params, uint16* ParamCount)
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 int32 PRMLIB_GetParamById(const char name[], PRMLIB_ParamData_t* InOutParam)
 {
-	int32 Status = -1;
+	int32 Status = PRMLIB_ERROR;
     int i = 0;
 
 	/* Lock the mutex */
@@ -463,7 +463,7 @@ int32 PRMLIB_GetParamById(const char name[], PRMLIB_ParamData_t* InOutParam)
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 int32 PRMLIB_GetParamValueById(const char name[], void* InOutValue)
 {
-	int32 Status = -1;
+	int32 Status = PRMLIB_ERROR;
     int i = 0;
 
 	/* Lock the mutex */
@@ -495,7 +495,7 @@ int32 PRMLIB_GetParamValueById(const char name[], void* InOutValue)
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 int32 PRMLIB_ParamRegister(const char name[], void* inOutValue, PRMLIB_ParamType_t type)
 {
-	int32 Status = -1;
+	int32 Status = PRMLIB_ERROR;
 	boolean ParamExists = FALSE;
 	PRMLIB_ParamData_t param = {0};
     int i = 0;
